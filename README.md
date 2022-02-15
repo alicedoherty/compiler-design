@@ -16,9 +16,10 @@ ToY Compiler Project for CSU33071
 	Regex Expressions + Actions (list of regex and specify to flex what actions you're going to do if there's a match)
 ```
 
-### Regex/Pattern Match
+### Links
 - [Flex Manual - Pattern Matching](https://westes.github.io/flex/manual/Patterns.html#Patterns)
 - [Regex Testing](https://regex101.com/)
+- [Lexical Analysis w/ JFlex](https://www.cs.auckland.ac.nz/courses/compsci330s1c/lectures/330ChaptersPDF/Chapt1.pdf)
 
 ## Commands
 ### Package Dependencies
