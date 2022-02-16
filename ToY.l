@@ -5,6 +5,7 @@ import java.io.IOException;
 class Yytoken {
   public String type;
   public Object value;
+
   public Yytoken(String type) {
     this.type = type;
   }
@@ -36,12 +37,39 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 Identifier = [:jletter:] [:jletterdigit:]*
 
+Zero = 0
+DecInt = [1-9][0-9]*
+Integer = [\-]?({Zero}|{DecInt})
 
 %state STRING
 
 %%
 <YYINITIAL> {
-/* identifiers */
+
+/* reserved words */
+"bool"                         { return new Yytoken("BOOL"); }
+"int"                          { return new Yytoken("INT"); }
+"true"                         { return new Yytoken("TRUE"); }
+"false"                        { return new Yytoken("FALSE"); }
+"void"                         { return new Yytoken("VOID"); }
+"printf"                       { return new Yytoken("PRINTF"); }
+"string"                       { return new Yytoken("STRING"); }
+"struct"                       { return new Yytoken("STRUCT"); }
+"if"                           { return new Yytoken("IF"); }
+"then"                         { return new Yytoken("THEN"); }
+"else"                         { return new Yytoken("ELSE"); }
+"for"                          { return new Yytoken("FOR"); }
+"return"                       { return new Yytoken("RETURN"); }
+
+/* whitespace */
+{WhiteSpace}                   { /* ignore */ }
+
+/* integer literals */
+{Integer}                      { return new Yytoken("INTEGER_LITERAL"); }
+
+/* string literals */
+
+/* identifier <id> */
 {Identifier}                   { return new Yytoken("IDENTIFIER"); }
 
 /* literals */
@@ -50,8 +78,6 @@ Identifier = [:jletter:] [:jletterdigit:]*
 /* operators */
 "="                            { return new Yytoken("EQ"); }
 
-/* whitespace */
-{WhiteSpace}                   { /* ignore */ }
 }
 
 <STRING> {

@@ -20,6 +20,7 @@ ToY Compiler Project for CSU33071
 - [Flex Manual - Pattern Matching](https://westes.github.io/flex/manual/Patterns.html#Patterns)
 - [Regex Testing](https://regex101.com/)
 - [Lexical Analysis w/ JFlex](https://www.cs.auckland.ac.nz/courses/compsci330s1c/lectures/330ChaptersPDF/Chapt1.pdf)
+- [JFlex Simple Example](https://jflex.de/manual.html#Example)
 
 ## Commands
 ### Package Dependencies
