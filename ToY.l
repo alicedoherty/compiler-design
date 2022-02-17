@@ -23,11 +23,18 @@ class Yytoken {
 StringBuffer stringBuffer = new StringBuffer();
 
 public static void main(String[] args) throws FileNotFoundException, IOException{
-            FileReader yyin = new FileReader(args[0]);
-            Yylex yy = new Yylex(yyin);
-            Yytoken t;
-            while ((t = yy.yylex()) != null)
-                System.out.println(t.type);
+    FileReader yyin = new FileReader(args[0]);
+    Yylex yy = new Yylex(yyin);
+    Yytoken t;
+    try {
+      while ((t = yy.yylex()) != null) {
+        System.out.println(t.type);
+      }
+      System.out.println("VALID");
+    } catch (Error e) {
+        System.out.println("ERROR");
+    }
+           
 }
 %}
 
