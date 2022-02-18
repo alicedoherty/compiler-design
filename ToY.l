@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.Integer;
 
 class Yytoken {
   public String type;
@@ -38,15 +39,21 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 }
 %}
 
-LineTerminator = \r|\n|\r\n
-InputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [ \t\f]
-
-Identifier = [:jletter:] [:jletterdigit:]*
+Letter = [A-Za-z]
+Digit = [0-9]
+Identifier = ({Letter}|_)[{Letter}{Digit}_]*
 
 Zero = 0
 DecInt = [1-9][0-9]*
+
+WhiteSpace     = {LineTerminator} | [ \t\f]
+
+/* TODO removing/keeping whitespace at end {WhiteSpace}
+  Will recognise 0123 as valid - two separate Integers */
 Integer = [\-]?({Zero}|{DecInt})
+
+LineTerminator = \r|\n|\r\n
+InputCharacter = [^\r\n]
 
 %state STRING
 
@@ -68,16 +75,23 @@ Integer = [\-]?({Zero}|{DecInt})
 "for"                          { return new Yytoken("FOR"); }
 "return"                       { return new Yytoken("RETURN"); }
 
+/* identifier <id> */
+{Identifier}                   { return new Yytoken("IDENTIFIER"); }
+
+/* integer literals */
+{Integer}                      { String input = yytext();
+                                 Integer inputInt = Integer.parseInt(input);
+                                 if (inputInt < -32768 || inputInt > 32767) {
+                                   throw new Error("Integer <"+yytext()+"> out of bounds");         
+                                 } else {
+                                   return new Yytoken("INTEGER_LITERAL");
+                                 }
+                               }
+
 /* whitespace */
 {WhiteSpace}                   { /* ignore */ }
 
-/* integer literals */
-{Integer}                      { return new Yytoken("INTEGER_LITERAL"); }
-
 /* string literals */
-
-/* identifier <id> */
-{Identifier}                   { return new Yytoken("IDENTIFIER"); }
 
 /* literals */
 \"                             { stringBuffer.setLength(0); yybegin(STRING); }
