@@ -110,6 +110,9 @@ InputCharacter = [^\r\n]
 ">="                           { return new Yytoken("GE"); }
 "!="                           { return new Yytoken("NE"); }
 
+/* comments */
+"//".*                         { }
+"##".*                         { }
 
 /* string literals */
 \"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
