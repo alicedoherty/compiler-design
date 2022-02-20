@@ -95,7 +95,21 @@ InputCharacter = [^\r\n]
 {WhiteSpace}                   { /* ignore */ }
 
 /* operators */
-"="                            { return new Yytoken("EQUAL"); }
+"="                            { return new Yytoken("ASSIGN"); }
+"-"                            { return new Yytoken("MINUS"); }
+"*"                            { return new Yytoken("TIMES"); }
+"/"                            { return new Yytoken("DIVIDE"); }
+"mod"                          { return new Yytoken("MOD"); }
+"and"                          { return new Yytoken("AND"); }
+"or"                           { return new Yytoken("OR"); }
+"not"                          { return new Yytoken("NOT"); }
+"=="                           { return new Yytoken("EQ"); }
+"<"                            { return new Yytoken("LT"); }
+">"                            { return new Yytoken("GT"); }
+"<="                           { return new Yytoken("LE"); }
+">="                           { return new Yytoken("GE"); }
+"!="                           { return new Yytoken("NE"); }
+
 
 /* string literals */
 \"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
