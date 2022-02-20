@@ -29,7 +29,7 @@ public static void main(String[] args) throws FileNotFoundException, IOException
     Yytoken t;
     try {
       while ((t = yy.yylex()) != null) {
-        System.out.println(t.type);
+        // System.out.println(t.type);
       }
       System.out.println("VALID");
     } catch (Error e) {
@@ -74,6 +74,39 @@ LineTerminator = \r|\n|\r\n
 "for"                          { return new Yytoken("FOR"); }
 "return"                       { return new Yytoken("RETURN"); }
 
+/* operators */
+"+"                            { return new Yytoken("PLUS"); }
+"-"                            { return new Yytoken("MINUS"); }
+"*"                            { return new Yytoken("TIMES"); }
+"/"                            { return new Yytoken("DIVIDE"); }
+"mod"                          { return new Yytoken("MOD"); }
+"and"                          { return new Yytoken("AND"); }
+"or"                           { return new Yytoken("OR"); }
+/* ! at top of projetc spec but 'not' later */
+"not"                          { return new Yytoken("NOT"); }
+"=="                           { return new Yytoken("EQ"); }
+"<"                            { return new Yytoken("LT"); }
+">"                            { return new Yytoken("GT"); }
+"<="                           { return new Yytoken("LE"); }
+">="                           { return new Yytoken("GE"); }
+"!="                           { return new Yytoken("NE"); }
+"="                            { return new Yytoken("ASSIGN"); }
+
+/* symbols */
+"{"                            { return new Yytoken("LEFTCURLY"); }
+"}"                            { return new Yytoken("RIGHTCURLY"); }
+";"                            { return new Yytoken("SEMICOLON"); }
+"("                            { return new Yytoken("LEFT"); }
+")"                            { return new Yytoken("RIGHT"); }
+"."                            { return new Yytoken("PERIOD"); }
+
+/* comments */
+"//".*                         { }
+"##".*                         { }
+
+/* whitespace */
+{WhiteSpace}                   { /* ignore */ }
+
 /* identifier <id> */
 {Identifier}                   { return new Yytoken("IDENTIFIER"); }
 
@@ -89,14 +122,6 @@ LineTerminator = \r|\n|\r\n
 
 /* string literals */
 \"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
-
-/* operator symbols */
-"="                            { return new Yytoken("EQUAL"); }
-
-/* comments */
-
-/* whitespace */
-{WhiteSpace}                   { /* ignore */ }
 
 }
 

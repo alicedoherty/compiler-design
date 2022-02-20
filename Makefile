@@ -4,7 +4,8 @@
 
 CLASSES = Yylex.java
 
-TEST_FILES = testCases
+TEST_FILES = \
+	validTestCases \
 
 default:
 	clear
@@ -12,7 +13,7 @@ default:
 	javac *.java
 
 test: $(CLASSES)
-	set -e; \
+	@set -e; \
 	for file in $(TEST_FILES); do java Yylex $$file; done;
 
 clean: 
