@@ -46,8 +46,6 @@ Identifier = ({Letter}|_)[{Letter}{Digit}_]*
 Zero = 0
 DecInt = [1-9][0-9]*
 
-WhiteSpace     = {LineTerminator} | [ \t\f]
-
 /* TODO removing/keeping whitespace at end {WhiteSpace}
   Will recognise 0123 as valid - two separate Integers */
 Integer = [\-]?({Zero}|{DecInt})
@@ -55,10 +53,8 @@ Integer = [\-]?({Zero}|{DecInt})
 Escape = \\[ntbrf\\\'\"]
 StringCharacter = [^\"\\\n\r]+ | {Escape}
 
+WhiteSpace     = {LineTerminator} | [ \t\f]
 LineTerminator = \r|\n|\r\n
-InputCharacter = [^\r\n]
-
-%state STRING
 
 %%
 <YYINITIAL> {
@@ -91,14 +87,16 @@ InputCharacter = [^\r\n]
                                  }
                                }
 
-/* whitespace */
-{WhiteSpace}                   { /* ignore */ }
-
-/* operators */
-"="                            { return new Yytoken("EQUAL"); }
-
 /* string literals */
 \"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
+
+/* operator symbols */
+"="                            { return new Yytoken("EQUAL"); }
+
+/* comments */
+
+/* whitespace */
+{WhiteSpace}                   { /* ignore */ }
 
 }
 
