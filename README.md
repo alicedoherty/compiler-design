@@ -33,18 +33,8 @@ brew install bison
 ### Running Lexer and Parser
 #### Using Makefile
 
-Run `make`
+1. Run `make` to compile code
 
-To clean up compiled files run `make clean`
+2. Run `make test` to run code with test files
 
-
-#### Long way (from project spec)
-(I don't think the last lines work here, just use the Makefile)
-
-```
-bison ToY.y -L java     \\ ignore for now, not yet implemented
-jflex ToY.l
-javac *.java
-java -cp ToY $@         \\ $@ means all command-line arguments
-                        \\ e.g run java -cp ToY sampleInput
-```
+3. To clean up compiled files run `make clean`
