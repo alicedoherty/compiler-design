@@ -51,7 +51,7 @@ DecInt = [1-9][0-9]*
 Integer = [\-]?({Zero}|{DecInt})
 
 Escape = \\[ntbrf\\\'\"]
-StringCharacter = [^\"\\\n\r]+ | {Escape}
+StringCharacter = [^\"\\\n\r]+
 
 WhiteSpace     = {LineTerminator} | [ \t\f]
 LineTerminator = \r|\n|\r\n
