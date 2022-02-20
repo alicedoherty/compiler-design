@@ -52,6 +52,9 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
   Will recognise 0123 as valid - two separate Integers */
 Integer = [\-]?({Zero}|{DecInt})
 
+Escape = \\[ntbrf\\\'\"]
+StringCharacter = [^\"\\\n\r]+ | {Escape}
+
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 
@@ -91,27 +94,12 @@ InputCharacter = [^\r\n]
 /* whitespace */
 {WhiteSpace}                   { /* ignore */ }
 
-/* string literals */
-
-/* literals */
-\"                             { stringBuffer.setLength(0); yybegin(STRING); }
-
 /* operators */
-"="                            { return new Yytoken("EQ"); }
+"="                            { return new Yytoken("EQUAL"); }
 
-}
+/* string literals */
+\"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
 
-<STRING> {
-\"                             { yybegin(YYINITIAL);
-                               return new Yytoken("STRING_LITERAL",
-                               stringBuffer.toString()); }
-[^\n\r\"\\]+                   { stringBuffer.append( yytext() ); }
-\\t                            { stringBuffer.append('\t'); }
-\\n                            { stringBuffer.append('\n'); }
-
-\\r                            { stringBuffer.append('\r'); }
-\\\"                           { stringBuffer.append('\"'); }
-\\                             { stringBuffer.append('\\'); }
 }
 
 /* error fallback */
