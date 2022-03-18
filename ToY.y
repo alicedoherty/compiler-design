@@ -31,66 +31,110 @@
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT PERIOD
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
 
-
 %%  
 
-assignment
-    : INT IDENTIFIER SEMICOLON
+pgm
+    : proc pgm1
+    | struct pgm 
 ;
 
-type : INT | BOOL | STRING | IDENTIFIER;
+pgm1
+    :
+    | proc pgm1
+    | struct pgm1
+;
 
-returnType : type | VOID;
+/* Only struct identifiers count as a type - not all IDENTIFIERs */
+type
+    : INT 
+    | BOOL 
+    | STRING 
+    /*| IDENTIFIER*/
+;
 
-struct : struct IDENTIFIER          { < declaration >, < declaration > ,... };
+returnType
+    : type 
+    | VOID
+;
 
-declaration : type IDENTIFIER;
+/* Struct has at least one declaration */
+struct
+    : STRUCT IDENTIFIER LEFTCURLY declaration RIGHTCURLY
+;
 
-proc : returnType IDENTIFIER '(' declaration ')' { < statement > };
+/* Multiple declarations are comma separated */
+/* Cannot have declarations with same identifier */
+declaration
+    : type IDENTIFIER
+;
 
-//had to change stmt to statement and expr to exp, not sure if this is correct
-//also removed the (,...) in places, idk if this will affect things
-statement : FOR '('IDENTIFIER '=' exp ; exp ; statement ')' statement
-| IF '('exp')' THEN statement
-| IF '('exp')' THEN statement ELSE statement
-| PRINTF '('STRING')';
-| RETURN exp;
-| { statementSeq } 
-| type IDENTIFIER ; 
-| lExp '=' exp ; 
-| IDENTIFIER '('exp ')'; 
-| IDENTIFIER '=' IDENTIFIER '(' exp ')'; 
+declaration1
+    : 
+    | declaration
+;
 
+proc
+    : returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY statement RIGHTCURLY
+;
 
-statementSeq :
-| statement statementSeq
+/* had to change stmt to statement and expr to exp, not sure if this is correct
+also removed the (,...) in places, idk if this will affect things */
+
+/* First statement inside for-construct is optional */
+/* Look at lecture/books for info about shift-reduce/reduce-reduce conflicts */
+/* IDENTIFIER in assignment needs to already be declared */
+/* Variables declared inside compound/for/if statement cannot be used outside of it */
+statement
+    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement
+    | IF LEFT exp RIGHT THEN statement
+    | IF LEFT exp RIGHT THEN statement ELSE statement
+    | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
+    | RETURN exp SEMICOLON
+    | LEFTCURLY statementSeq RIGHTCURLY
+    | type IDENTIFIER SEMICOLON 
+    | lExp ASSIGN exp SEMICOLON
+    | IDENTIFIER LEFT exp RIGHT SEMICOLON 
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON 
+
+statementSeq
+    :
+    | statement statementSeq
 ;
 
 
-lExp : IDENTIFIER | IDENTIFIER '.' lExp 
+lExp
+    : IDENTIFIER
+    | IDENTIFIER PERIOD lExp 
 ;
 
-pgm : proc pgm1
-| struct pgm 
+/* Define different expressions for type checking or delegate to type checker */
+exp
+    : INTEGER_LITERAL
+    | STRING_LITERAL
+    | TRUE
+    | FALSE
+    | exp op exp 
+    | MINUS exp 
+    | NOT exp 
+    | lExp
+    | LEFT exp RIGHT
 ;
 
-pgm1 :
-| proc pgm1
-| struct pgm1
-;
-
-exp : INTEGER_LITERAL
-| STRING_LITERAL
-| TRUE
-| FALSE
-| exp op exp 
-| '-' exp 
-| '!' exp 
-| lExp
-| '(exp)'
-;
-
-op : PLUS | MINUS| TIMES| DIVIDE | MOD | AND | OR | EQ | GT | LT | GE | LE| NE
+/* Add precedence and associativity rules */
+op 
+    : PLUS
+    | MINUS
+    | TIMES
+    | DIVIDE
+    | MOD
+    | AND
+    | OR
+    | EQ
+    | GT
+    | LT
+    | GE
+    | LE
+    | NE
 ;
 
 %%
