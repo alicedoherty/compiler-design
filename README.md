@@ -30,14 +30,14 @@ brew install bison
 
 1. Run `make` to compile code
 
-2. Run `make test` to run code with test files
+2. Run `java ToY < validParserTestCases` to test parser
 
 3. To clean up compiled files run `make clean`
 
-### Compilation Commands
+### Full Compilation Commands
 ```
 jflex ToY.l
 bison ToY.y -L java
 javac *.java
-java Yylex input-file
+java ToY < validParserTestCases
 ```
