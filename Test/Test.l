@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.lang.Integer;
 
 class Yytoken {
-  public static final int INT = 0;
-  public static final int IDENTIFIER = 1;
-  public static final int INTEGER_LITERAL = 2;
-
   public String type;
   public Object value;
 
@@ -26,9 +22,6 @@ class Yytoken {
 %public
 %standalone
 
-%line
-%column
-
 Letter = [A-Za-z]
 Digit = [0-9]
 Identifier = ({Letter}|_)[{Letter}{Digit}_]*
@@ -42,8 +35,7 @@ LineTerminator = \r|\n|\r\n
 
 "int"                          { return TestLexer.INT; }
 {Identifier}                   { return TestLexer.IDENTIFIER; }
-
-/* whitespace */
+";"                            { return TestLexer.SEMICOLON; }
 {WhiteSpace}                   { /* ignore */ }
 
 }
