@@ -27,6 +27,13 @@
 /* Bison declarations */
 %token <Integer> NUM
 %type <Integer> exp
+%type <Integer> int
+%type <Boolean> bool
+%type <String> string
+%type id
+%type void
+%token FOR IF ELSE THEN RETURN PRINTF NEG TRUE FALSE MOD AND OR
+
 
 %%  
 
@@ -39,6 +46,7 @@ line
     | error '\n'
     ;
 
+//are intLiteral and stringLiteral types to be declared? 
 exp
     : NUM                   { $$ = $1; }
     | exp '=' exp           { if ($1.intValue() != $3.intValue()) yyerror("calc: error: " + $1 + " != " + $3); }
@@ -52,7 +60,73 @@ exp
     | '(' error ')'         { $$ = 1111; }
     | '!'                   { $$ = 0; return YYERROR; }
     | '-' error             { $$ = 0; return YYERROR; }
+    | intLiteral
+    | stringLiteral
+    | TRUE
+    | FALSE
+    | exp op exp 
+    | '-' exp 
+    | '!' exp 
+    | lExp
+    | '(exp)'
     ;
+
+type : int | bool | string | id;
+
+returnType : type | void;
+
+struct : struct id          { < declaration >, < declaration > ,... };
+
+declaration : type id;
+
+proc : returnType id '(' declaration ')' { < statement > };
+
+//had to change stmt to statement and expr to exp, not sure if this is correct
+//also removed the (,...) in places, idk if this will affect things
+statement : FOR '('id '=' exp ; exp ; statement ')' statement
+| IF '('exp')' THEN statement
+| IF '('exp')' THEN statement ELSE statement
+| PRINTF '('string')';
+| RETURN exp;
+| { statementSeq } 
+| type id ; 
+| lExp '=' exp ; 
+| id '('exp ')'; 
+| id '=' id '(' exp ')'; 
+
+
+statementSeq :
+| statement statementSeq
+;
+
+
+lExp : id | id '.' lExp 
+;
+
+pgm : proc pgm1
+| struct pgm 
+;
+
+pgm1 :
+| proc pgm1
+| struct pgm1
+;
+
+//Combined this with previous declaration of exp
+/* exp : intLiteral
+| stringLiteral
+| true
+| false
+| exp op exp 
+| '-' exp 
+| '!' exp 
+| lExp
+| '(exp)'
+; */
+
+//Are these operators meant to be in quotation marks?
+op : '+' | '-'| '*'| '/' | MOD | AND | OR | '==' | '>' | '<' | '>=' | '<='| '!='
+;
 
 %%
 
