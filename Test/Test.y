@@ -26,12 +26,12 @@
 	} 
 }
 
-%token INT IDENTIFIER INTEGER_LITERAL
+%token INT IDENTIFIER SEMICOLON
 
 %%  
 
-assignment: 
-    INT IDENTIFIER
+assignment
+    : INT IDENTIFIER SEMICOLON
 ;
 
 %%

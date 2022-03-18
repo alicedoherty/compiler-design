@@ -19,7 +19,10 @@ class Yytoken {
 %%
 
 %unicode
+%public
+%standalone
 
+/*
 %{
 StringBuffer stringBuffer = new StringBuffer();
 
@@ -38,6 +41,7 @@ public static void main(String[] args) throws FileNotFoundException, IOException
            
 }
 %}
+*/
 
 Letter = [A-Za-z]
 Digit = [0-9]
@@ -57,58 +61,59 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 LineTerminator = \r|\n|\r\n
 
 %%
+
 <YYINITIAL> {
 
 /* reserved words */
-"bool"                         { return new Yytoken("BOOL"); }
-"int"                          { return new Yytoken("INT"); }
-"true"                         { return new Yytoken("TRUE"); }
-"false"                        { return new Yytoken("FALSE"); }
-"void"                         { return new Yytoken("VOID"); }
-"printf"                       { return new Yytoken("PRINTF"); }
-"string"                       { return new Yytoken("STRING"); }
-"struct"                       { return new Yytoken("STRUCT"); }
-"if"                           { return new Yytoken("IF"); }
-"then"                         { return new Yytoken("THEN"); }
-"else"                         { return new Yytoken("ELSE"); }
-"for"                          { return new Yytoken("FOR"); }
-"return"                       { return new Yytoken("RETURN"); }
+"bool"                         { return ToYLexer.BOOL; }
+"int"                          { return ToYLexer.INT; }
+"true"                         { return ToYLexer.TRUE; }
+"false"                        { return ToYLexer.FALSE; }
+"void"                         { return ToYLexer.VOID; }
+"printf"                       { return ToYLexer.PRINTF; }
+"string"                       { return ToYLexer.STRING; }
+"struct"                       { return ToYLexer.STRUCT; }
+"if"                           { return ToYLexer.IF; }
+"then"                         { return ToYLexer.THEN; }
+"else"                         { return ToYLexer.ELSE; }
+"for"                          { return ToYLexer.FOR; }
+"return"                       { return ToYLexer.RETURN; }
 
 /* operators */
-"+"                            { return new Yytoken("PLUS"); }
-"-"                            { return new Yytoken("MINUS"); }
-"*"                            { return new Yytoken("TIMES"); }
-"/"                            { return new Yytoken("DIVIDE"); }
-"mod"                          { return new Yytoken("MOD"); }
-"and"                          { return new Yytoken("AND"); }
-"or"                           { return new Yytoken("OR"); }
+"+"                            { return ToYLexer.PLUS; }
+"-"                            { return ToYLexer.MINUS; }
+"*"                            { return ToYLexer.TIMES; }
+"/"                            { return ToYLexer.DIVIDE; }
+"mod"                          { return ToYLexer.MOD; }
+"and"                          { return ToYLexer.AND; }
+"or"                           { return ToYLexer.OR; }
 /* ! at top of projetc spec but 'not' later */
-"not"                          { return new Yytoken("NOT"); }
-"=="                           { return new Yytoken("EQ"); }
-"<"                            { return new Yytoken("LT"); }
-">"                            { return new Yytoken("GT"); }
-"<="                           { return new Yytoken("LE"); }
-">="                           { return new Yytoken("GE"); }
-"!="                           { return new Yytoken("NE"); }
-"="                            { return new Yytoken("ASSIGN"); }
+"not"                          { return ToYLexer.NOT; }
+"=="                           { return ToYLexer.EQ; }
+"<"                            { return ToYLexer.LT; }
+">"                            { return ToYLexer.GT; }
+"<="                           { return ToYLexer.LE; }
+">="                           { return ToYLexer.GE; }
+"!="                           { return ToYLexer.NE; }
+"="                            { return ToYLexer.ASSIGN; }
 
 /* symbols */
-"{"                            { return new Yytoken("LEFTCURLY"); }
-"}"                            { return new Yytoken("RIGHTCURLY"); }
-";"                            { return new Yytoken("SEMICOLON"); }
-"("                            { return new Yytoken("LEFT"); }
-")"                            { return new Yytoken("RIGHT"); }
-"."                            { return new Yytoken("PERIOD"); }
+"{"                            { return ToYLexer.LEFTCURLY; }
+"}"                            { return ToYLexer.RIGHTCURLY; }
+";"                            { return ToYLexer.SEMICOLON; }
+"("                            { return ToYLexer.LEFT; }
+")"                            { return ToYLexer.RIGHT; }
+"."                            { return ToYLexer.PERIOD; }
 
 /* comments */
 "//".*                         { }
 "##".*                         { }
 
 /* whitespace */
-{WhiteSpace}                   { /* ignore */ }
+{WhiteSpace}                   { }
 
 /* identifier <id> */
-{Identifier}                   { return new Yytoken("IDENTIFIER"); }
+{Identifier}                   { return ToYLexer.IDENTIFIER; }
 
 /* integer literals */
 {Integer}                      { String input = yytext();
@@ -116,12 +121,12 @@ LineTerminator = \r|\n|\r\n
                                  if (inputInt < -32768 || inputInt > 32767) {
                                    throw new Error("Integer <"+yytext()+"> out of bounds");         
                                  } else {
-                                   return new Yytoken("INTEGER_LITERAL");
+                                   return ToYLexer.INTEGER_LITERAL;
                                  }
                                }
 
 /* string literals */
-\"{StringCharacter}\"          { return new Yytoken("STRING_LITERAL"); }
+\"{StringCharacter}\"          { return ToYLexer.STRING_LITERAL; }
 
 }
 

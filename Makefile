@@ -1,20 +1,8 @@
-.SUFFIXES: .java .class
-.java.class:
-	javac $<
-
-CLASSES = Yylex.java
-
-TEST_FILES = \
-	validTestCases \
-
 default:
 	clear
 	jflex ToY.l
+	bison ToY.y -L java
 	javac *.java
-
-test: $(CLASSES)
-	@set -e; \
-	for file in $(TEST_FILES); do java Yylex $$file; done;
-
-clean: 
-	rm *.java *.class *.java\~
+	
+clean:
+	rm ToY.java *.class Yylex.java Yylex.java\~

@@ -1,11 +1,10 @@
 %language "Java"
 
-/* Definitions */
-%define api.parser.class {ToYParser}
+%define api.prefix {ToY}
+%define api.parser.class {ToY}
 %define api.parser.public
 %define parse.error verbose
 
-/* Libraries to import */
 %code imports {
     import java.io.IOException;
     import java.io.InputStream;
@@ -14,85 +13,53 @@
     import java.io.StreamTokenizer;
 }
 
-/* Main code */
 %code {
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
-        ToYParser parser = new ToYParser(lexer);
-        if (!parser.parse())
-            System.out.println("INVALID");
+        ToY parser = new ToY(lexer);
+        if (parser.parse())
+            System.out.println("VALID");
+        else {
+            System.out.println("ERROR");
+        }
+        return;
 	} 
 }
 
-/* Bison declarations */
-%token <Integer> NUM
-%type <Integer> exp
-%type <Integer> int
-%type <Boolean> bool
-%type <String> string
-%type id
-%type void
-%token FOR IF ELSE THEN RETURN PRINTF NEG TRUE FALSE MOD AND OR
+%token BOOL INT TRUE FALSE VOID PRINTF STRING STRUCT IF THEN ELSE FOR RETURN
+%token PLUS MINUS TIMES DIVIDE MOD AND OR NOT EQ LT GT LE GE NE ASSIGN
+%token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT PERIOD
+%token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
 
 
 %%  
 
-/* Grammar rules section */
-input: line | input line;
+assignment
+    : INT IDENTIFIER SEMICOLON
+;
 
-line
-    : '\n'
-    | exp '\n'              { System.out.println($exp); }
-    | error '\n'
-    ;
+type : INT | BOOL | STRING | IDENTIFIER;
 
-//are intLiteral and stringLiteral types to be declared? 
-exp
-    : NUM                   { $$ = $1; }
-    | exp '=' exp           { if ($1.intValue() != $3.intValue()) yyerror("calc: error: " + $1 + " != " + $3); }
-    | exp '+' exp           { $$ = $1 + $3; }
-    | exp '-' exp           { $$ = $1 - $3; }
-    | exp '*' exp           { $$ = $1 * $3; }
-    | exp '/' exp           { $$ = $1 / $3; }
-    | '-' exp %prec NEG     { $$ = -$2; }
-    | exp '^' exp           { $$ = (int) Math.pow($1, $3); }
-    | '(' exp ')'           { $$ = $2; }
-    | '(' error ')'         { $$ = 1111; }
-    | '!'                   { $$ = 0; return YYERROR; }
-    | '-' error             { $$ = 0; return YYERROR; }
-    | intLiteral
-    | stringLiteral
-    | TRUE
-    | FALSE
-    | exp op exp 
-    | '-' exp 
-    | '!' exp 
-    | lExp
-    | '(exp)'
-    ;
+returnType : type | VOID;
 
-type : int | bool | string | id;
+struct : struct IDENTIFIER          { < declaration >, < declaration > ,... };
 
-returnType : type | void;
+declaration : type IDENTIFIER;
 
-struct : struct id          { < declaration >, < declaration > ,... };
-
-declaration : type id;
-
-proc : returnType id '(' declaration ')' { < statement > };
+proc : returnType IDENTIFIER '(' declaration ')' { < statement > };
 
 //had to change stmt to statement and expr to exp, not sure if this is correct
 //also removed the (,...) in places, idk if this will affect things
-statement : FOR '('id '=' exp ; exp ; statement ')' statement
+statement : FOR '('IDENTIFIER '=' exp ; exp ; statement ')' statement
 | IF '('exp')' THEN statement
 | IF '('exp')' THEN statement ELSE statement
-| PRINTF '('string')';
+| PRINTF '('STRING')';
 | RETURN exp;
 | { statementSeq } 
-| type id ; 
+| type IDENTIFIER ; 
 | lExp '=' exp ; 
-| id '('exp ')'; 
-| id '=' id '(' exp ')'; 
+| IDENTIFIER '('exp ')'; 
+| IDENTIFIER '=' IDENTIFIER '(' exp ')'; 
 
 
 statementSeq :
@@ -100,7 +67,7 @@ statementSeq :
 ;
 
 
-lExp : id | id '.' lExp 
+lExp : IDENTIFIER | IDENTIFIER '.' lExp 
 ;
 
 pgm : proc pgm1
@@ -112,25 +79,22 @@ pgm1 :
 | struct pgm1
 ;
 
-//Combined this with previous declaration of exp
-/* exp : intLiteral
-| stringLiteral
-| true
-| false
+exp : INTEGER_LITERAL
+| STRING_LITERAL
+| TRUE
+| FALSE
 | exp op exp 
 | '-' exp 
 | '!' exp 
 | lExp
 | '(exp)'
-; */
+;
 
-//Are these operators meant to be in quotation marks?
-op : '+' | '-'| '*'| '/' | MOD | AND | OR | '==' | '>' | '<' | '>=' | '<='| '!='
+op : PLUS | MINUS| TIMES| DIVIDE | MOD | AND | OR | EQ | GT | LT | GE | LE| NE
 ;
 
 %%
 
-/* Additional Java code */
 class ToYLexer implements ToY.Lexer {
     InputStreamReader it;
     Yylex yylex;
@@ -145,16 +109,13 @@ class ToYLexer implements ToY.Lexer {
         System.err.println(s);
     }
 
-    ParserToken yylval;
     @Override
     public Object getLVal() {
-        /* Returns the semantic value of the last token that yylex returned. */
-        return yylval;
+        return null;
     }
 
     @Override
-    public int yylex () throws IOException{
-        /* Returns the next token. Here we get the next Token from the Lexer. */
+    public int yylex() throws IOException{
         return yylex.yylex();
     }
 }
