@@ -1,4 +1,3 @@
 void main() {
     int myInt;
-    myInt = 3;
 }

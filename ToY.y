@@ -72,7 +72,7 @@ type
 /* Come back - identifiers of structs need to be treated different to other variable identifiers */
 /* structId should be value of IDENTIFIER - but has extra check if it is a struct identifier */
 structId
-    : STRUCT IDENTIFIER         { $$ = $2; }
+    : STRUCT IDENTIFIER         /*{ $$ = $2; }*/
 ;
 
 returnType
