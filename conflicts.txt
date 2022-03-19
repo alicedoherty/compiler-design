@@ -1,0 +1,17 @@
+ToY.y: warning: 1 shift/reduce conflict [-Wconflicts-sr]
+ToY.y: warning: shift/reduce conflict on token ASSIGN [-Wcounterexamples]
+time limit exceeded: 6.000000
+  First example: returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY IDENTIFIER • ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON RIGHTCURLY $end
+  Shift derivation
+    $accept
+    ↳ 0: proc                                                                                                                                   $end
+         ↳ 17: returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY statement                                                     RIGHTCURLY
+                                                                       ↳ 27: IDENTIFIER • ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON
+  Second example: returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY IDENTIFIER • ASSIGN exp SEMICOLON RIGHTCURLY pgm1 $end
+  Reduce derivation
+    $accept
+    ↳ 0: pgm                                                                                                                              $end
+         ↳ 1: proc                                                                                                                   pgm1
+              ↳ 17: returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY statement                                     RIGHTCURLY
+                                                                            ↳ 25: lExp               ASSIGN exp SEMICOLON
+                                                                                  ↳ 30: IDENTIFIER •

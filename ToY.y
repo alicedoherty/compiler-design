@@ -27,9 +27,26 @@
 }
 
 %token BOOL INT TRUE FALSE VOID PRINTF STRING STRUCT IF THEN ELSE FOR RETURN
-%token PLUS MINUS TIMES DIVIDE MOD AND OR NOT EQ LT GT LE GE NE ASSIGN
-%token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT PERIOD
+%token ASSIGN
+%token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
+
+/* These defintions declare the associativity as well as precedence from LOWEST to HIGHEST */
+%left PERIOD
+%left MOD AND OR
+%nonassoc EQ LT GT LE GE NE
+%left PLUS MINUS
+%left TIMES DIVIDE
+
+/* Need to be able to differentiate between unary minus and binary minus */
+/* e.g add UMINUS token? */
+%precedence NOT
+
+/* To deal with shift/reduce conflict in IF/THEN statements */
+/* The else branch belongs to the LAST if-statement (see p. 188 Intro to Flex and Bison) */
+/* i.e read as: IF (cond) {IF (cond) stmt ELSE stmt} */
+%nonassoc THEN
+%nonassoc ELSE
 
 %%  
 
@@ -39,7 +56,7 @@ pgm
 ;
 
 pgm1
-    :
+    : /* nothing */
     | proc pgm1
     | struct pgm1
 ;
@@ -49,7 +66,13 @@ type
     : INT 
     | BOOL 
     | STRING 
-    /*| IDENTIFIER*/
+    | structId
+;
+
+/* Come back - identifiers of structs need to be treated different to other variable identifiers */
+/* structId should be value of IDENTIFIER - but has extra check if it is a struct identifier */
+structId
+    : STRUCT IDENTIFIER         { $$ = $2; }
 ;
 
 returnType
@@ -69,7 +92,7 @@ declaration
 ;
 
 declaration1
-    : 
+    : /* nothing */
     | declaration
 ;
 
@@ -77,13 +100,10 @@ proc
     : returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY statement RIGHTCURLY
 ;
 
-/* had to change stmt to statement and expr to exp, not sure if this is correct
-also removed the (,...) in places, idk if this will affect things */
-
 /* First statement inside for-construct is optional */
-/* Look at lecture/books for info about shift-reduce/reduce-reduce conflicts */
 /* IDENTIFIER in assignment needs to already be declared */
 /* Variables declared inside compound/for/if statement cannot be used outside of it */
+
 statement
     : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement
     | IF LEFT exp RIGHT THEN statement
@@ -95,12 +115,12 @@ statement
     | lExp ASSIGN exp SEMICOLON
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
     | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON 
-
-statementSeq
-    :
-    | statement statementSeq
 ;
 
+statementSeq
+    : /* nothing */
+    | statement statementSeq
+;
 
 lExp
     : IDENTIFIER
@@ -113,15 +133,18 @@ exp
     | STRING_LITERAL
     | TRUE
     | FALSE
-    | exp op exp 
+    /*| exp op exp*/
     | MINUS exp 
-    | NOT exp 
+    | calcExp
+    | logicalExp
+    | comparisonExp
+    /*| NOT exp*/
     | lExp
     | LEFT exp RIGHT
 ;
 
-/* Add precedence and associativity rules */
-op 
+/* Temporary - remove when calcExp, logicalExp, and comparisonExp are working */
+/*op 
     : PLUS
     | MINUS
     | TIMES
@@ -136,6 +159,30 @@ op
     | LE
     | NE
 ;
+*/
+
+calcExp
+    : INTEGER_LITERAL
+    | calcExp PLUS calcExp       /* { $$ = $1 + $3; } */
+    | calcExp MINUS calcExp      /* { $$ = $1 - $3; } */
+    | calcExp TIMES calcExp      /* { $$ = $1 * $3; } */
+    | calcExp DIVIDE calcExp     /* { $$ = $1 / $3; } */
+    | calcExp MOD calcExp        /* { $$ = $1 % $3; } */
+;
+
+/* Need to check it is a boolean expression */
+logicalExp
+    : exp AND exp        /*{ $$ = $1 && $3; }*/
+    | exp OR exp         /*{ $$ = $1 || $3; }*/
+    | NOT exp            /*{ $$ = ! $2; }*/
+
+comparisonExp
+    : exp EQ exp         /*{ $$ = $1 == $3; }*/
+    | exp GT exp         /*{ $$ = $1 > $3; }*/
+    | exp LT exp         /*{ $$ = $1 < $3; }*/
+    | exp GE exp         /*{ $$ = $1 >= $3; }*/
+    | exp LE exp         /*{ $$ = $1 <= $3; }*/
+    | exp NE exp         /*{ $$ = $1 != $3; }*/
 
 %%
 

@@ -24,6 +24,7 @@ brew install bison
 - [Intro to Flex and Bison (C++)](https://www.oreilly.com/library/view/flex-bison/9780596805418/ch01.html)
 - [GitHub Bison Examples](https://github.com/valecor95/bison-flex-jflex-examples)
 - [Bison Manual](https://www.gnu.org/software/bison/manual/bison.html#Java-Parsers)
+- [Compiler Construction using Flex and Bison](https://www.admb-project.org/tools/flex/compiler.pdf)
 
 ## Commands
 ### Using Makefile
@@ -41,3 +42,6 @@ bison ToY.y -L java
 javac *.java
 java ToY < validParserTestCases
 ```
+
+## Notes
+See `conflicts.txt` for current shift/reduce conflicts

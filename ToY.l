@@ -88,7 +88,7 @@ LineTerminator = \r|\n|\r\n
 "and"                          { return ToYLexer.AND; }
 "or"                           { return ToYLexer.OR; }
 /* ! at top of projetc spec but 'not' later */
-"not"                          { return ToYLexer.NOT; }
+"!"                            { return ToYLexer.NOT; }
 "=="                           { return ToYLexer.EQ; }
 "<"                            { return ToYLexer.LT; }
 ">"                            { return ToYLexer.GT; }
