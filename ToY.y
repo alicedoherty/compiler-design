@@ -11,6 +11,7 @@
     import java.io.InputStreamReader;
     import java.io.Reader;
     import java.io.StreamTokenizer;
+    import ToY.AST;
 }
 
 %code {
@@ -22,6 +23,9 @@
         else {
             System.out.println("ERROR");
         }
+
+        AST ast = new AST();
+
         return;
 	} 
 }
@@ -35,8 +39,8 @@
 %left PERIOD
 %left MOD AND OR
 %nonassoc EQ LT GT LE GE NE
-%left PLUS MINUS
 %left TIMES DIVIDE
+%left PLUS MINUS
 
 /* Need to be able to differentiate between unary minus and binary minus */
 /* e.g add UMINUS token? */
