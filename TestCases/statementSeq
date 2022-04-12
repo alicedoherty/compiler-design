@@ -1,0 +1,6 @@
+void main() {
+    {
+        int myInt;
+        string myString;
+    }
+}

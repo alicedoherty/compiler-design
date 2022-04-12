@@ -34,6 +34,7 @@
 %token ASSIGN
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
+%token COMMA
 
 /* Need to be able to differentiate between unary minus and binary minus */
 /* e.g add UMINUS token? */
@@ -67,17 +68,17 @@ pgm1
 
 /* Only struct identifiers count as a type - not all IDENTIFIERs */
 type
-    : INT 
-    | BOOL 
-    | STRING 
-    | structId
+    : INT           {System.out.println("INT");}
+    | BOOL          {System.out.println("BOOL");}
+    | STRING        {System.out.println("STRING");}
+    | STRUCT        {System.out.println("STRUCT");}
 ;
 
 /* Come back - identifiers of structs need to be treated different to other variable identifiers */
 /* structId should be value of IDENTIFIER - but has extra check if it is a struct identifier */
-structId
-    : STRUCT IDENTIFIER         /*{ $$ = $2; }*/
-;
+/*structId
+    : IDENTIFIER        {System.out.println("<struct IDENTIFIER>");}
+;*/
 
 returnType
     : type 
@@ -86,22 +87,28 @@ returnType
 
 /* Struct has at least one declaration */
 struct
-    : STRUCT IDENTIFIER LEFTCURLY declaration RIGHTCURLY
+    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY
 ;
 
 /* Multiple declarations are comma separated */
 /* Cannot have declarations with same identifier */
 declaration
-    : type IDENTIFIER
+    : type IDENTIFIER        
 ;
 
-declaration1
+/* Check if both declarationZeroPlus and declarationOnePlus */
+declarationZeroPlus
     : /* nothing */
     | declaration
+    | declaration COMMA declarationOnePlus
 ;
 
+declarationOnePlus
+    : declaration
+    | declaration COMMA declarationOnePlus
+
 proc
-    : returnType IDENTIFIER LEFT declaration1 RIGHT LEFTCURLY statement RIGHTCURLY
+    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY   {System.out.println("proc");}
 ;
 
 /* First statement inside for-construct is optional */
@@ -114,6 +121,8 @@ statement
     | IF LEFT exp RIGHT THEN statement ELSE statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
+    | IDENTIFIER ASSIGN exp SEMICOLON                   {System.out.println("statement IDENTIFIER ASSIGN exp SEMICOLON");}
+    /* Check about {} around this */
     | LEFTCURLY statementSeq RIGHTCURLY
     | type IDENTIFIER SEMICOLON 
     | lExp ASSIGN exp SEMICOLON
@@ -134,7 +143,8 @@ lExp
 /* Define different expressions for type checking or delegate to type checker */
 exp
     : INTEGER_LITERAL
-    | STRING_LITERAL
+    /* Not string literal? */
+    | IDENTIFIER
     | TRUE
     | FALSE
     /*| exp op exp*/
@@ -167,6 +177,8 @@ exp
 
 calcExp
     : INTEGER_LITERAL
+    /* Not string literal? */
+    | IDENTIFIER
     | calcExp PLUS calcExp       /* { $$ = $1 + $3; } */
     | calcExp MINUS calcExp      /* { $$ = $1 - $3; } */
     | calcExp TIMES calcExp      /* { $$ = $1 * $3; } */

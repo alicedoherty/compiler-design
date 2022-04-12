@@ -104,6 +104,7 @@ LineTerminator = \r|\n|\r\n
 "("                            { return ToYLexer.LEFT; }
 ")"                            { return ToYLexer.RIGHT; }
 "."                            { return ToYLexer.PERIOD; }
+","                            { return ToYLexer.COMMA; }
 
 /* comments */
 "//".*                         { }
