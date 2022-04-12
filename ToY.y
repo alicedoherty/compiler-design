@@ -35,16 +35,16 @@
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
 
+/* Need to be able to differentiate between unary minus and binary minus */
+/* e.g add UMINUS token? */
+%precedence NOT
+
 /* These defintions declare the associativity as well as precedence from LOWEST to HIGHEST */
 %left PERIOD
 %left MOD AND OR
 %nonassoc EQ LT GT LE GE NE
-%left TIMES DIVIDE
 %left PLUS MINUS
-
-/* Need to be able to differentiate between unary minus and binary minus */
-/* e.g add UMINUS token? */
-%precedence NOT
+%left TIMES DIVIDE
 
 /* To deal with shift/reduce conflict in IF/THEN statements */
 /* The else branch belongs to the LAST if-statement (see p. 188 Intro to Flex and Bison) */
