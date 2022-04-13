@@ -1,4 +1,3 @@
-# Check if it should work with main() first then struct
 struct MyStruct {
     int myInt, int secondInt, string mystring
 }

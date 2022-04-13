@@ -26,6 +26,15 @@ brew install bison
 - [Bison Manual](https://www.gnu.org/software/bison/manual/bison.html#Java-Parsers)
 - [Compiler Construction using Flex and Bison](https://www.admb-project.org/tools/flex/compiler.pdf)
 
+### Part 3: Semantic Analysis
+- [Parser and AST Assignment](https://courses.cs.washington.edu/courses/csep501/14sp/project/parser-ast.html)
+- [Reflex Bison AST](https://github.com/UO-cis561/reflex-bison-ast)
+- [AST Assignment](https://people.cs.pitt.edu/~jmisurda/teaching/cs2210/2134/cs2210-2134-project2.htm)
+- [Compiler Slides](http://web.cecs.pdx.edu/~harry/compilers/slides/) (specifically "Project4.pdf")
+- [Bison Printing Semantic Values](https://www.gnu.org/software/bison/manual/bison.html#Printer-Decl)
+- [Flex Bison Book Examples](https://github.com/mbbill/flexbison/tree/master/flexbison)
+- [Symbol Table Assignment](https://cs.gmu.edu/~dnord/cs440-540/cpaxi2.html)
+
 ## Commands
 ### Using Makefile
 

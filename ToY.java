@@ -104,48 +104,47 @@ public class ToY
     S_ELSE(13),                    /* ELSE  */
     S_FOR(14),                     /* FOR  */
     S_RETURN(15),                  /* RETURN  */
-    S_ASSIGN(16),                  /* ASSIGN  */
-    S_LEFTCURLY(17),               /* LEFTCURLY  */
-    S_RIGHTCURLY(18),              /* RIGHTCURLY  */
-    S_SEMICOLON(19),               /* SEMICOLON  */
-    S_LEFT(20),                    /* LEFT  */
-    S_RIGHT(21),                   /* RIGHT  */
-    S_IDENTIFIER(22),              /* IDENTIFIER  */
-    S_INTEGER_LITERAL(23),         /* INTEGER_LITERAL  */
-    S_STRING_LITERAL(24),          /* STRING_LITERAL  */
-    S_COMMA(25),                   /* COMMA  */
-    S_NOT(26),                     /* NOT  */
-    S_PERIOD(27),                  /* PERIOD  */
-    S_MOD(28),                     /* MOD  */
-    S_AND(29),                     /* AND  */
-    S_OR(30),                      /* OR  */
-    S_EQ(31),                      /* EQ  */
-    S_LT(32),                      /* LT  */
-    S_GT(33),                      /* GT  */
-    S_LE(34),                      /* LE  */
-    S_GE(35),                      /* GE  */
-    S_NE(36),                      /* NE  */
-    S_PLUS(37),                    /* PLUS  */
-    S_MINUS(38),                   /* MINUS  */
-    S_TIMES(39),                   /* TIMES  */
-    S_DIVIDE(40),                  /* DIVIDE  */
-    S_YYACCEPT(41),                /* $accept  */
-    S_pgm(42),                     /* pgm  */
-    S_pgm1(43),                    /* pgm1  */
-    S_type(44),                    /* type  */
-    S_returnType(45),              /* returnType  */
-    S_struct(46),                  /* struct  */
-    S_declaration(47),             /* declaration  */
-    S_declarationZeroPlus(48),     /* declarationZeroPlus  */
-    S_declarationOnePlus(49),      /* declarationOnePlus  */
-    S_proc(50),                    /* proc  */
-    S_statement(51),               /* statement  */
-    S_statementSeq(52),            /* statementSeq  */
-    S_lExp(53),                    /* lExp  */
-    S_exp(54),                     /* exp  */
-    S_calcExp(55),                 /* calcExp  */
-    S_logicalExp(56),              /* logicalExp  */
-    S_comparisonExp(57);           /* comparisonExp  */
+    S_LEFTCURLY(16),               /* LEFTCURLY  */
+    S_RIGHTCURLY(17),              /* RIGHTCURLY  */
+    S_SEMICOLON(18),               /* SEMICOLON  */
+    S_LEFT(19),                    /* LEFT  */
+    S_RIGHT(20),                   /* RIGHT  */
+    S_IDENTIFIER(21),              /* IDENTIFIER  */
+    S_INTEGER_LITERAL(22),         /* INTEGER_LITERAL  */
+    S_STRING_LITERAL(23),          /* STRING_LITERAL  */
+    S_COMMA(24),                   /* COMMA  */
+    S_PERIOD(25),                  /* PERIOD  */
+    S_MOD(26),                     /* MOD  */
+    S_AND(27),                     /* AND  */
+    S_OR(28),                      /* OR  */
+    S_EQ(29),                      /* EQ  */
+    S_LT(30),                      /* LT  */
+    S_GT(31),                      /* GT  */
+    S_LE(32),                      /* LE  */
+    S_GE(33),                      /* GE  */
+    S_NE(34),                      /* NE  */
+    S_ASSIGN(35),                  /* ASSIGN  */
+    S_TIMES(36),                   /* TIMES  */
+    S_DIVIDE(37),                  /* DIVIDE  */
+    S_PLUS(38),                    /* PLUS  */
+    S_MINUS(39),                   /* MINUS  */
+    S_NOT(40),                     /* NOT  */
+    S_UMINUS(41),                  /* UMINUS  */
+    S_YYACCEPT(42),                /* $accept  */
+    S_pgm(43),                     /* pgm  */
+    S_pgm1(44),                    /* pgm1  */
+    S_type(45),                    /* type  */
+    S_structName(46),              /* structName  */
+    S_returnType(47),              /* returnType  */
+    S_struct(48),                  /* struct  */
+    S_declaration(49),             /* declaration  */
+    S_declarationZeroPlus(50),     /* declarationZeroPlus  */
+    S_declarationOnePlus(51),      /* declarationOnePlus  */
+    S_proc(52),                    /* proc  */
+    S_statement(53),               /* statement  */
+    S_statementSeq(54),            /* statementSeq  */
+    S_lExp(55),                    /* lExp  */
+    S_exp(56);                     /* exp  */
 
 
     private final int yycode_;
@@ -171,7 +170,6 @@ public class ToY
       SymbolKind.S_ELSE,
       SymbolKind.S_FOR,
       SymbolKind.S_RETURN,
-      SymbolKind.S_ASSIGN,
       SymbolKind.S_LEFTCURLY,
       SymbolKind.S_RIGHTCURLY,
       SymbolKind.S_SEMICOLON,
@@ -181,7 +179,6 @@ public class ToY
       SymbolKind.S_INTEGER_LITERAL,
       SymbolKind.S_STRING_LITERAL,
       SymbolKind.S_COMMA,
-      SymbolKind.S_NOT,
       SymbolKind.S_PERIOD,
       SymbolKind.S_MOD,
       SymbolKind.S_AND,
@@ -192,14 +189,18 @@ public class ToY
       SymbolKind.S_LE,
       SymbolKind.S_GE,
       SymbolKind.S_NE,
-      SymbolKind.S_PLUS,
-      SymbolKind.S_MINUS,
+      SymbolKind.S_ASSIGN,
       SymbolKind.S_TIMES,
       SymbolKind.S_DIVIDE,
+      SymbolKind.S_PLUS,
+      SymbolKind.S_MINUS,
+      SymbolKind.S_NOT,
+      SymbolKind.S_UMINUS,
       SymbolKind.S_YYACCEPT,
       SymbolKind.S_pgm,
       SymbolKind.S_pgm1,
       SymbolKind.S_type,
+      SymbolKind.S_structName,
       SymbolKind.S_returnType,
       SymbolKind.S_struct,
       SymbolKind.S_declaration,
@@ -209,10 +210,7 @@ public class ToY
       SymbolKind.S_statement,
       SymbolKind.S_statementSeq,
       SymbolKind.S_lExp,
-      SymbolKind.S_exp,
-      SymbolKind.S_calcExp,
-      SymbolKind.S_logicalExp,
-      SymbolKind.S_comparisonExp
+      SymbolKind.S_exp
     };
 
     static final SymbolKind get(int code) {
@@ -264,13 +262,13 @@ public class ToY
     {
   "\"end of file\"", "error", "\"invalid token\"", "BOOL", "INT", "TRUE",
   "FALSE", "VOID", "PRINTF", "STRING", "STRUCT", "IF", "THEN", "ELSE",
-  "FOR", "RETURN", "ASSIGN", "LEFTCURLY", "RIGHTCURLY", "SEMICOLON",
-  "LEFT", "RIGHT", "IDENTIFIER", "INTEGER_LITERAL", "STRING_LITERAL",
-  "COMMA", "NOT", "PERIOD", "MOD", "AND", "OR", "EQ", "LT", "GT", "LE",
-  "GE", "NE", "PLUS", "MINUS", "TIMES", "DIVIDE", "$accept", "pgm", "pgm1",
-  "type", "returnType", "struct", "declaration", "declarationZeroPlus",
-  "declarationOnePlus", "proc", "statement", "statementSeq", "lExp", "exp",
-  "calcExp", "logicalExp", "comparisonExp", null
+  "FOR", "RETURN", "LEFTCURLY", "RIGHTCURLY", "SEMICOLON", "LEFT", "RIGHT",
+  "IDENTIFIER", "INTEGER_LITERAL", "STRING_LITERAL", "COMMA", "PERIOD",
+  "MOD", "AND", "OR", "EQ", "LT", "GT", "LE", "GE", "NE", "ASSIGN",
+  "TIMES", "DIVIDE", "PLUS", "MINUS", "NOT", "UMINUS", "$accept", "pgm",
+  "pgm1", "type", "structName", "returnType", "struct", "declaration",
+  "declarationZeroPlus", "declarationOnePlus", "proc", "statement",
+  "statementSeq", "lExp", "exp", null
     };
   }
 
@@ -320,56 +318,58 @@ public class ToY
     static final int FOR = 269;
     /** Token RETURN, to be returned by the scanner.  */
     static final int RETURN = 270;
-    /** Token ASSIGN, to be returned by the scanner.  */
-    static final int ASSIGN = 271;
     /** Token LEFTCURLY, to be returned by the scanner.  */
-    static final int LEFTCURLY = 272;
+    static final int LEFTCURLY = 271;
     /** Token RIGHTCURLY, to be returned by the scanner.  */
-    static final int RIGHTCURLY = 273;
+    static final int RIGHTCURLY = 272;
     /** Token SEMICOLON, to be returned by the scanner.  */
-    static final int SEMICOLON = 274;
+    static final int SEMICOLON = 273;
     /** Token LEFT, to be returned by the scanner.  */
-    static final int LEFT = 275;
+    static final int LEFT = 274;
     /** Token RIGHT, to be returned by the scanner.  */
-    static final int RIGHT = 276;
+    static final int RIGHT = 275;
     /** Token IDENTIFIER, to be returned by the scanner.  */
-    static final int IDENTIFIER = 277;
+    static final int IDENTIFIER = 276;
     /** Token INTEGER_LITERAL, to be returned by the scanner.  */
-    static final int INTEGER_LITERAL = 278;
+    static final int INTEGER_LITERAL = 277;
     /** Token STRING_LITERAL, to be returned by the scanner.  */
-    static final int STRING_LITERAL = 279;
+    static final int STRING_LITERAL = 278;
     /** Token COMMA, to be returned by the scanner.  */
-    static final int COMMA = 280;
-    /** Token NOT, to be returned by the scanner.  */
-    static final int NOT = 281;
+    static final int COMMA = 279;
     /** Token PERIOD, to be returned by the scanner.  */
-    static final int PERIOD = 282;
+    static final int PERIOD = 280;
     /** Token MOD, to be returned by the scanner.  */
-    static final int MOD = 283;
+    static final int MOD = 281;
     /** Token AND, to be returned by the scanner.  */
-    static final int AND = 284;
+    static final int AND = 282;
     /** Token OR, to be returned by the scanner.  */
-    static final int OR = 285;
+    static final int OR = 283;
     /** Token EQ, to be returned by the scanner.  */
-    static final int EQ = 286;
+    static final int EQ = 284;
     /** Token LT, to be returned by the scanner.  */
-    static final int LT = 287;
+    static final int LT = 285;
     /** Token GT, to be returned by the scanner.  */
-    static final int GT = 288;
+    static final int GT = 286;
     /** Token LE, to be returned by the scanner.  */
-    static final int LE = 289;
+    static final int LE = 287;
     /** Token GE, to be returned by the scanner.  */
-    static final int GE = 290;
+    static final int GE = 288;
     /** Token NE, to be returned by the scanner.  */
-    static final int NE = 291;
-    /** Token PLUS, to be returned by the scanner.  */
-    static final int PLUS = 292;
-    /** Token MINUS, to be returned by the scanner.  */
-    static final int MINUS = 293;
+    static final int NE = 289;
+    /** Token ASSIGN, to be returned by the scanner.  */
+    static final int ASSIGN = 290;
     /** Token TIMES, to be returned by the scanner.  */
-    static final int TIMES = 294;
+    static final int TIMES = 291;
     /** Token DIVIDE, to be returned by the scanner.  */
-    static final int DIVIDE = 295;
+    static final int DIVIDE = 292;
+    /** Token PLUS, to be returned by the scanner.  */
+    static final int PLUS = 293;
+    /** Token MINUS, to be returned by the scanner.  */
+    static final int MINUS = 294;
+    /** Token NOT, to be returned by the scanner.  */
+    static final int NOT = 295;
+    /** Token UMINUS, to be returned by the scanner.  */
+    static final int UMINUS = 296;
 
     /** Deprecated, use YYEOF instead.  */
     public static final int EOF = YYEOF;
@@ -569,48 +569,34 @@ public class ToY
       {
           case 7: /* type: INT  */
   if (yyn == 7)
-    /* "ToY.y":71  */
+    /* "ToY.y":74  */
                     {System.out.println("INT");};
   break;
 
 
   case 8: /* type: BOOL  */
   if (yyn == 8)
-    /* "ToY.y":72  */
+    /* "ToY.y":75  */
                     {System.out.println("BOOL");};
   break;
 
 
   case 9: /* type: STRING  */
   if (yyn == 9)
-    /* "ToY.y":73  */
+    /* "ToY.y":76  */
                     {System.out.println("STRING");};
   break;
 
 
-  case 10: /* type: STRUCT  */
-  if (yyn == 10)
-    /* "ToY.y":74  */
-                    {System.out.println("STRUCT");};
-  break;
-
-
-  case 20: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
-  if (yyn == 20)
-    /* "ToY.y":111  */
+  case 21: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
+  if (yyn == 21)
+    /* "ToY.y":113  */
                                                                                             {System.out.println("proc");};
   break;
 
 
-  case 26: /* statement: IDENTIFIER ASSIGN exp SEMICOLON  */
-  if (yyn == 26)
-    /* "ToY.y":124  */
-                                                        {System.out.println("statement IDENTIFIER ASSIGN exp SEMICOLON");};
-  break;
 
-
-
-/* "ToY.java":614  */
+/* "ToY.java":600  */
 
         default: break;
       }
@@ -1022,8 +1008,8 @@ public class ToY
     return yyvalue == yytable_ninf_;
   }
 
-  private static final short yypact_ninf_ = -45;
-  private static final short yytable_ninf_ = -48;
+  private static final short yypact_ninf_ = -46;
+  private static final short yytable_ninf_ = -1;
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
@@ -1032,20 +1018,19 @@ public class ToY
   {
     return new short[]
     {
-      81,   -45,   -45,   -45,   -45,   -10,    49,   -45,     8,    81,
-      81,    23,   -45,    45,   -45,   -45,    81,    81,   103,   103,
-     -45,   -45,   -45,    34,    46,    43,    52,    58,   -45,   103,
-     -45,   103,    66,   -45,   -45,   116,    69,    83,    84,    21,
-     116,     1,   100,    87,   112,   108,    21,   113,   -45,   -45,
-      21,   -24,    14,    21,    21,   -45,   110,    36,   -45,   -45,
-     116,   146,    40,    21,   114,   115,   -45,    21,   141,   178,
-     174,   194,   153,   -45,   -45,    21,    21,    21,    21,    21,
-      21,    21,    21,   -15,   -15,   -15,   -15,   -15,   -45,   -45,
-      30,   118,   210,   193,   -45,   -45,   136,   187,   209,    21,
-     -45,   125,   125,   169,   169,   169,   169,   169,   169,   -45,
-     -45,   179,    41,    41,   -45,   -45,    21,   -45,   203,   -45,
-     -45,   116,   144,   226,   -45,   219,    21,   214,   116,   162,
-     -45,   -45,   116,   213,   116,   -45
+     218,   -46,   -46,   -46,   -46,   -17,   -46,     9,   -46,   -46,
+       6,   218,   218,    32,   -46,    38,   -46,   -46,   218,   218,
+      41,    41,   -46,   -46,    40,    42,    51,    45,    54,   -46,
+      41,   -46,    41,    62,   -46,   -46,     4,    64,    66,    75,
+      37,     4,    30,    60,    72,    76,    89,    37,    74,   -46,
+     -46,    37,    85,   -46,   -46,    37,    37,   -46,    70,     4,
+     110,    37,   107,   108,   126,   -46,    37,   125,   136,   111,
+     151,   -46,   -46,   -46,    37,    37,    37,    37,    37,    37,
+      37,    37,    37,    37,    37,    37,    37,   -46,   -46,   166,
+     -46,   142,   -46,    87,   158,   179,    37,   -46,   204,   204,
+     204,   215,   215,   215,   215,   215,   215,     8,     8,   -46,
+     -46,   188,    37,   -46,   -46,     4,   104,   -46,   181,   203,
+      37,   205,     4,   121,   -46,   -46,     4,   206,     4,   -46
     };
   }
 
@@ -1057,20 +1042,19 @@ public class ToY
   {
     return new byte[]
     {
-       0,     8,     7,    12,     9,     0,     0,    11,     0,     0,
-       4,     0,     1,     0,     3,     2,     4,     4,     0,    15,
-       6,     5,    10,     0,    18,     0,    16,     0,    14,     0,
-      13,     0,     0,    19,    17,     0,     0,     0,     0,     0,
-      32,     0,     0,     0,     0,     0,     0,     0,    38,    39,
-       0,    34,    36,     0,     0,    44,     0,    41,    42,    43,
-      32,     0,     0,     0,     0,     0,    20,     0,     0,     0,
-       0,     0,    55,    40,    25,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    33,    27,
-      34,     0,     0,    34,    35,    28,     0,     0,     0,     0,
-      45,    53,    54,    56,    58,    57,    60,    59,    61,    47,
-      46,    52,    48,    49,    50,    51,     0,    26,     0,    29,
-      24,     0,     0,     0,    30,    22,     0,     0,     0,     0,
-      31,    23,     0,     0,     0,    21
+       0,     8,     7,    13,     9,     0,    11,     0,    12,    10,
+       0,     0,     4,     0,     1,     0,     3,     2,     4,     4,
+       0,    16,     6,     5,     0,    19,     0,    17,     0,    15,
+       0,    14,     0,     0,    20,    18,     0,     0,     0,     0,
+       0,    32,    11,     0,     0,     0,     0,     0,     0,    38,
+      39,     0,    34,    36,    37,     0,     0,    42,     0,    32,
+       0,     0,     0,     0,     0,    21,     0,     0,     0,     0,
+       0,    40,    41,    26,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    33,    27,     0,
+      35,     0,    28,     0,     0,     0,     0,    43,    48,    49,
+      50,    51,    53,    52,    55,    54,    56,    46,    47,    44,
+      45,     0,     0,    29,    25,     0,     0,    30,     0,    23,
+       0,     0,     0,     0,    31,    24,     0,     0,     0,    22
     };
   }
 
@@ -1080,8 +1064,8 @@ public class ToY
   {
     return new short[]
     {
-     -45,   227,    79,    92,   -45,    11,   216,   -45,    -7,    39,
-     -34,   177,   -35,   -44,    31,   -45,   -45
+     -46,   213,    35,    52,   -46,   -46,     3,   208,   -46,    -8,
+      17,   -35,   171,   -36,   -45
     };
   }
 
@@ -1091,8 +1075,8 @@ public class ToY
   {
     return new byte[]
     {
-       0,     6,    15,    42,     8,    16,    24,    27,    25,    17,
-      60,    61,    55,    56,    57,    58,    59
+       0,     7,    17,    43,     9,    10,    18,    25,    28,    26,
+      19,    59,    60,    57,    58
     };
   }
 
@@ -1104,33 +1088,32 @@ public class ToY
   {
     return new short[]
     {
-      44,    43,    69,    64,   -47,    44,    71,   109,   110,    72,
-      73,     9,    11,   -47,   -47,   -47,   -47,    62,    91,    92,
-       9,    63,    33,    96,    34,    44,    48,    49,    64,    94,
-      13,   101,   102,   103,   104,   105,   106,   107,   108,    10,
-      18,    50,   -46,    51,    52,    48,    49,    53,    10,    12,
-     116,   -46,   -46,   -46,   -46,   122,    28,    64,   -47,    54,
-      50,    30,    90,    52,    83,    19,    53,   -47,   -47,   -47,
-     -47,    29,   123,    84,    85,    86,    87,    31,    54,    32,
-      86,    87,   129,    35,     1,     2,    44,   125,     3,    45,
-       4,     5,     7,    44,   131,    20,    21,    44,   133,    44,
-     135,     7,     7,    46,    47,    66,     1,     2,     7,     7,
-      23,    23,     4,    22,   111,   112,   113,   114,   115,     1,
-       2,    23,    65,    23,    36,     4,    22,    37,    67,    74,
-      38,    39,    68,    40,    95,    70,    93,   117,    41,    75,
-      76,    77,    78,    79,    80,    81,    82,    75,    76,    77,
-      78,    79,    80,    81,    82,   119,    77,    78,    79,    80,
-      81,    82,    97,   126,    89,    75,    76,    77,    78,    79,
-      80,    81,    82,    75,    76,    77,    78,    79,    80,    81,
-      82,   132,    75,    76,    77,    78,    79,    80,    81,    82,
-      99,    75,    76,    77,    78,    79,    80,    81,    82,    98,
-     -48,   -48,   -48,   -48,   -48,   -48,   120,    75,    76,    77,
-      78,    79,    80,    81,    82,   100,    84,    85,    86,    87,
-      64,   121,   124,    75,    76,    77,    78,    79,    80,    81,
-      82,   118,   128,   130,   134,    26,    14,    88,     0,    75,
-      76,    77,    78,    79,    80,    81,    82,   127,     0,     0,
-       0,     0,     0,     0,     0,    75,    76,    77,    78,    79,
-      80,    81,    82
+      45,    44,    68,    11,    13,    45,    70,     1,     2,    14,
+      71,    72,    37,     4,    11,    38,    89,    12,    39,    40,
+      41,    93,    34,    45,    35,    42,    90,    15,    12,    98,
+      99,   100,   101,   102,   103,   104,   105,   106,   107,   108,
+     109,   110,    49,    50,     1,     2,    85,    86,    20,    61,
+       4,   116,     8,    22,    23,    62,    51,    21,    52,    53,
+      54,    29,     6,     8,     8,    63,    30,   118,    31,    32,
+       8,     8,    24,    24,    33,   123,    55,    56,    36,    45,
+     119,    64,    24,    46,    24,    47,    45,   125,    73,    65,
+      45,   127,    45,   129,    48,    69,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,   113,    83,    84,    85,    86,
+      62,    66,    67,    74,    75,    76,    77,    78,    79,    80,
+      81,    82,   120,    83,    84,    85,    86,    88,    52,    91,
+      74,    75,    76,    77,    78,    79,    80,    81,    82,   126,
+      83,    84,    85,    86,    92,    94,    96,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,    95,    83,    84,    85,
+      86,   112,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,    97,    83,    84,    85,    86,   114,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,   111,    83,    84,    85,
+      86,   115,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,   121,    83,    84,    85,    86,   117,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,   122,    83,    84,    85,
+      86,     1,     2,   124,    16,     3,   128,     4,     5,    27,
+      87,     0,     0,    77,    78,    79,    80,    81,    82,     6,
+      83,    84,    85,    86,    -1,    -1,    -1,    -1,    -1,    -1,
+       0,    83,    84,    85,    86
     };
   }
 
@@ -1139,33 +1122,32 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new short[]
     {
-      35,    35,    46,    27,    28,    40,    50,    22,    23,    53,
-      54,     0,    22,    37,    38,    39,    40,    16,    62,    63,
-       9,    20,    29,    67,    31,    60,     5,     6,    27,    64,
-      22,    75,    76,    77,    78,    79,    80,    81,    82,     0,
-      17,    20,    28,    22,    23,     5,     6,    26,     9,     0,
-      20,    37,    38,    39,    40,    99,    22,    27,    28,    38,
-      20,    18,    22,    23,    28,    20,    26,    37,    38,    39,
-      40,    25,   116,    37,    38,    39,    40,    25,    38,    21,
-      39,    40,   126,    17,     3,     4,   121,   121,     7,    20,
-       9,    10,     0,   128,   128,    16,    17,   132,   132,   134,
-     134,     9,    10,    20,    20,    18,     3,     4,    16,    17,
-      18,    19,     9,    10,    83,    84,    85,    86,    87,     3,
-       4,    29,    22,    31,     8,     9,    10,    11,    16,    19,
-      14,    15,    24,    17,    19,    22,    22,    19,    22,    29,
-      30,    31,    32,    33,    34,    35,    36,    29,    30,    31,
-      32,    33,    34,    35,    36,    19,    31,    32,    33,    34,
-      35,    36,    21,    19,    18,    29,    30,    31,    32,    33,
-      34,    35,    36,    29,    30,    31,    32,    33,    34,    35,
-      36,    19,    29,    30,    31,    32,    33,    34,    35,    36,
-      16,    29,    30,    31,    32,    33,    34,    35,    36,    21,
-      31,    32,    33,    34,    35,    36,    19,    29,    30,    31,
-      32,    33,    34,    35,    36,    21,    37,    38,    39,    40,
-      27,    12,    19,    29,    30,    31,    32,    33,    34,    35,
-      36,    21,    13,    19,    21,    19,     9,    60,    -1,    29,
-      30,    31,    32,    33,    34,    35,    36,    21,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    29,    30,    31,    32,    33,
-      34,    35,    36
+      36,    36,    47,     0,    21,    41,    51,     3,     4,     0,
+      55,    56,     8,     9,    11,    11,    61,     0,    14,    15,
+      16,    66,    30,    59,    32,    21,    62,    21,    11,    74,
+      75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
+      85,    86,     5,     6,     3,     4,    38,    39,    16,    19,
+       9,    96,     0,    18,    19,    25,    19,    19,    21,    22,
+      23,    21,    21,    11,    12,    35,    24,   112,    17,    24,
+      18,    19,    20,    21,    20,   120,    39,    40,    16,   115,
+     115,    21,    30,    19,    32,    19,   122,   122,    18,    17,
+     126,   126,   128,   128,    19,    21,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,    18,    36,    37,    38,    39,
+      25,    35,    23,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,    18,    36,    37,    38,    39,    17,    21,    21,
+      26,    27,    28,    29,    30,    31,    32,    33,    34,    18,
+      36,    37,    38,    39,    18,    20,    35,    26,    27,    28,
+      29,    30,    31,    32,    33,    34,    20,    36,    37,    38,
+      39,    19,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    20,    36,    37,    38,    39,    18,    26,    27,    28,
+      29,    30,    31,    32,    33,    34,    20,    36,    37,    38,
+      39,    12,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    20,    36,    37,    38,    39,    18,    26,    27,    28,
+      29,    30,    31,    32,    33,    34,    13,    36,    37,    38,
+      39,     3,     4,    18,    11,     7,    20,     9,    10,    21,
+      59,    -1,    -1,    29,    30,    31,    32,    33,    34,    21,
+      36,    37,    38,    39,    29,    30,    31,    32,    33,    34,
+      -1,    36,    37,    38,    39
     };
   }
 
@@ -1176,20 +1158,19 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     3,     4,     7,     9,    10,    42,    44,    45,    46,
-      50,    22,     0,    22,    42,    43,    46,    50,    17,    20,
-      43,    43,    10,    44,    47,    49,    47,    48,    22,    25,
-      18,    25,    21,    49,    49,    17,     8,    11,    14,    15,
-      17,    22,    44,    51,    53,    20,    20,    20,     5,     6,
-      20,    22,    23,    26,    38,    53,    54,    55,    56,    57,
-      51,    52,    16,    20,    27,    22,    18,    16,    24,    54,
-      22,    54,    54,    54,    19,    29,    30,    31,    32,    33,
-      34,    35,    36,    28,    37,    38,    39,    40,    52,    18,
-      22,    54,    54,    22,    53,    19,    54,    21,    21,    16,
-      21,    54,    54,    54,    54,    54,    54,    54,    54,    22,
-      23,    55,    55,    55,    55,    55,    20,    19,    21,    19,
-      19,    12,    54,    54,    19,    51,    19,    21,    13,    54,
-      19,    51,    19,    51,    21,    51
+       0,     3,     4,     7,     9,    10,    21,    43,    45,    46,
+      47,    48,    52,    21,     0,    21,    43,    44,    48,    52,
+      16,    19,    44,    44,    45,    49,    51,    49,    50,    21,
+      24,    17,    24,    20,    51,    51,    16,     8,    11,    14,
+      15,    16,    21,    45,    53,    55,    19,    19,    19,     5,
+       6,    19,    21,    22,    23,    39,    40,    55,    56,    53,
+      54,    19,    25,    35,    21,    17,    35,    23,    56,    21,
+      56,    56,    56,    18,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    36,    37,    38,    39,    54,    17,    56,
+      55,    21,    18,    56,    20,    20,    35,    20,    56,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    20,    19,    18,    18,    12,    56,    18,    56,    53,
+      18,    20,    13,    56,    18,    53,    18,    53,    20,    53
     };
   }
 
@@ -1199,13 +1180,12 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    41,    42,    42,    43,    43,    43,    44,    44,    44,
-      44,    45,    45,    46,    47,    48,    48,    48,    49,    49,
-      50,    51,    51,    51,    51,    51,    51,    51,    51,    51,
-      51,    51,    52,    52,    53,    53,    54,    54,    54,    54,
-      54,    54,    54,    54,    54,    54,    55,    55,    55,    55,
-      55,    55,    55,    56,    56,    56,    57,    57,    57,    57,
-      57,    57
+       0,    42,    43,    43,    44,    44,    44,    45,    45,    45,
+      45,    46,    47,    47,    48,    49,    50,    50,    50,    51,
+      51,    52,    53,    53,    53,    53,    53,    53,    53,    53,
+      53,    53,    54,    54,    55,    55,    56,    56,    56,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56,    56,    56,    56,    56,    56,    56
     };
   }
 
@@ -1216,12 +1196,11 @@ private static final short[] yycheck_ = yycheck_init();
     return new byte[]
     {
        0,     2,     2,     2,     0,     2,     2,     1,     1,     1,
-       1,     1,     1,     5,     2,     0,     1,     3,     1,     3,
-       8,    11,     6,     8,     5,     3,     4,     3,     3,     4,
+       1,     1,     1,     1,     5,     2,     0,     1,     3,     1,
+       3,     8,    11,     6,     8,     5,     3,     3,     3,     4,
        5,     7,     0,     2,     1,     3,     1,     1,     1,     1,
-       2,     1,     1,     1,     1,     3,     1,     1,     3,     3,
-       3,     3,     3,     3,     3,     2,     3,     3,     3,     3,
-       3,     3
+       2,     2,     1,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3
     };
   }
 
@@ -1233,7 +1212,7 @@ private static final short[] yycheck_ = yycheck_init();
   private static final SymbolKind yytranslate_(int t)
   {
     // Last valid token kind.
-    int code_max = 295;
+    int code_max = 296;
     if (t <= 0)
       return SymbolKind.S_YYEOF;
     else if (t <= code_max)
@@ -1275,15 +1254,15 @@ private static final short[] yycheck_ = yycheck_init();
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40
+      35,    36,    37,    38,    39,    40,    41
     };
   }
 
 
-  private static final int YYLAST_ = 262;
+  private static final int YYLAST_ = 254;
   private static final int YYEMPTY_ = -2;
-  private static final int YYFINAL_ = 12;
-  private static final int YYNTOKENS_ = 41;
+  private static final int YYFINAL_ = 14;
+  private static final int YYNTOKENS_ = 42;
 
 /* Unqualified %code blocks.  */
 /* "ToY.y":17  */
@@ -1302,10 +1281,10 @@ private static final short[] yycheck_ = yycheck_init();
         return;
 	} 
 
-/* "ToY.java":1306  */
+/* "ToY.java":1285  */
 
 }
-/* "ToY.y":203  */
+/* "ToY.y":170  */
 
 
 class ToYLexer implements ToY.Lexer {

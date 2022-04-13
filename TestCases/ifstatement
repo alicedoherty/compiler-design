@@ -1,6 +1,6 @@
 void main() {
     {
         int i;
-        if (i == 0) then printf ("hello") else printf ("world");
+        if (i == 0) then printf ("hello"); else printf ("world");
     }
 }

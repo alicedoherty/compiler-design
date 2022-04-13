@@ -1,0 +1,7 @@
+## This should be ignored
+
+void main() {
+    int myInt;
+}
+
+// So should this

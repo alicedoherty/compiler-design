@@ -29,29 +29,32 @@
         return;
 	} 
 }
+/* First token has lowest precedence */
 
 %token BOOL INT TRUE FALSE VOID PRINTF STRING STRUCT IF THEN ELSE FOR RETURN
-%token ASSIGN
+/*%token ASSIGN*/
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
 %token COMMA
 
 /* Need to be able to differentiate between unary minus and binary minus */
-/* e.g add UMINUS token? */
-%precedence NOT
-
-/* These defintions declare the associativity as well as precedence from LOWEST to HIGHEST */
 %left PERIOD
 %left MOD AND OR
-%nonassoc EQ LT GT LE GE NE
-%left PLUS MINUS
+
+%nonassoc EQ LT GT LE GE NE ASSIGN
 %left TIMES DIVIDE
+%left PLUS MINUS
+%left NOT UMINUS
 
 /* To deal with shift/reduce conflict in IF/THEN statements */
 /* The else branch belongs to the LAST if-statement (see p. 188 Intro to Flex and Bison) */
 /* i.e read as: IF (cond) {IF (cond) stmt ELSE stmt} */
 %nonassoc THEN
 %nonassoc ELSE
+
+/* %precedence THEN
+%precedence ELSE
+*/
 
 %%  
 
@@ -71,15 +74,14 @@ type
     : INT           {System.out.println("INT");}
     | BOOL          {System.out.println("BOOL");}
     | STRING        {System.out.println("STRING");}
-    | STRUCT        {System.out.println("STRUCT");}
+    | structName
 ;
 
-/* Come back - identifiers of structs need to be treated different to other variable identifiers */
-/* structId should be value of IDENTIFIER - but has extra check if it is a struct identifier */
-/*structId
-    : IDENTIFIER        {System.out.println("<struct IDENTIFIER>");}
-;*/
+structName
+    : IDENTIFIER
 
+/* STRUCT is keyword for defining a struct */
+/* STRUCT cannot be used as a return type - rather value of struct, e.g Car is the return type*/
 returnType
     : type 
     | VOID
@@ -121,11 +123,10 @@ statement
     | IF LEFT exp RIGHT THEN statement ELSE statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
-    | IDENTIFIER ASSIGN exp SEMICOLON                   {System.out.println("statement IDENTIFIER ASSIGN exp SEMICOLON");}
-    /* Check about {} around this */
     | LEFTCURLY statementSeq RIGHTCURLY
     | type IDENTIFIER SEMICOLON 
     | lExp ASSIGN exp SEMICOLON
+    /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
     | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON 
 ;
@@ -141,64 +142,30 @@ lExp
 ;
 
 /* Define different expressions for type checking or delegate to type checker */
+/* See if different rules are needed for calculation, logical, comparison expressions */
 exp
     : INTEGER_LITERAL
-    /* Not string literal? */
-    | IDENTIFIER
+    | STRING_LITERAL
     | TRUE
     | FALSE
-    /*| exp op exp*/
-    | MINUS exp 
-    | calcExp
-    | logicalExp
-    | comparisonExp
-    /*| NOT exp*/
+    | MINUS exp %prec UMINUS 
+    | NOT exp
     | lExp
     | LEFT exp RIGHT
+    | exp PLUS exp       
+    | exp MINUS exp
+    | exp TIMES exp 
+    | exp DIVIDE exp
+    | exp MOD exp 
+    | exp AND exp 
+    | exp OR exp
+    | exp EQ exp 
+    | exp GT exp
+    | exp LT exp
+    | exp GE exp
+    | exp LE exp
+    | exp NE exp
 ;
-
-/* Temporary - remove when calcExp, logicalExp, and comparisonExp are working */
-/*op 
-    : PLUS
-    | MINUS
-    | TIMES
-    | DIVIDE
-    | MOD
-    | AND
-    | OR
-    | EQ
-    | GT
-    | LT
-    | GE
-    | LE
-    | NE
-;
-*/
-
-calcExp
-    : INTEGER_LITERAL
-    /* Not string literal? */
-    | IDENTIFIER
-    | calcExp PLUS calcExp       /* { $$ = $1 + $3; } */
-    | calcExp MINUS calcExp      /* { $$ = $1 - $3; } */
-    | calcExp TIMES calcExp      /* { $$ = $1 * $3; } */
-    | calcExp DIVIDE calcExp     /* { $$ = $1 / $3; } */
-    | calcExp MOD calcExp        /* { $$ = $1 % $3; } */
-;
-
-/* Need to check it is a boolean expression */
-logicalExp
-    : exp AND exp        /*{ $$ = $1 && $3; }*/
-    | exp OR exp         /*{ $$ = $1 || $3; }*/
-    | NOT exp            /*{ $$ = ! $2; }*/
-
-comparisonExp
-    : exp EQ exp         /*{ $$ = $1 == $3; }*/
-    | exp GT exp         /*{ $$ = $1 > $3; }*/
-    | exp LT exp         /*{ $$ = $1 < $3; }*/
-    | exp GE exp         /*{ $$ = $1 >= $3; }*/
-    | exp LE exp         /*{ $$ = $1 <= $3; }*/
-    | exp NE exp         /*{ $$ = $1 != $3; }*/
 
 %%
 

@@ -107,8 +107,8 @@ LineTerminator = \r|\n|\r\n
 ","                            { return ToYLexer.COMMA; }
 
 /* comments */
-"//".*                         { }
-"##".*                         { }
+"//".*                        { }
+"##".*                        { }
 
 /* whitespace */
 {WhiteSpace}                   { }
