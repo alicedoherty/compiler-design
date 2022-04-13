@@ -40,16 +40,18 @@
 import java.text.MessageFormat;
 import java.util.ArrayList;
 /* "%code imports" blocks.  */
-/* "ToY.y":8  */
+/* "ToY.y":9  */
 
     import java.io.IOException;
     import java.io.InputStream;
     import java.io.InputStreamReader;
     import java.io.Reader;
     import java.io.StreamTokenizer;
+    import java.util.HashMap;
     import ToY.AST;
+    import ToY.SymbolTable;
 
-/* "ToY.java":53  */
+/* "ToY.java":55  */
 
 /**
  * A Bison parser, automatically generated from <tt>ToY.y</tt>.
@@ -379,7 +381,7 @@ public class ToY
      * Method to retrieve the semantic value of the last scanned token.
      * @return the semantic value of the last scanned token.
      */
-    Object getLVal();
+    Yytoken getLVal();
 
     /**
      * Entry point for the scanner.  Returns the token identifier corresponding
@@ -443,19 +445,19 @@ public class ToY
 
   private final class YYStack {
     private int[] stateStack = new int[16];
-    private Object[] valueStack = new Object[16];
+    private Yytoken[] valueStack = new Yytoken[16];
 
     public int size = 16;
     public int height = -1;
 
-    public final void push(int state, Object value) {
+    public final void push(int state, Yytoken value) {
       height++;
       if (size == height) {
         int[] newStateStack = new int[size * 2];
         System.arraycopy(stateStack, 0, newStateStack, 0, height);
         stateStack = newStateStack;
 
-        Object[] newValueStack = new Object[size * 2];
+        Yytoken[] newValueStack = new Yytoken[size * 2];
         System.arraycopy(valueStack, 0, newValueStack, 0, height);
         valueStack = newValueStack;
 
@@ -482,7 +484,7 @@ public class ToY
       return stateStack[height - i];
     }
 
-    public final Object valueAt(int i) {
+    public final Yytoken valueAt(int i) {
       return valueStack[height - i];
     }
 
@@ -563,40 +565,33 @@ public class ToY
        Otherwise, the following line sets YYVAL to garbage.
        This behavior is undocumented and Bison
        users should not rely upon it.  */
-    Object yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
+    Yytoken yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
 
     switch (yyn)
       {
-          case 7: /* type: INT  */
-  if (yyn == 7)
-    /* "ToY.y":74  */
-                    {System.out.println("INT");};
-  break;
-
-
-  case 8: /* type: BOOL  */
-  if (yyn == 8)
-    /* "ToY.y":75  */
-                    {System.out.println("BOOL");};
-  break;
-
-
-  case 9: /* type: STRING  */
-  if (yyn == 9)
-    /* "ToY.y":76  */
-                    {System.out.println("STRING");};
+          case 15: /* declaration: type IDENTIFIER  */
+  if (yyn == 15)
+    /* "ToY.y":96  */
+                            { SymbolTable.variableSymbolTable.put(yystack.valueAt (0).value, yystack.valueAt (1).type); };
   break;
 
 
   case 21: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
   if (yyn == 21)
-    /* "ToY.y":113  */
-                                                                                            {System.out.println("proc");};
+    /* "ToY.y":111  */
+                                                                                                { SymbolTable.functionSymbolTable.put(yystack.valueAt (6).value, new Integer[] {yystack.valueAt (7).type} ); };
+  break;
+
+
+  case 28: /* statement: type IDENTIFIER SEMICOLON  */
+  if (yyn == 28)
+    /* "ToY.y":124  */
+                                        { SymbolTable.variableSymbolTable.put(yystack.valueAt (1).value, yystack.valueAt (2).type); };
   break;
 
 
 
-/* "ToY.java":600  */
+/* "ToY.java":595  */
 
         default: break;
       }
@@ -639,7 +634,7 @@ public class ToY
 
 
     /* Semantic value of the lookahead.  */
-    Object yylval = null;
+    Yytoken yylval = null;
 
 
 
@@ -1265,26 +1260,24 @@ private static final short[] yycheck_ = yycheck_init();
   private static final int YYNTOKENS_ = 42;
 
 /* Unqualified %code blocks.  */
-/* "ToY.y":17  */
+/* "ToY.y":20  */
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
         ToY parser = new ToY(lexer);
+
         if (parser.parse())
             System.out.println("VALID");
         else {
             System.out.println("ERROR");
         }
-
-        AST ast = new AST();
-
-        return;
+        SymbolTable.printTable();
 	} 
 
-/* "ToY.java":1285  */
+/* "ToY.java":1278  */
 
 }
-/* "ToY.y":170  */
+/* "ToY.y":167  */
 
 
 class ToYLexer implements ToY.Lexer {
@@ -1302,12 +1295,15 @@ class ToYLexer implements ToY.Lexer {
     }
 
     @Override
-    public Object getLVal() {
-        return null;
+    public Yytoken getLVal() {
+        return token;
     }
+
+    Yytoken token;
 
     @Override
     public int yylex() throws IOException{
-        return yylex.yylex();
+        token = yylex.yylex();
+        return token.type;
     }
 }

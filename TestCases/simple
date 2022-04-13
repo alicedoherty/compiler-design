@@ -1,0 +1,13 @@
+struct myStruct {
+    bool myBool,
+    string nice,
+    Car myCar
+}
+
+void main(int param1, string param2) {
+    {
+        int int1;
+        int int2;
+        string myString;
+    }
+}

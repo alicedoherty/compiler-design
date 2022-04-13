@@ -2,7 +2,7 @@
 ToY Compiler Project for CSU33071
 
 - [x] Lexical Analysis 20/02
-- [ ] Parser 20/03
+- [x] Parser 20/03
 - [ ] Semantic Analysis 10/04
 - [ ] (Test Suite)
 
@@ -34,6 +34,7 @@ brew install bison
 - [Bison Printing Semantic Values](https://www.gnu.org/software/bison/manual/bison.html#Printer-Decl)
 - [Flex Bison Book Examples](https://github.com/mbbill/flexbison/tree/master/flexbison)
 - [Symbol Table Assignment](https://cs.gmu.edu/~dnord/cs440-540/cpaxi2.html)
+- [Bison Parser Algorithm](http://web.mit.edu/gnu/doc/html/bison_8.html#SEC76)
 
 ## Commands
 ### Using Makefile

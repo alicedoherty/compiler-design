@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.lang.Integer;
 
 class Yytoken {
-  public String type;
-  public Object value;
+  public int type;
+  public String value;
 
-  public Yytoken(String type) {
+  public Yytoken(int type) {
     this.type = type;
   }
-  public Yytoken(String type, Object value) {
+  public Yytoken(int type, String value) {
     this.type = type;
     this.value = value;
   }
@@ -20,7 +20,7 @@ class Yytoken {
 
 %unicode
 %public
-%standalone
+/*%standalone*/
 
 /*
 %{
@@ -65,46 +65,46 @@ LineTerminator = \r|\n|\r\n
 <YYINITIAL> {
 
 /* reserved words */
-"bool"                         { return ToYLexer.BOOL; }
-"int"                          { return ToYLexer.INT; }
-"true"                         { return ToYLexer.TRUE; }
-"false"                        { return ToYLexer.FALSE; }
-"void"                         { return ToYLexer.VOID; }
-"printf"                       { return ToYLexer.PRINTF; }
-"string"                       { return ToYLexer.STRING; }
-"struct"                       { return ToYLexer.STRUCT; }
-"if"                           { return ToYLexer.IF; }
-"then"                         { return ToYLexer.THEN; }
-"else"                         { return ToYLexer.ELSE; }
-"for"                          { return ToYLexer.FOR; }
-"return"                       { return ToYLexer.RETURN; }
+"bool"                         { return new Yytoken(ToYLexer.BOOL); }
+"int"                          { return new Yytoken(ToYLexer.INT); }
+"true"                         { return new Yytoken(ToYLexer.TRUE); }
+"false"                        { return new Yytoken(ToYLexer.FALSE); }
+"void"                         { return new Yytoken(ToYLexer.VOID); }
+"printf"                       { return new Yytoken(ToYLexer.PRINTF); }
+"string"                       { return new Yytoken(ToYLexer.STRING); }
+"struct"                       { return new Yytoken(ToYLexer.STRUCT); }
+"if"                           { return new Yytoken(ToYLexer.IF); }
+"then"                         { return new Yytoken(ToYLexer.THEN); }
+"else"                         { return new Yytoken(ToYLexer.ELSE); }
+"for"                          { return new Yytoken(ToYLexer.FOR); }
+"return"                       { return new Yytoken(ToYLexer.RETURN); }
 
 /* operators */
-"+"                            { return ToYLexer.PLUS; }
-"-"                            { return ToYLexer.MINUS; }
-"*"                            { return ToYLexer.TIMES; }
-"/"                            { return ToYLexer.DIVIDE; }
-"mod"                          { return ToYLexer.MOD; }
-"and"                          { return ToYLexer.AND; }
-"or"                           { return ToYLexer.OR; }
+"+"                            { return new Yytoken(ToYLexer.PLUS); }
+"-"                            { return new Yytoken(ToYLexer.MINUS); }
+"*"                            { return new Yytoken(ToYLexer.TIMES); }
+"/"                            { return new Yytoken(ToYLexer.DIVIDE); }
+"mod"                          { return new Yytoken(ToYLexer.MOD); }
+"and"                          { return new Yytoken(ToYLexer.AND); }
+"or"                           { return new Yytoken(ToYLexer.OR); }
 /* ! at top of projetc spec but 'not' later */
-"!"                            { return ToYLexer.NOT; }
-"=="                           { return ToYLexer.EQ; }
-"<"                            { return ToYLexer.LT; }
-">"                            { return ToYLexer.GT; }
-"<="                           { return ToYLexer.LE; }
-">="                           { return ToYLexer.GE; }
-"!="                           { return ToYLexer.NE; }
-"="                            { return ToYLexer.ASSIGN; }
+"!"                            { return new Yytoken(ToYLexer.NOT); }
+"=="                           { return new Yytoken(ToYLexer.EQ); }
+"<"                            { return new Yytoken(ToYLexer.LT); }
+">"                            { return new Yytoken(ToYLexer.GT); }
+"<="                           { return new Yytoken(ToYLexer.LE); }
+">="                           { return new Yytoken(ToYLexer.GE); }
+"!="                           { return new Yytoken(ToYLexer.NE); }
+"="                            { return new Yytoken(ToYLexer.ASSIGN); }
 
 /* symbols */
-"{"                            { return ToYLexer.LEFTCURLY; }
-"}"                            { return ToYLexer.RIGHTCURLY; }
-";"                            { return ToYLexer.SEMICOLON; }
-"("                            { return ToYLexer.LEFT; }
-")"                            { return ToYLexer.RIGHT; }
-"."                            { return ToYLexer.PERIOD; }
-","                            { return ToYLexer.COMMA; }
+"{"                            { return new Yytoken(ToYLexer.LEFTCURLY); }
+"}"                            { return new Yytoken(ToYLexer.RIGHTCURLY); }
+";"                            { return new Yytoken(ToYLexer.SEMICOLON); }
+"("                            { return new Yytoken(ToYLexer.LEFT); }
+")"                            { return new Yytoken(ToYLexer.RIGHT); }
+"."                            { return new Yytoken(ToYLexer.PERIOD); }
+","                            { return new Yytoken(ToYLexer.COMMA); }
 
 /* comments */
 "//".*                        { }
@@ -114,7 +114,7 @@ LineTerminator = \r|\n|\r\n
 {WhiteSpace}                   { }
 
 /* identifier <id> */
-{Identifier}                   { return ToYLexer.IDENTIFIER; }
+{Identifier}                   { return new Yytoken(ToYLexer.IDENTIFIER, yytext()); }
 
 /* integer literals */
 {Integer}                      { String input = yytext();
@@ -122,14 +122,16 @@ LineTerminator = \r|\n|\r\n
                                  if (inputInt < -32768 || inputInt > 32767) {
                                    throw new Error("Integer <"+yytext()+"> out of bounds");         
                                  } else {
-                                   return ToYLexer.INTEGER_LITERAL;
+                                   return new Yytoken(ToYLexer.INTEGER_LITERAL);
                                  }
                                }
 
 /* string literals */
-\"{StringCharacter}\"          { return ToYLexer.STRING_LITERAL; }
+\"{StringCharacter}\"          { return new Yytoken(ToYLexer.STRING_LITERAL, yytext()); }
 
 }
+
+<<EOF>>                        { return new Yytoken(ToYLexer.EOF); }
 
 /* error fallback */
 [^]                              { throw new Error("Illegal character <"+

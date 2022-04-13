@@ -2,6 +2,7 @@
 
 %define api.prefix {ToY}
 %define api.parser.class {ToY}
+%define api.value.type {Yytoken}
 %define api.parser.public
 %define parse.error verbose
 
@@ -11,28 +12,27 @@
     import java.io.InputStreamReader;
     import java.io.Reader;
     import java.io.StreamTokenizer;
+    import java.util.HashMap;
     import ToY.AST;
+    import ToY.SymbolTable;
 }
 
 %code {
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
         ToY parser = new ToY(lexer);
+
         if (parser.parse())
             System.out.println("VALID");
         else {
             System.out.println("ERROR");
         }
-
-        AST ast = new AST();
-
-        return;
+        SymbolTable.printTable();
 	} 
 }
-/* First token has lowest precedence */
 
+/* First token has lowest precedence */
 %token BOOL INT TRUE FALSE VOID PRINTF STRING STRUCT IF THEN ELSE FOR RETURN
-/*%token ASSIGN*/
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
 %token COMMA
@@ -59,7 +59,7 @@
 %%  
 
 pgm
-    : proc pgm1
+    : proc pgm1        
     | struct pgm 
 ;
 
@@ -71,9 +71,9 @@ pgm1
 
 /* Only struct identifiers count as a type - not all IDENTIFIERs */
 type
-    : INT           {System.out.println("INT");}
-    | BOOL          {System.out.println("BOOL");}
-    | STRING        {System.out.println("STRING");}
+    : INT
+    | BOOL
+    | STRING
     | structName
 ;
 
@@ -92,10 +92,8 @@ struct
     : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY
 ;
 
-/* Multiple declarations are comma separated */
-/* Cannot have declarations with same identifier */
 declaration
-    : type IDENTIFIER        
+    : type IDENTIFIER       { SymbolTable.variableSymbolTable.put($2.value, $1.type); }
 ;
 
 /* Check if both declarationZeroPlus and declarationOnePlus */
@@ -110,8 +108,7 @@ declarationOnePlus
     | declaration COMMA declarationOnePlus
 
 proc
-    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY   {System.out.println("proc");}
-;
+    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY       { SymbolTable.functionSymbolTable.put($2.value, new Integer[] {$1.type} ); }
 
 /* First statement inside for-construct is optional */
 /* IDENTIFIER in assignment needs to already be declared */
@@ -124,7 +121,7 @@ statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
     | LEFTCURLY statementSeq RIGHTCURLY
-    | type IDENTIFIER SEMICOLON 
+    | type IDENTIFIER SEMICOLON         { SymbolTable.variableSymbolTable.put($2.value, $1.type); }
     | lExp ASSIGN exp SEMICOLON
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
@@ -184,12 +181,15 @@ class ToYLexer implements ToY.Lexer {
     }
 
     @Override
-    public Object getLVal() {
-        return null;
+    public Yytoken getLVal() {
+        return token;
     }
+
+    Yytoken token;
 
     @Override
     public int yylex() throws IOException{
-        return yylex.yylex();
+        token = yylex.yylex();
+        return token.type;
     }
 }
