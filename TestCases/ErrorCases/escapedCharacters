@@ -1,0 +1,7 @@
+//String containing escaped characters e.g., "Hello \”world\”!"
+void main(){
+    {
+        string s;
+        s = "Hello";
+    }
+}

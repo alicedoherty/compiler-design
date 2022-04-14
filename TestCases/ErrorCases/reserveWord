@@ -1,0 +1,8 @@
+//Reserve words used as variable names
+struct struct {
+    string string;
+}
+
+void main() {
+    int int;
+}

@@ -1,0 +1,9 @@
+// Incorrect precedence and associativity rules are implemented e.g., a < b < c.
+void main(){
+    {
+        int a;
+        int b;
+        int c;
+        if (a < b <c ) then printf ("hello"); else printf ("world");
+    }
+}
