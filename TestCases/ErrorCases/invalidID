@@ -1,7 +1,6 @@
 // Invalid integer/ID e.g., 1wd7
 void main(){
     {
-        int i;
-        i = 1wd7;
+        int 1wd7;
     }
 }

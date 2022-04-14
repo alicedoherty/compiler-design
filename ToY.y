@@ -56,7 +56,7 @@
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token INTEGER_LITERAL STRING_LITERAL
 %left IDENTIFIER
-%token COMMA
+%token COMMA QUOTE
 
 /* Need to be able to differentiate between unary minus and binary minus */
 %left PERIOD
@@ -88,7 +88,7 @@ pgm1
 
 /* Only struct identifiers count as a type - not all IDENTIFIERs */
 type
-    : INT
+    : INT                    {System.out.println("INT");}
     | BOOL
     | STRING
     | structName
@@ -164,11 +164,6 @@ statementSeq
     | statement statementSeq
 ;
 
-lExp
-    : IDENTIFIER
-    | IDENTIFIER PERIOD lExp 
-;
-
 /* Define different expressions for type checking or delegate to type checker */
 /* See if different rules are needed for calculation, logical, comparison expressions */
 exp
@@ -193,6 +188,11 @@ exp
     | exp GE exp
     | exp LE exp
     | exp NE exp
+;
+
+lExp
+    : IDENTIFIER                    {System.out.println("lExp");}
+    | IDENTIFIER PERIOD lExp        {System.out.println("lExp");}
 ;
 
 %%

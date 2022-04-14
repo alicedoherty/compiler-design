@@ -105,6 +105,7 @@ LineTerminator = \r|\n|\r\n
 ")"                            { return new Yytoken(ToYLexer.RIGHT); }
 "."                            { return new Yytoken(ToYLexer.PERIOD); }
 ","                            { return new Yytoken(ToYLexer.COMMA); }
+"\""                           { return new Yytoken(ToYLexer.QUOTE); }
 
 /* comments */
 "//".*                        { }

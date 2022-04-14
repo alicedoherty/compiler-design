@@ -114,38 +114,39 @@ public class ToY
     S_STRING_LITERAL(22),          /* STRING_LITERAL  */
     S_IDENTIFIER(23),              /* IDENTIFIER  */
     S_COMMA(24),                   /* COMMA  */
-    S_PERIOD(25),                  /* PERIOD  */
-    S_MOD(26),                     /* MOD  */
-    S_AND(27),                     /* AND  */
-    S_OR(28),                      /* OR  */
-    S_EQ(29),                      /* EQ  */
-    S_LT(30),                      /* LT  */
-    S_GT(31),                      /* GT  */
-    S_LE(32),                      /* LE  */
-    S_GE(33),                      /* GE  */
-    S_NE(34),                      /* NE  */
-    S_ASSIGN(35),                  /* ASSIGN  */
-    S_TIMES(36),                   /* TIMES  */
-    S_DIVIDE(37),                  /* DIVIDE  */
-    S_PLUS(38),                    /* PLUS  */
-    S_MINUS(39),                   /* MINUS  */
-    S_NOT(40),                     /* NOT  */
-    S_UMINUS(41),                  /* UMINUS  */
-    S_YYACCEPT(42),                /* $accept  */
-    S_pgm(43),                     /* pgm  */
-    S_pgm1(44),                    /* pgm1  */
-    S_type(45),                    /* type  */
-    S_structName(46),              /* structName  */
-    S_returnType(47),              /* returnType  */
-    S_struct(48),                  /* struct  */
-    S_declaration(49),             /* declaration  */
-    S_declarationZeroPlus(50),     /* declarationZeroPlus  */
-    S_declarationOnePlus(51),      /* declarationOnePlus  */
-    S_proc(52),                    /* proc  */
-    S_statement(53),               /* statement  */
-    S_statementSeq(54),            /* statementSeq  */
-    S_lExp(55),                    /* lExp  */
-    S_exp(56);                     /* exp  */
+    S_QUOTE(25),                   /* QUOTE  */
+    S_PERIOD(26),                  /* PERIOD  */
+    S_MOD(27),                     /* MOD  */
+    S_AND(28),                     /* AND  */
+    S_OR(29),                      /* OR  */
+    S_EQ(30),                      /* EQ  */
+    S_LT(31),                      /* LT  */
+    S_GT(32),                      /* GT  */
+    S_LE(33),                      /* LE  */
+    S_GE(34),                      /* GE  */
+    S_NE(35),                      /* NE  */
+    S_ASSIGN(36),                  /* ASSIGN  */
+    S_TIMES(37),                   /* TIMES  */
+    S_DIVIDE(38),                  /* DIVIDE  */
+    S_PLUS(39),                    /* PLUS  */
+    S_MINUS(40),                   /* MINUS  */
+    S_NOT(41),                     /* NOT  */
+    S_UMINUS(42),                  /* UMINUS  */
+    S_YYACCEPT(43),                /* $accept  */
+    S_pgm(44),                     /* pgm  */
+    S_pgm1(45),                    /* pgm1  */
+    S_type(46),                    /* type  */
+    S_structName(47),              /* structName  */
+    S_returnType(48),              /* returnType  */
+    S_struct(49),                  /* struct  */
+    S_declaration(50),             /* declaration  */
+    S_declarationZeroPlus(51),     /* declarationZeroPlus  */
+    S_declarationOnePlus(52),      /* declarationOnePlus  */
+    S_proc(53),                    /* proc  */
+    S_statement(54),               /* statement  */
+    S_statementSeq(55),            /* statementSeq  */
+    S_exp(56),                     /* exp  */
+    S_lExp(57);                    /* lExp  */
 
 
     private final int yycode_;
@@ -180,6 +181,7 @@ public class ToY
       SymbolKind.S_STRING_LITERAL,
       SymbolKind.S_IDENTIFIER,
       SymbolKind.S_COMMA,
+      SymbolKind.S_QUOTE,
       SymbolKind.S_PERIOD,
       SymbolKind.S_MOD,
       SymbolKind.S_AND,
@@ -210,8 +212,8 @@ public class ToY
       SymbolKind.S_proc,
       SymbolKind.S_statement,
       SymbolKind.S_statementSeq,
-      SymbolKind.S_lExp,
-      SymbolKind.S_exp
+      SymbolKind.S_exp,
+      SymbolKind.S_lExp
     };
 
     static final SymbolKind get(int code) {
@@ -264,12 +266,12 @@ public class ToY
   "\"end of file\"", "error", "\"invalid token\"", "BOOL", "INT", "TRUE",
   "FALSE", "VOID", "PRINTF", "STRING", "STRUCT", "IF", "THEN", "ELSE",
   "FOR", "RETURN", "LEFTCURLY", "RIGHTCURLY", "SEMICOLON", "LEFT", "RIGHT",
-  "INTEGER_LITERAL", "STRING_LITERAL", "IDENTIFIER", "COMMA", "PERIOD",
-  "MOD", "AND", "OR", "EQ", "LT", "GT", "LE", "GE", "NE", "ASSIGN",
-  "TIMES", "DIVIDE", "PLUS", "MINUS", "NOT", "UMINUS", "$accept", "pgm",
-  "pgm1", "type", "structName", "returnType", "struct", "declaration",
-  "declarationZeroPlus", "declarationOnePlus", "proc", "statement",
-  "statementSeq", "lExp", "exp", null
+  "INTEGER_LITERAL", "STRING_LITERAL", "IDENTIFIER", "COMMA", "QUOTE",
+  "PERIOD", "MOD", "AND", "OR", "EQ", "LT", "GT", "LE", "GE", "NE",
+  "ASSIGN", "TIMES", "DIVIDE", "PLUS", "MINUS", "NOT", "UMINUS", "$accept",
+  "pgm", "pgm1", "type", "structName", "returnType", "struct",
+  "declaration", "declarationZeroPlus", "declarationOnePlus", "proc",
+  "statement", "statementSeq", "exp", "lExp", null
     };
   }
 
@@ -337,40 +339,42 @@ public class ToY
     static final int IDENTIFIER = 278;
     /** Token COMMA, to be returned by the scanner.  */
     static final int COMMA = 279;
+    /** Token QUOTE, to be returned by the scanner.  */
+    static final int QUOTE = 280;
     /** Token PERIOD, to be returned by the scanner.  */
-    static final int PERIOD = 280;
+    static final int PERIOD = 281;
     /** Token MOD, to be returned by the scanner.  */
-    static final int MOD = 281;
+    static final int MOD = 282;
     /** Token AND, to be returned by the scanner.  */
-    static final int AND = 282;
+    static final int AND = 283;
     /** Token OR, to be returned by the scanner.  */
-    static final int OR = 283;
+    static final int OR = 284;
     /** Token EQ, to be returned by the scanner.  */
-    static final int EQ = 284;
+    static final int EQ = 285;
     /** Token LT, to be returned by the scanner.  */
-    static final int LT = 285;
+    static final int LT = 286;
     /** Token GT, to be returned by the scanner.  */
-    static final int GT = 286;
+    static final int GT = 287;
     /** Token LE, to be returned by the scanner.  */
-    static final int LE = 287;
+    static final int LE = 288;
     /** Token GE, to be returned by the scanner.  */
-    static final int GE = 288;
+    static final int GE = 289;
     /** Token NE, to be returned by the scanner.  */
-    static final int NE = 289;
+    static final int NE = 290;
     /** Token ASSIGN, to be returned by the scanner.  */
-    static final int ASSIGN = 290;
+    static final int ASSIGN = 291;
     /** Token TIMES, to be returned by the scanner.  */
-    static final int TIMES = 291;
+    static final int TIMES = 292;
     /** Token DIVIDE, to be returned by the scanner.  */
-    static final int DIVIDE = 292;
+    static final int DIVIDE = 293;
     /** Token PLUS, to be returned by the scanner.  */
-    static final int PLUS = 293;
+    static final int PLUS = 294;
     /** Token MINUS, to be returned by the scanner.  */
-    static final int MINUS = 294;
+    static final int MINUS = 295;
     /** Token NOT, to be returned by the scanner.  */
-    static final int NOT = 295;
+    static final int NOT = 296;
     /** Token UMINUS, to be returned by the scanner.  */
-    static final int UMINUS = 296;
+    static final int UMINUS = 297;
 
     /** Deprecated, use YYEOF instead.  */
     public static final int EOF = YYEOF;
@@ -1258,7 +1262,7 @@ private static final short[] yycheck_ = yycheck_init();
   private static final SymbolKind yytranslate_(int t)
   {
     // Last valid token kind.
-    int code_max = 296;
+    int code_max = 297;
     if (t <= 0)
       return SymbolKind.S_YYEOF;
     else if (t <= code_max)
@@ -1300,7 +1304,7 @@ private static final short[] yycheck_ = yycheck_init();
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41
+      35,    36,    37,    38,    39,    40,    41,    42
     };
   }
 
@@ -1308,7 +1312,7 @@ private static final short[] yycheck_ = yycheck_init();
   private static final int YYLAST_ = 301;
   private static final int YYEMPTY_ = -2;
   private static final int YYFINAL_ = 14;
-  private static final int YYNTOKENS_ = 42;
+  private static final int YYNTOKENS_ = 43;
 
 /* Unqualified %code blocks.  */
 /* "ToY.y":19  */
