@@ -1,10 +1,4 @@
-struct myStruct {
-    bool myBool,
-    string nice,
-    Car myCar
-}
-
-void main(int param1, string param2) {
+void main() {
     {
         int int1;
         int int2;

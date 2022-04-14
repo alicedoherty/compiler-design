@@ -13,22 +13,34 @@
     import java.io.Reader;
     import java.io.StreamTokenizer;
     import java.util.HashMap;
-    import ToY.AST;
     import ToY.SymbolTable;
 }
 
 %code {
+    public static SymbolTable symbolTable;
+
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
         ToY parser = new ToY(lexer);
+
+        initialise();
 
         if (parser.parse())
             System.out.println("VALID");
         else {
             System.out.println("ERROR");
         }
-        SymbolTable.printTable();
+
+        printSymbolTable();
 	} 
+    
+    public static void initialise() {
+        symbolTable = new SymbolTable();
+    }
+
+    public static void printSymbolTable() {
+        symbolTable.printTable();
+    }
 }
 
 /* First token has lowest precedence */
@@ -59,7 +71,7 @@
 %%  
 
 pgm
-    : proc pgm1        
+    : proc pgm1
     | struct pgm 
 ;
 
@@ -89,11 +101,14 @@ returnType
 
 /* Struct has at least one declaration */
 struct
-    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY
+    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY         { symbolTable.addStruct($2.value, -1); }
 ;
 
+
+/* { SymbolTable.variableSymbolTable.put($2.value, $1.type); } */
+
 declaration
-    : type IDENTIFIER       { SymbolTable.variableSymbolTable.put($2.value, $1.type); }
+    : type IDENTIFIER      
 ;
 
 /* Check if both declarationZeroPlus and declarationOnePlus */
@@ -108,7 +123,7 @@ declarationOnePlus
     | declaration COMMA declarationOnePlus
 
 proc
-    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY       { SymbolTable.functionSymbolTable.put($2.value, new Integer[] {$1.type} ); }
+    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY
 
 /* First statement inside for-construct is optional */
 /* IDENTIFIER in assignment needs to already be declared */
@@ -121,7 +136,7 @@ statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
     | LEFTCURLY statementSeq RIGHTCURLY
-    | type IDENTIFIER SEMICOLON         { SymbolTable.variableSymbolTable.put($2.value, $1.type); }
+    | type IDENTIFIER SEMICOLON 
     | lExp ASSIGN exp SEMICOLON
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 

@@ -34,6 +34,7 @@ brew install bison
 - [Bison Printing Semantic Values](https://www.gnu.org/software/bison/manual/bison.html#Printer-Decl)
 - [Flex Bison Book Examples](https://github.com/mbbill/flexbison/tree/master/flexbison)
 - [Symbol Table Assignment](https://cs.gmu.edu/~dnord/cs440-540/cpaxi2.html)
+- [Simple Java Compiler Example](https://github.com/hartikainen/simple-compiler/blob/master/SymbolTable.java)
 - [Bison Parser Algorithm](http://web.mit.edu/gnu/doc/html/bison_8.html#SEC76)
 
 ## Commands

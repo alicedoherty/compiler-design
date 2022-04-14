@@ -48,10 +48,9 @@ import java.util.ArrayList;
     import java.io.Reader;
     import java.io.StreamTokenizer;
     import java.util.HashMap;
-    import ToY.AST;
     import ToY.SymbolTable;
 
-/* "ToY.java":55  */
+/* "ToY.java":54  */
 
 /**
  * A Bison parser, automatically generated from <tt>ToY.y</tt>.
@@ -569,29 +568,15 @@ public class ToY
 
     switch (yyn)
       {
-          case 15: /* declaration: type IDENTIFIER  */
-  if (yyn == 15)
-    /* "ToY.y":96  */
-                            { SymbolTable.variableSymbolTable.put(yystack.valueAt (0).value, yystack.valueAt (1).type); };
-  break;
-
-
-  case 21: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
-  if (yyn == 21)
-    /* "ToY.y":111  */
-                                                                                                { SymbolTable.functionSymbolTable.put(yystack.valueAt (6).value, new Integer[] {yystack.valueAt (7).type} ); };
-  break;
-
-
-  case 28: /* statement: type IDENTIFIER SEMICOLON  */
-  if (yyn == 28)
-    /* "ToY.y":124  */
-                                        { SymbolTable.variableSymbolTable.put(yystack.valueAt (1).value, yystack.valueAt (2).type); };
+          case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY  */
+  if (yyn == 14)
+    /* "ToY.y":104  */
+                                                                        { symbolTable.addStruct(yystack.valueAt (3).value, -1); };
   break;
 
 
 
-/* "ToY.java":595  */
+/* "ToY.java":580  */
 
         default: break;
       }
@@ -1260,24 +1245,37 @@ private static final short[] yycheck_ = yycheck_init();
   private static final int YYNTOKENS_ = 42;
 
 /* Unqualified %code blocks.  */
-/* "ToY.y":20  */
+/* "ToY.y":19  */
+
+    public static SymbolTable symbolTable;
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
         ToY parser = new ToY(lexer);
+
+        initialise();
 
         if (parser.parse())
             System.out.println("VALID");
         else {
             System.out.println("ERROR");
         }
-        SymbolTable.printTable();
-	} 
 
-/* "ToY.java":1278  */
+        printSymbolTable();
+	} 
+    
+    public static void initialise() {
+        symbolTable = new SymbolTable();
+    }
+
+    public static void printSymbolTable() {
+        symbolTable.printTable();
+    }
+
+/* "ToY.java":1276  */
 
 }
-/* "ToY.y":167  */
+/* "ToY.y":182  */
 
 
 class ToYLexer implements ToY.Lexer {
