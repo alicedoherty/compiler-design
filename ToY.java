@@ -1274,17 +1274,10 @@ private static final short[] yycheck_ = yycheck_init();
         symbolTable.printTable();
     }
 
-<<<<<<< HEAD
 /* "ToY.java":1276  */
 
 }
 /* "ToY.y":182  */
-=======
-/* "ToY.java":1280  */
-
-}
-/* "ToY.y":168  */
->>>>>>> a5bd96d818eef0c6fcfacfa54d3f62edfbe3fe18
 
 
 class ToYLexer implements ToY.Lexer {
