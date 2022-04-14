@@ -114,38 +114,39 @@ public class ToY
     S_STRING_LITERAL(22),          /* STRING_LITERAL  */
     S_IDENTIFIER(23),              /* IDENTIFIER  */
     S_COMMA(24),                   /* COMMA  */
-    S_PERIOD(25),                  /* PERIOD  */
-    S_MOD(26),                     /* MOD  */
-    S_AND(27),                     /* AND  */
-    S_OR(28),                      /* OR  */
-    S_EQ(29),                      /* EQ  */
-    S_LT(30),                      /* LT  */
-    S_GT(31),                      /* GT  */
-    S_LE(32),                      /* LE  */
-    S_GE(33),                      /* GE  */
-    S_NE(34),                      /* NE  */
-    S_ASSIGN(35),                  /* ASSIGN  */
-    S_TIMES(36),                   /* TIMES  */
-    S_DIVIDE(37),                  /* DIVIDE  */
-    S_PLUS(38),                    /* PLUS  */
-    S_MINUS(39),                   /* MINUS  */
-    S_NOT(40),                     /* NOT  */
-    S_UMINUS(41),                  /* UMINUS  */
-    S_YYACCEPT(42),                /* $accept  */
-    S_pgm(43),                     /* pgm  */
-    S_pgm1(44),                    /* pgm1  */
-    S_type(45),                    /* type  */
-    S_structName(46),              /* structName  */
-    S_returnType(47),              /* returnType  */
-    S_struct(48),                  /* struct  */
-    S_declaration(49),             /* declaration  */
-    S_declarationZeroPlus(50),     /* declarationZeroPlus  */
-    S_declarationOnePlus(51),      /* declarationOnePlus  */
-    S_proc(52),                    /* proc  */
-    S_statement(53),               /* statement  */
-    S_statementSeq(54),            /* statementSeq  */
-    S_lExp(55),                    /* lExp  */
-    S_exp(56);                     /* exp  */
+    S_QUOTE(25),                   /* QUOTE  */
+    S_PERIOD(26),                  /* PERIOD  */
+    S_MOD(27),                     /* MOD  */
+    S_AND(28),                     /* AND  */
+    S_OR(29),                      /* OR  */
+    S_EQ(30),                      /* EQ  */
+    S_LT(31),                      /* LT  */
+    S_GT(32),                      /* GT  */
+    S_LE(33),                      /* LE  */
+    S_GE(34),                      /* GE  */
+    S_NE(35),                      /* NE  */
+    S_ASSIGN(36),                  /* ASSIGN  */
+    S_TIMES(37),                   /* TIMES  */
+    S_DIVIDE(38),                  /* DIVIDE  */
+    S_PLUS(39),                    /* PLUS  */
+    S_MINUS(40),                   /* MINUS  */
+    S_NOT(41),                     /* NOT  */
+    S_UMINUS(42),                  /* UMINUS  */
+    S_YYACCEPT(43),                /* $accept  */
+    S_pgm(44),                     /* pgm  */
+    S_pgm1(45),                    /* pgm1  */
+    S_type(46),                    /* type  */
+    S_structName(47),              /* structName  */
+    S_returnType(48),              /* returnType  */
+    S_struct(49),                  /* struct  */
+    S_declaration(50),             /* declaration  */
+    S_declarationZeroPlus(51),     /* declarationZeroPlus  */
+    S_declarationOnePlus(52),      /* declarationOnePlus  */
+    S_proc(53),                    /* proc  */
+    S_statement(54),               /* statement  */
+    S_statementSeq(55),            /* statementSeq  */
+    S_exp(56),                     /* exp  */
+    S_lExp(57);                    /* lExp  */
 
 
     private final int yycode_;
@@ -180,6 +181,7 @@ public class ToY
       SymbolKind.S_STRING_LITERAL,
       SymbolKind.S_IDENTIFIER,
       SymbolKind.S_COMMA,
+      SymbolKind.S_QUOTE,
       SymbolKind.S_PERIOD,
       SymbolKind.S_MOD,
       SymbolKind.S_AND,
@@ -210,8 +212,8 @@ public class ToY
       SymbolKind.S_proc,
       SymbolKind.S_statement,
       SymbolKind.S_statementSeq,
-      SymbolKind.S_lExp,
-      SymbolKind.S_exp
+      SymbolKind.S_exp,
+      SymbolKind.S_lExp
     };
 
     static final SymbolKind get(int code) {
@@ -264,12 +266,12 @@ public class ToY
   "\"end of file\"", "error", "\"invalid token\"", "BOOL", "INT", "TRUE",
   "FALSE", "VOID", "PRINTF", "STRING", "STRUCT", "IF", "THEN", "ELSE",
   "FOR", "RETURN", "LEFTCURLY", "RIGHTCURLY", "SEMICOLON", "LEFT", "RIGHT",
-  "INTEGER_LITERAL", "STRING_LITERAL", "IDENTIFIER", "COMMA", "PERIOD",
-  "MOD", "AND", "OR", "EQ", "LT", "GT", "LE", "GE", "NE", "ASSIGN",
-  "TIMES", "DIVIDE", "PLUS", "MINUS", "NOT", "UMINUS", "$accept", "pgm",
-  "pgm1", "type", "structName", "returnType", "struct", "declaration",
-  "declarationZeroPlus", "declarationOnePlus", "proc", "statement",
-  "statementSeq", "lExp", "exp", null
+  "INTEGER_LITERAL", "STRING_LITERAL", "IDENTIFIER", "COMMA", "QUOTE",
+  "PERIOD", "MOD", "AND", "OR", "EQ", "LT", "GT", "LE", "GE", "NE",
+  "ASSIGN", "TIMES", "DIVIDE", "PLUS", "MINUS", "NOT", "UMINUS", "$accept",
+  "pgm", "pgm1", "type", "structName", "returnType", "struct",
+  "declaration", "declarationZeroPlus", "declarationOnePlus", "proc",
+  "statement", "statementSeq", "exp", "lExp", null
     };
   }
 
@@ -337,40 +339,42 @@ public class ToY
     static final int IDENTIFIER = 278;
     /** Token COMMA, to be returned by the scanner.  */
     static final int COMMA = 279;
+    /** Token QUOTE, to be returned by the scanner.  */
+    static final int QUOTE = 280;
     /** Token PERIOD, to be returned by the scanner.  */
-    static final int PERIOD = 280;
+    static final int PERIOD = 281;
     /** Token MOD, to be returned by the scanner.  */
-    static final int MOD = 281;
+    static final int MOD = 282;
     /** Token AND, to be returned by the scanner.  */
-    static final int AND = 282;
+    static final int AND = 283;
     /** Token OR, to be returned by the scanner.  */
-    static final int OR = 283;
+    static final int OR = 284;
     /** Token EQ, to be returned by the scanner.  */
-    static final int EQ = 284;
+    static final int EQ = 285;
     /** Token LT, to be returned by the scanner.  */
-    static final int LT = 285;
+    static final int LT = 286;
     /** Token GT, to be returned by the scanner.  */
-    static final int GT = 286;
+    static final int GT = 287;
     /** Token LE, to be returned by the scanner.  */
-    static final int LE = 287;
+    static final int LE = 288;
     /** Token GE, to be returned by the scanner.  */
-    static final int GE = 288;
+    static final int GE = 289;
     /** Token NE, to be returned by the scanner.  */
-    static final int NE = 289;
+    static final int NE = 290;
     /** Token ASSIGN, to be returned by the scanner.  */
-    static final int ASSIGN = 290;
+    static final int ASSIGN = 291;
     /** Token TIMES, to be returned by the scanner.  */
-    static final int TIMES = 291;
+    static final int TIMES = 292;
     /** Token DIVIDE, to be returned by the scanner.  */
-    static final int DIVIDE = 292;
+    static final int DIVIDE = 293;
     /** Token PLUS, to be returned by the scanner.  */
-    static final int PLUS = 293;
+    static final int PLUS = 294;
     /** Token MINUS, to be returned by the scanner.  */
-    static final int MINUS = 294;
+    static final int MINUS = 295;
     /** Token NOT, to be returned by the scanner.  */
-    static final int NOT = 295;
+    static final int NOT = 296;
     /** Token UMINUS, to be returned by the scanner.  */
-    static final int UMINUS = 296;
+    static final int UMINUS = 297;
 
     /** Deprecated, use YYEOF instead.  */
     public static final int EOF = YYEOF;
@@ -568,15 +572,106 @@ public class ToY
 
     switch (yyn)
       {
-          case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY  */
+          case 7: /* type: INT  */
+  if (yyn == 7)
+    /* "ToY.y":87  */
+                             {System.out.println("INT");};
+  break;
+
+
+  case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY  */
   if (yyn == 14)
-    /* "ToY.y":104  */
+    /* "ToY.y":105  */
                                                                         { symbolTable.addStruct(yystack.valueAt (3).value, -1); };
   break;
 
 
+  case 22: /* statement: FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement  */
+  if (yyn == 22)
+    /* "ToY.y":134  */
+                                                                                        {System.out.println("FOR");};
+  break;
 
-/* "ToY.java":580  */
+
+  case 23: /* statement: IF LEFT exp RIGHT THEN statement  */
+  if (yyn == 23)
+    /* "ToY.y":135  */
+                                                                                        {System.out.println("IF");};
+  break;
+
+
+  case 24: /* statement: IF LEFT exp RIGHT THEN statement ELSE statement  */
+  if (yyn == 24)
+    /* "ToY.y":136  */
+                                                                                        {System.out.println("IF ELSE");};
+  break;
+
+
+  case 25: /* statement: PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON  */
+  if (yyn == 25)
+    /* "ToY.y":137  */
+                                                                                        {System.out.println("PRINTF");};
+  break;
+
+
+  case 26: /* statement: RETURN exp SEMICOLON  */
+  if (yyn == 26)
+    /* "ToY.y":138  */
+                                                                                        {System.out.println("RETURN");};
+  break;
+
+
+  case 27: /* statement: LEFTCURLY statementSeq RIGHTCURLY  */
+  if (yyn == 27)
+    /* "ToY.y":139  */
+                                                                                        {System.out.println("LEFTCURLY");};
+  break;
+
+
+  case 28: /* statement: type IDENTIFIER SEMICOLON  */
+  if (yyn == 28)
+    /* "ToY.y":140  */
+                                                                                        {System.out.println("type IDENTIFIER SEMICOLON");};
+  break;
+
+
+  case 29: /* statement: lExp ASSIGN exp SEMICOLON  */
+  if (yyn == 29)
+    /* "ToY.y":141  */
+                                                                                        {System.out.println("lExp ASSIGN exp SEMICOLON");};
+  break;
+
+
+  case 31: /* statement: IDENTIFIER LEFT exp RIGHT SEMICOLON  */
+  if (yyn == 31)
+    /* "ToY.y":144  */
+                                                                                        {System.out.println("IDENTIFIER LEFT exp RIGHT SEMICOLON");};
+  break;
+
+
+  case 32: /* statement: IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON  */
+  if (yyn == 32)
+    /* "ToY.y":145  */
+                                                                                        {System.out.println("IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON");};
+  break;
+
+
+  case 56: /* lExp: IDENTIFIER  */
+  if (yyn == 56)
+    /* "ToY.y":180  */
+                                    {System.out.println("lExp");};
+  break;
+
+
+  case 57: /* lExp: IDENTIFIER PERIOD lExp  */
+  if (yyn == 57)
+    /* "ToY.y":181  */
+                                    {System.out.println("lExp");};
+  break;
+
+
+
+/* "ToY.java":675  */
 
         default: break;
       }
@@ -998,19 +1093,20 @@ public class ToY
   {
     return new short[]
     {
-     158,   -46,   -46,   -46,   -46,   -19,   -46,     9,   -46,   -46,
-       2,   158,   158,    34,   -46,    36,   -46,   -46,   158,   158,
-      45,    45,   -46,   -46,    30,    33,    44,    38,    46,   -46,
-      45,   -46,    45,    49,   -46,   -46,     4,    50,    55,    59,
-      37,     4,   212,    58,    66,    54,    63,    37,    71,   -46,
-     -46,    37,   -46,   -46,    85,    37,    37,   -46,    70,     4,
-      78,    37,    88,    89,   109,   -46,    37,   108,   146,    94,
-     166,   -46,   -46,   -46,    37,    37,    37,    37,    37,    37,
-      37,    37,    37,    37,    37,    37,    37,   -46,   -46,   181,
-     -46,   125,   -46,    87,   127,   134,    37,   -46,   219,   219,
-     219,   230,   230,   230,   230,   230,   230,     6,     6,   -46,
-     -46,   138,    37,   -46,   -46,     4,   104,   -46,   196,   150,
-      37,   151,     4,   121,   -46,   -46,     4,   144,     4,   -46
+       5,   -46,   -46,   -46,   -46,   -16,   -46,    22,   -46,   -46,
+       2,     5,     5,    26,   -46,    28,   -46,   -46,     5,     5,
+      47,    47,   -46,   -46,    44,    21,    54,    48,    53,   -46,
+      47,   -46,    47,    59,   -46,   -46,   265,    55,    57,    61,
+      38,   265,    27,    63,    70,    62,    68,    38,    76,   -46,
+     -46,    38,   -46,   -46,    65,    38,    38,    91,   -46,   265,
+      83,    38,    78,    43,    84,   -46,    38,    87,   179,    72,
+     195,   -46,   -46,   -46,    38,    38,    38,    38,    38,    38,
+      38,    38,    38,    38,    38,    38,    38,   -46,   -46,   211,
+     -46,     1,   109,   -46,   127,    92,    99,    38,   -46,   252,
+     252,   252,   263,   263,   263,   263,   263,   263,    15,    15,
+     -46,   -46,    94,    38,   -46,   -46,   -46,   265,   145,   -46,
+     227,   100,    38,    96,   265,   163,   -46,   -46,   265,   112,
+     265,   -46
     };
   }
 
@@ -1026,26 +1122,27 @@ public class ToY
        0,     0,     4,     0,     1,     0,     3,     2,     4,     4,
        0,    16,     6,     5,     0,    19,     0,    17,     0,    15,
        0,    14,     0,     0,    20,    18,     0,     0,     0,     0,
-       0,    32,    11,     0,     0,     0,     0,     0,     0,    38,
-      39,     0,    36,    37,    34,     0,     0,    42,     0,    32,
+       0,    33,    11,     0,     0,     0,     0,     0,     0,    37,
+      38,     0,    35,    36,    56,     0,     0,     0,    41,    33,
        0,     0,     0,     0,     0,    21,     0,     0,     0,     0,
-       0,    40,    41,    26,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    33,    27,     0,
-      35,     0,    28,     0,     0,     0,     0,    43,    48,    49,
-      50,    51,    53,    52,    55,    54,    56,    46,    47,    44,
-      45,     0,     0,    29,    25,     0,     0,    30,     0,    23,
-       0,     0,     0,     0,    31,    24,     0,     0,     0,    22
+       0,    39,    40,    26,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    34,    27,     0,
+      57,    56,     0,    28,     0,     0,     0,     0,    42,    47,
+      48,    49,    50,    52,    51,    54,    53,    55,    45,    46,
+      43,    44,     0,     0,    30,    29,    25,     0,     0,    31,
+       0,    23,     0,     0,     0,     0,    32,    24,     0,     0,
+       0,    22
     };
   }
 
 /* YYPGOTO[NTERM-NUM].  */
-  private static final short[] yypgoto_ = yypgoto_init();
-  private static final short[] yypgoto_init()
+  private static final byte[] yypgoto_ = yypgoto_init();
+  private static final byte[] yypgoto_init()
   {
-    return new short[]
+    return new byte[]
     {
-     -46,   159,    28,    52,   -46,   -46,     3,   167,   -46,    -8,
-      17,   -35,   112,   -36,   -45
+     -46,   105,   -15,    85,   -46,   -46,    13,   113,   -46,   -13,
+      58,   -35,    74,   -45,   -36
     };
   }
 
@@ -1068,33 +1165,37 @@ public class ToY
   {
     return new short[]
     {
-      45,    44,    68,    11,    13,    45,    70,     1,     2,    14,
-      71,    72,    37,     4,    11,    38,    89,    12,    39,    40,
-      41,    93,    34,    45,    35,    15,    90,    42,    12,    98,
-      99,   100,   101,   102,   103,   104,   105,   106,   107,   108,
-     109,   110,    49,    50,    85,    86,    22,    23,     1,     2,
-      20,   116,     8,    29,     4,    21,    51,    30,    52,    53,
-      54,    31,    32,     8,     8,    36,    33,   118,     6,    46,
-       8,     8,    24,    24,    47,   123,    55,    56,    48,    45,
-     119,    64,    24,    65,    24,    67,    45,   125,    73,    66,
-      45,   127,    45,   129,    69,    88,    74,    75,    76,    77,
-      78,    79,    80,    81,    82,   113,    83,    84,    85,    86,
-      62,    54,    91,    74,    75,    76,    77,    78,    79,    80,
-      81,    82,   120,    83,    84,    85,    86,    92,    94,    96,
-      74,    75,    76,    77,    78,    79,    80,    81,    82,   126,
-      83,    84,    85,    86,   112,   114,   115,    74,    75,    76,
-      77,    78,    79,    80,    81,    82,   117,    83,    84,    85,
-      86,     1,     2,   122,   128,     3,    95,     4,     5,   124,
-      16,    87,    74,    75,    76,    77,    78,    79,    80,    81,
-      82,     6,    83,    84,    85,    86,    97,     0,    27,     0,
+      45,    44,    68,    22,    23,    45,    70,    13,     1,     2,
+      71,    72,     3,    11,     4,     5,    89,    34,    92,    35,
+     113,    94,    14,    45,    11,    15,    90,    62,     6,    99,
+     100,   101,   102,   103,   104,   105,   106,   107,   108,   109,
+     110,   111,    20,    49,    50,    30,    61,    21,    49,    50,
+       1,     2,   118,    62,    85,    86,     4,    51,    12,    52,
+      53,    54,    51,    63,    52,    53,    91,    29,   120,    12,
+       6,    31,    32,    33,    46,    36,    47,   125,    55,    56,
+      48,    45,   121,    55,    56,     8,    64,    65,    45,   127,
+      67,    62,    45,   129,    45,   131,     8,     8,    66,    69,
+      88,    54,    93,     8,     8,    24,    24,    95,    97,    73,
+     116,   117,   119,   124,   126,    24,    16,    24,    74,    75,
+      76,    77,    78,    79,    80,    81,    82,   114,    83,    84,
+      85,    86,   130,    87,    27,     0,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,   115,    83,    84,    85,    86,
+       0,     0,     0,     0,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,   122,    83,    84,    85,    86,     0,     0,
        0,     0,    74,    75,    76,    77,    78,    79,    80,    81,
-      82,   111,    83,    84,    85,    86,     0,    74,    75,    76,
-      77,    78,    79,    80,    81,    82,   121,    83,    84,    85,
-      86,     0,    74,    75,    76,    77,    78,    79,    80,    81,
-      82,    61,    83,    84,    85,    86,     0,    62,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    63,    77,    78,
-      79,    80,    81,    82,     0,    83,    84,    85,    86,    -1,
-      -1,    -1,    -1,    -1,    -1,     0,    83,    84,    85,    86
+      82,   128,    83,    84,    85,    86,     0,     0,     0,     0,
+      74,    75,    76,    77,    78,    79,    80,    81,    82,    96,
+      83,    84,    85,    86,     0,     0,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,    98,    83,    84,    85,    86,
+       0,     0,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,   112,    83,    84,    85,    86,     0,     0,    74,    75,
+      76,    77,    78,    79,    80,    81,    82,   123,    83,    84,
+      85,    86,     0,     0,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,     0,    83,    84,    85,    86,     1,     2,
+       0,     0,     0,    37,     4,     0,    38,     0,     0,    39,
+      40,    41,    77,    78,    79,    80,    81,    82,    42,    83,
+      84,    85,    86,    -1,    -1,    -1,    -1,    -1,    -1,     0,
+      83,    84,    85,    86
     };
   }
 
@@ -1103,33 +1204,37 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new short[]
     {
-      36,    36,    47,     0,    23,    41,    51,     3,     4,     0,
-      55,    56,     8,     9,    11,    11,    61,     0,    14,    15,
-      16,    66,    30,    59,    32,    23,    62,    23,    11,    74,
+      36,    36,    47,    18,    19,    41,    51,    23,     3,     4,
+      55,    56,     7,     0,     9,    10,    61,    30,    63,    32,
+      19,    66,     0,    59,    11,    23,    62,    26,    23,    74,
       75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
-      85,    86,     5,     6,    38,    39,    18,    19,     3,     4,
-      16,    96,     0,    23,     9,    19,    19,    24,    21,    22,
-      23,    17,    24,    11,    12,    16,    20,   112,    23,    19,
-      18,    19,    20,    21,    19,   120,    39,    40,    19,   115,
-     115,    23,    30,    17,    32,    22,   122,   122,    18,    35,
-     126,   126,   128,   128,    23,    17,    26,    27,    28,    29,
-      30,    31,    32,    33,    34,    18,    36,    37,    38,    39,
-      25,    23,    23,    26,    27,    28,    29,    30,    31,    32,
-      33,    34,    18,    36,    37,    38,    39,    18,    20,    35,
-      26,    27,    28,    29,    30,    31,    32,    33,    34,    18,
-      36,    37,    38,    39,    19,    18,    12,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    18,    36,    37,    38,
-      39,     3,     4,    13,    20,     7,    20,     9,    10,    18,
-      11,    59,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    23,    36,    37,    38,    39,    20,    -1,    21,    -1,
-      -1,    -1,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    20,    36,    37,    38,    39,    -1,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    20,    36,    37,    38,
-      39,    -1,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    19,    36,    37,    38,    39,    -1,    25,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    35,    29,    30,
-      31,    32,    33,    34,    -1,    36,    37,    38,    39,    29,
-      30,    31,    32,    33,    34,    -1,    36,    37,    38,    39
+      85,    86,    16,     5,     6,    24,    19,    19,     5,     6,
+       3,     4,    97,    26,    39,    40,     9,    19,     0,    21,
+      22,    23,    19,    36,    21,    22,    23,    23,   113,    11,
+      23,    17,    24,    20,    19,    16,    19,   122,    40,    41,
+      19,   117,   117,    40,    41,     0,    23,    17,   124,   124,
+      22,    26,   128,   128,   130,   130,    11,    12,    36,    23,
+      17,    23,    18,    18,    19,    20,    21,    20,    36,    18,
+      18,    12,    18,    13,    18,    30,    11,    32,    27,    28,
+      29,    30,    31,    32,    33,    34,    35,    18,    37,    38,
+      39,    40,    20,    59,    21,    -1,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    18,    37,    38,    39,    40,
+      -1,    -1,    -1,    -1,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    18,    37,    38,    39,    40,    -1,    -1,
+      -1,    -1,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    18,    37,    38,    39,    40,    -1,    -1,    -1,    -1,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    20,
+      37,    38,    39,    40,    -1,    -1,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    20,    37,    38,    39,    40,
+      -1,    -1,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    20,    37,    38,    39,    40,    -1,    -1,    27,    28,
+      29,    30,    31,    32,    33,    34,    35,    20,    37,    38,
+      39,    40,    -1,    -1,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    -1,    37,    38,    39,    40,     3,     4,
+      -1,    -1,    -1,     8,     9,    -1,    11,    -1,    -1,    14,
+      15,    16,    30,    31,    32,    33,    34,    35,    23,    37,
+      38,    39,    40,    30,    31,    32,    33,    34,    35,    -1,
+      37,    38,    39,    40
     };
   }
 
@@ -1140,19 +1245,20 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     3,     4,     7,     9,    10,    23,    43,    45,    46,
-      47,    48,    52,    23,     0,    23,    43,    44,    48,    52,
-      16,    19,    44,    44,    45,    49,    51,    49,    50,    23,
-      24,    17,    24,    20,    51,    51,    16,     8,    11,    14,
-      15,    16,    23,    45,    53,    55,    19,    19,    19,     5,
-       6,    19,    21,    22,    23,    39,    40,    55,    56,    53,
-      54,    19,    25,    35,    23,    17,    35,    22,    56,    23,
-      56,    56,    56,    18,    26,    27,    28,    29,    30,    31,
-      32,    33,    34,    36,    37,    38,    39,    54,    17,    56,
-      55,    23,    18,    56,    20,    20,    35,    20,    56,    56,
+       0,     3,     4,     7,     9,    10,    23,    44,    46,    47,
+      48,    49,    53,    23,     0,    23,    44,    45,    49,    53,
+      16,    19,    45,    45,    46,    50,    52,    50,    51,    23,
+      24,    17,    24,    20,    52,    52,    16,     8,    11,    14,
+      15,    16,    23,    46,    54,    57,    19,    19,    19,     5,
+       6,    19,    21,    22,    23,    40,    41,    56,    57,    54,
+      55,    19,    26,    36,    23,    17,    36,    22,    56,    23,
+      56,    56,    56,    18,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    37,    38,    39,    40,    55,    17,    56,
+      57,    23,    56,    18,    56,    20,    20,    36,    20,    56,
       56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
-      56,    20,    19,    18,    18,    12,    56,    18,    56,    53,
-      18,    20,    13,    56,    18,    53,    18,    53,    20,    53
+      56,    56,    20,    19,    18,    18,    18,    12,    56,    18,
+      56,    54,    18,    20,    13,    56,    18,    54,    18,    54,
+      20,    54
     };
   }
 
@@ -1162,12 +1268,12 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    42,    43,    43,    44,    44,    44,    45,    45,    45,
-      45,    46,    47,    47,    48,    49,    50,    50,    50,    51,
-      51,    52,    53,    53,    53,    53,    53,    53,    53,    53,
-      53,    53,    54,    54,    55,    55,    56,    56,    56,    56,
+       0,    43,    44,    44,    45,    45,    45,    46,    46,    46,
+      46,    47,    48,    48,    49,    50,    51,    51,    51,    52,
+      52,    53,    54,    54,    54,    54,    54,    54,    54,    54,
+      54,    54,    54,    55,    55,    56,    56,    56,    56,    56,
       56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
-      56,    56,    56,    56,    56,    56,    56
+      56,    56,    56,    56,    56,    56,    57,    57
     };
   }
 
@@ -1180,9 +1286,9 @@ private static final short[] yycheck_ = yycheck_init();
        0,     2,     2,     2,     0,     2,     2,     1,     1,     1,
        1,     1,     1,     1,     5,     2,     0,     1,     3,     1,
        3,     8,    11,     6,     8,     5,     3,     3,     3,     4,
-       5,     7,     0,     2,     1,     3,     1,     1,     1,     1,
-       2,     2,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3
+       4,     5,     7,     0,     2,     1,     1,     1,     1,     2,
+       2,     1,     3,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     1,     3
     };
   }
 
@@ -1194,7 +1300,7 @@ private static final short[] yycheck_ = yycheck_init();
   private static final SymbolKind yytranslate_(int t)
   {
     // Last valid token kind.
-    int code_max = 296;
+    int code_max = 297;
     if (t <= 0)
       return SymbolKind.S_YYEOF;
     else if (t <= code_max)
@@ -1236,15 +1342,15 @@ private static final short[] yycheck_ = yycheck_init();
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    41
+      35,    36,    37,    38,    39,    40,    41,    42
     };
   }
 
 
-  private static final int YYLAST_ = 269;
+  private static final int YYLAST_ = 303;
   private static final int YYEMPTY_ = -2;
   private static final int YYFINAL_ = 14;
-  private static final int YYNTOKENS_ = 42;
+  private static final int YYNTOKENS_ = 43;
 
 /* Unqualified %code blocks.  */
 /* "ToY.y":19  */
@@ -1274,10 +1380,10 @@ private static final short[] yycheck_ = yycheck_init();
         symbolTable.printTable();
     }
 
-/* "ToY.java":1276  */
+/* "ToY.java":1384  */
 
 }
-/* "ToY.y":182  */
+/* "ToY.y":184  */
 
 
 class ToYLexer implements ToY.Lexer {

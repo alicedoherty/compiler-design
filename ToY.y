@@ -48,7 +48,7 @@
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
 %token INTEGER_LITERAL STRING_LITERAL
 %left IDENTIFIER
-%token COMMA
+%token COMMA QUOTE
 
 /* Need to be able to differentiate between unary minus and binary minus */
 %left PERIOD
@@ -84,7 +84,7 @@ pgm1
 
 /* Only struct identifiers count as a type - not all IDENTIFIERs */
 type
-    : INT
+    : INT                    {System.out.println("INT");}
     | BOOL
     | STRING
     | structName
@@ -131,27 +131,23 @@ proc
 /* Variables declared inside compound/for/if statement cannot be used outside of it */
 
 statement
-    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement
-    | IF LEFT exp RIGHT THEN statement
-    | IF LEFT exp RIGHT THEN statement ELSE statement
-    | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
-    | RETURN exp SEMICOLON
-    | LEFTCURLY statementSeq RIGHTCURLY
-    | type IDENTIFIER SEMICOLON 
-    | lExp ASSIGN exp SEMICOLON
+    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement  {System.out.println("FOR");}
+    | IF LEFT exp RIGHT THEN statement                                                  {System.out.println("IF");}
+    | IF LEFT exp RIGHT THEN statement ELSE statement                                   {System.out.println("IF ELSE");}
+    | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON                                        {System.out.println("PRINTF");}              
+    | RETURN exp SEMICOLON                                                              {System.out.println("RETURN");}
+    | LEFTCURLY statementSeq RIGHTCURLY                                                 {System.out.println("LEFTCURLY");}
+    | type IDENTIFIER SEMICOLON                                                         {System.out.println("type IDENTIFIER SEMICOLON");}
+    | lExp ASSIGN exp SEMICOLON                                                         {System.out.println("lExp ASSIGN exp SEMICOLON");}
+    | IDENTIFIER ASSIGN exp SEMICOLON
     /* TODO Below exp - they should allow for 0 exp */
-    | IDENTIFIER LEFT exp RIGHT SEMICOLON 
-    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON 
+    | IDENTIFIER LEFT exp RIGHT SEMICOLON                                               {System.out.println("IDENTIFIER LEFT exp RIGHT SEMICOLON");}
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON                             {System.out.println("IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON");}
 ;
 
 statementSeq
     : /* nothing */
     | statement statementSeq
-;
-
-lExp
-    : IDENTIFIER
-    | IDENTIFIER PERIOD lExp 
 ;
 
 /* Define different expressions for type checking or delegate to type checker */
@@ -178,6 +174,11 @@ exp
     | exp GE exp
     | exp LE exp
     | exp NE exp
+;
+
+lExp
+    : IDENTIFIER                    {System.out.println("lExp");}
+    | IDENTIFIER PERIOD lExp        {System.out.println("lExp");}
 ;
 
 %%
