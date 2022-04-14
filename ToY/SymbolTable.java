@@ -6,10 +6,12 @@ import java.util.ArrayList;
 public class SymbolTable {
     public HashMap<String, Function> functionSymbolTable;
     public HashMap<String, Struct> structSymbolTable;
+    public HashMap<String, Variable> variableSymbolTable;
     
     public SymbolTable() {
         functionSymbolTable = new HashMap<String, Function>();
         structSymbolTable = new HashMap<String, Struct>();
+        variableSymbolTable = new HashMap<String, Variable>();
     }
 
     public void printFunctionTable() {
@@ -28,6 +30,36 @@ public class SymbolTable {
 
     public void printStructTable() {
 
+    }
+
+    public void printVariableTable() {
+        System.out.println("Variable Symbol Table: ");
+        for (String key: variableSymbolTable.keySet()) {
+            Variable variable = variableSymbolTable.get(key);
+            System.out.print(variable.name + " : " + variable.type + ", ");
+        }
+    }
+
+    public boolean isVariableDeclared(String name) {
+        if (variableSymbolTable.containsKey(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    // Is the variable of the given name of a passed in type?
+    public boolean isType(String name, int type) {
+        if (variableSymbolTable.containsKey(name)) {
+            Variable variable = variableSymbolTable.get(name);
+            if (variable.type == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean returnTypeMatches() {
+        return true;
     }
 
     // public void enterScope() {
@@ -62,7 +94,6 @@ public class SymbolTable {
     public Function addFunction(String name, int type, ArrayList<Variable> parameters) {
         Function function = new Function(name, type, parameters);
         functionSymbolTable.put(name, function);
-        System.out.println("Function Added: " + name + " + " + type);
         return function;
     }
 
@@ -74,13 +105,9 @@ public class SymbolTable {
 
     public Variable addVariable(String name, int type) {
         Variable variable = new Variable(name, type);
+        variableSymbolTable.put(name, variable);
         return variable;
     }
-
-
-    // public void checkScope() {
-
-    // }
 
     // public class Symbol {
     //     String name;
@@ -100,7 +127,6 @@ public class SymbolTable {
         public Function() {
             this.name = "";
             this.returnType = -1;
-            this.parameters = null;
         }
 
         public Function(String name, int returnType, ArrayList<Variable> parameters) {

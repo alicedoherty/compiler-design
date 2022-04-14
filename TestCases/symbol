@@ -1,7 +1,12 @@
-void main(int pls, int another, string hi) {
-    int myInt;
+void main(int pls, string hi) {
+    {
+        int i;
+        int j;
+    }
 }
 
-int myFunction(int param1) {
-    string string;
+int func(bool myBool) {
+    {
+        string hello;
+    }
 }

@@ -18,9 +18,9 @@
 
 %code {
     public static SymbolTable symbolTable;
-    public SymbolTable.Function func;
+    public static SymbolTable.Function func;
     public SymbolTable.Variable var;
-    public static ArrayList<SymbolTable.Variable> varList;
+    public ArrayList<SymbolTable.Variable> varList = new ArrayList<SymbolTable.Variable>();
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -28,22 +28,26 @@
 
         initialise();
 
-        if (parser.parse())
-            System.out.println("VALID");
-        else {
+        try {
+            if (parser.parse())
+                System.out.println("VALID");
+            else
+                System.out.println("ERROR");
+        } catch (Error e) {
             System.out.println("ERROR");
         }
-
-        printSymbolTable();
+        printSymbolTables();
 	} 
     
     public static void initialise() {
         symbolTable = new SymbolTable();
-        varList = new ArrayList<SymbolTable.Variable>();
+        //func = symbolTable.new Function();
+        //varList = new ArrayList<SymbolTable.Variable>();
     }
 
-    public static void printSymbolTable() {
+    public static void printSymbolTables() {
         symbolTable.printFunctionTable();
+        symbolTable.printVariableTable();
     }
 }
 
@@ -69,20 +73,16 @@
 %nonassoc THEN
 %nonassoc ELSE
 
-/* %precedence THEN
-%precedence ELSE
-*/
-
 %%  
 
 pgm
-    : proc pgm1                             
+    : proc pgm1                           
     | struct pgm 
 ;
 
 pgm1
     : /* nothing */
-    | proc pgm1                                   
+    | proc pgm1            
     | struct pgm1
 ;
 
@@ -100,8 +100,8 @@ structName
 /* STRUCT is keyword for defining a struct */
 /* STRUCT cannot be used as a return type - rather value of struct, e.g Car is the return type*/
 returnType
-    : type 
-    | VOID
+    : type          
+    | VOID            
 ;
 
 /* Struct has at least one declaration */
@@ -110,7 +110,13 @@ struct
 ;
 
 declaration
-    : type IDENTIFIER                                                       { var = symbolTable.addVariable($2.value, $1.type); varList.add(var); }
+    : type IDENTIFIER   {   
+                            if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                            else { 
+                                var = symbolTable.addVariable($2.value, $1.type); 
+                                varList.add(var);                            
+                            }
+                        }
 ;
 
 /* Check if both declarationZeroPlus and declarationOnePlus */
@@ -126,24 +132,31 @@ declarationOnePlus
 ;                          
 
 proc
-    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY     { func = symbolTable.addFunction($2.value, $1.type, varList); }
+    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  { 
+                                                                                                func = symbolTable.new Function();
+                                                                                                func.name = $2.value; func.returnType = $1.type; func.parameters = varList;
+                                                                                                symbolTable.functionSymbolTable.put(func.name, func);
+                                                                                           }                                                                                          
 
 /* First statement inside for-construct is optional */
 /* IDENTIFIER in assignment needs to already be declared */
 /* Variables declared inside compound/for/if statement cannot be used outside of it */
 
 statement
-    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement
+    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement { if(!symbolTable.isVariableDeclared($3.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
     | IF LEFT exp RIGHT THEN statement
     | IF LEFT exp RIGHT THEN statement ELSE statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
     | LEFTCURLY statementSeq RIGHTCURLY
-    | type IDENTIFIER SEMICOLON 
-    | lExp ASSIGN exp SEMICOLON
+    | type IDENTIFIER SEMICOLON     { if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                                        else { symbolTable.addVariable($2.value, $1.type); }}
+    | IDENTIFIER ASSIGN exp SEMICOLON   { if(!symbolTable.isVariableDeclared($1.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
+    /* Add check to see if variable has been declared */
+    | lExp ASSIGN exp SEMICOLON     
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
-    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON 
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { if(!symbolTable.isVariableDeclared($1.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
 ;
 
 statementSeq
@@ -167,7 +180,7 @@ exp
     | NOT exp
     | lExp
     | LEFT exp RIGHT
-    | exp PLUS exp       
+    | exp PLUS exp    
     | exp MINUS exp
     | exp TIMES exp 
     | exp DIVIDE exp
