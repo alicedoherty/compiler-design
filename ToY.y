@@ -46,7 +46,8 @@
 /* First token has lowest precedence */
 %token BOOL INT TRUE FALSE VOID PRINTF STRING STRUCT IF THEN ELSE FOR RETURN
 %token LEFTCURLY RIGHTCURLY SEMICOLON LEFT RIGHT
-%token IDENTIFIER INTEGER_LITERAL STRING_LITERAL
+%token INTEGER_LITERAL STRING_LITERAL
+%left IDENTIFIER
 %token COMMA
 
 /* Need to be able to differentiate between unary minus and binary minus */
