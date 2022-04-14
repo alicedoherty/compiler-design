@@ -1,0 +1,6 @@
+//Use of undeclared variables
+void main() {
+    {
+        if (i == 0) then printf ("hello"); else printf ("world");
+    }
+}

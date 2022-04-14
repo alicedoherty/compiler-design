@@ -1,0 +1,10 @@
+//Bad struct usage: LHS of dot in variable reference is not a known struct 
+struct MyStruct {
+         string a
+}
+
+void main() {
+    {
+        WrongStruct s2;
+    }
+}

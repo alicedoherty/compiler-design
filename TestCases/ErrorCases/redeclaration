@@ -1,0 +1,7 @@
+//Re-declaration of the same variable
+void main() {
+    {
+        int a;
+        int a;
+    }
+}

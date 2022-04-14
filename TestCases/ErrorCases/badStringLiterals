@@ -1,0 +1,7 @@
+// Bad string literals e.g., "Hello
+void main(){
+    {
+        string s;
+        s = "Hello;
+    }   
+}
