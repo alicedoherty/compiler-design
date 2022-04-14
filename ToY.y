@@ -18,6 +18,9 @@
 
 %code {
     public static SymbolTable symbolTable;
+    public SymbolTable.Function func;
+    public SymbolTable.Variable var;
+    public static ArrayList<SymbolTable.Variable> varList;
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -36,10 +39,11 @@
     
     public static void initialise() {
         symbolTable = new SymbolTable();
+        varList = new ArrayList<SymbolTable.Variable>();
     }
 
     public static void printSymbolTable() {
-        symbolTable.printTable();
+        symbolTable.printFunctionTable();
     }
 }
 
@@ -72,13 +76,13 @@
 %%  
 
 pgm
-    : proc pgm1
+    : proc pgm1                             
     | struct pgm 
 ;
 
 pgm1
     : /* nothing */
-    | proc pgm1
+    | proc pgm1                                   
     | struct pgm1
 ;
 
@@ -102,29 +106,27 @@ returnType
 
 /* Struct has at least one declaration */
 struct
-    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY         { symbolTable.addStruct($2.value, -1); }
+    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY        
 ;
 
-
-/* { SymbolTable.variableSymbolTable.put($2.value, $1.type); } */
-
 declaration
-    : type IDENTIFIER      
+    : type IDENTIFIER                                                       { var = symbolTable.addVariable($2.value, $1.type); varList.add(var); }
 ;
 
 /* Check if both declarationZeroPlus and declarationOnePlus */
 declarationZeroPlus
     : /* nothing */
-    | declaration
-    | declaration COMMA declarationOnePlus
+    | declaration                                                           
+    | declaration COMMA declarationOnePlus                              
 ;
 
 declarationOnePlus
-    : declaration
-    | declaration COMMA declarationOnePlus
+    : declaration                                                                                                      
+    | declaration COMMA declarationOnePlus    
+;                          
 
 proc
-    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY
+    : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY     { func = symbolTable.addFunction($2.value, $1.type, varList); }
 
 /* First statement inside for-construct is optional */
 /* IDENTIFIER in assignment needs to already be declared */

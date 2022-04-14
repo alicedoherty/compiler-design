@@ -1,0 +1,7 @@
+void main(int pls, int another, string hi) {
+    int myInt;
+}
+
+int myFunction(int param1) {
+    string string;
+}

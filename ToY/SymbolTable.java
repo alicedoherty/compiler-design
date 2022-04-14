@@ -2,21 +2,32 @@ package ToY;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class SymbolTable {
-    public HashMap<String, Symbol> symbols;
+    public HashMap<String, Function> functionSymbolTable;
+    public HashMap<String, Struct> structSymbolTable;
     
     public SymbolTable() {
-        symbols = new HashMap<String, Symbol>();
+        functionSymbolTable = new HashMap<String, Function>();
+        structSymbolTable = new HashMap<String, Struct>();
     }
 
-    public void printTable() {
-        System.out.println("Symbol Table:");
-        for (String key : symbols.keySet()) {
-            System.out.println("Symbol:" + key + ": " + symbols.get(key));
+    public void printFunctionTable() {
+        System.out.println("Function Symbol Table:");
+        for (String key : functionSymbolTable.keySet()) {
+            Function function = functionSymbolTable.get(key);
+            System.out.print("FunctionName: " + function.name + " | " + "ReturnType: " + function.returnType + " | ");
+            System.out.print("Parameters: ");
+            for (int i = 0; i < function.parameters.size(); i++) {
+                System.out.print(function.parameters.get(i).name + ":" + function.parameters.get(i).type + ", ");
+            }
+            System.out.println();
         }
-        System.out.println();
+        
+    }
+
+    public void printStructTable() {
+
     }
 
     // public void enterScope() {
@@ -27,18 +38,18 @@ public class SymbolTable {
 
     // }
 
-    public Symbol findSymbol(String name) {
-        for (Map.Entry<String, Symbol> pair : symbols.entrySet()) {
-            String symbolName = pair.getKey();
-            Symbol symbol = pair.getValue();
+    // public Symbol findSymbol(String name) {
+    //     for (Map.Entry<String, Symbol> pair : symbols.entrySet()) {
+    //         String symbolName = pair.getKey();
+    //         Symbol symbol = pair.getValue();
 
-            if (name.equals(symbolName)) {
-                System.out.println("Symbol: " + symbolName + ": " + symbol);
-                return symbol;
-            }
-        }
-        return null;
-    }
+    //         if (name.equals(symbolName)) {
+    //             System.out.println("Symbol: " + symbolName + ": " + symbol);
+    //             return symbol;
+    //         }
+    //     }
+    //     return null;
+    // }
 
     // public void addSymbol(Function function) {
     //     symbols.put(function.name, function);
@@ -48,16 +59,17 @@ public class SymbolTable {
     //     symbols.put(variable.name, variable);
     // }
 
-    public void addFunction(String name, int type) {
-        Function function = new Function(name, type);
-        symbols.put(name, function);
+    public Function addFunction(String name, int type, ArrayList<Variable> parameters) {
+        Function function = new Function(name, type, parameters);
+        functionSymbolTable.put(name, function);
         System.out.println("Function Added: " + name + " + " + type);
+        return function;
     }
 
-    public void addStruct(String name, int type) {
-        Struct struct = new Struct(name, type);
-        symbols.put(name, struct);
-        System.out.println("Struct Added: " + name + " + " + type);
+    public void addStruct(String name) {
+        Struct struct = new Struct(name);
+        structSymbolTable.put(name, struct);
+        System.out.println("Struct Added: " + name);
     }
 
     public Variable addVariable(String name, int type) {
@@ -70,21 +82,31 @@ public class SymbolTable {
 
     // }
 
-    public class Symbol {
-        String name;
-        int type;
+    // public class Symbol {
+    //     String name;
+    //     int type;
 
-        public Symbol(String name, int type) {
-            this.name = name;
-            this.type = type; // type is the return type for Function
-        }
-    }
+    //     public Symbol(String name, int type) {
+    //         this.name = name;
+    //         this.type = type; // type is the return type for Function
+    //     }
+    // }
 
-    public class Function extends Symbol {
+    public class Function {
+        public String name;
+        public int returnType;
         public ArrayList<Variable> parameters = new ArrayList<Variable>();
         
-        public Function(String name, int returnType) {
-            super(name, returnType);
+        public Function() {
+            this.name = "";
+            this.returnType = -1;
+            this.parameters = null;
+        }
+
+        public Function(String name, int returnType, ArrayList<Variable> parameters) {
+            this.name = name;
+            this.returnType = returnType;
+            this.parameters = parameters;
         }
 
         public void addParameter(Variable variable) {
@@ -92,11 +114,12 @@ public class SymbolTable {
         }
     }
 
-    public class Struct extends Symbol {
+    public class Struct {
+        public String name;
         public ArrayList<Variable> fields = new ArrayList<Variable>();
         
-        public Struct(String name, int type) {
-            super(name, type);
+        public Struct(String name) {
+           this.name = name;
         }
 
         public void addField(Variable variable) {
@@ -104,11 +127,20 @@ public class SymbolTable {
         }
     }
 
-    public class Variable extends Symbol {
+    public class Variable {
+        public String name;
+        public int type;
         public int level;
 
+        public Variable() {
+            this.name = "";
+            this.type = -1;
+            this.level = -1;
+        }
+
         public Variable(String name, int type) {
-            super(name, type);
+            this.name = name;
+            this.type = type;
         }
     }
 }

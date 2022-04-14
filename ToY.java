@@ -568,15 +568,22 @@ public class ToY
 
     switch (yyn)
       {
-          case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY  */
-  if (yyn == 14)
-    /* "ToY.y":104  */
-                                                                        { symbolTable.addStruct(yystack.valueAt (3).value, -1); };
+          case 15: /* declaration: type IDENTIFIER  */
+  if (yyn == 15)
+    /* "ToY.y":113  */
+                                                                            { var = symbolTable.addVariable(yystack.valueAt (0).value, yystack.valueAt (1).type); varList.add(var); };
+  break;
+
+
+  case 21: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
+  if (yyn == 21)
+    /* "ToY.y":129  */
+                                                                                              { func = symbolTable.addFunction(yystack.valueAt (6).value, yystack.valueAt (7).type, varList); };
   break;
 
 
 
-/* "ToY.java":580  */
+/* "ToY.java":587  */
 
         default: break;
       }
@@ -1250,6 +1257,9 @@ private static final short[] yycheck_ = yycheck_init();
 /* "ToY.y":19  */
 
     public static SymbolTable symbolTable;
+    public SymbolTable.Function func;
+    public SymbolTable.Variable var;
+    public static ArrayList<SymbolTable.Variable> varList;
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -1268,16 +1278,17 @@ private static final short[] yycheck_ = yycheck_init();
     
     public static void initialise() {
         symbolTable = new SymbolTable();
+        varList = new ArrayList<SymbolTable.Variable>();
     }
 
     public static void printSymbolTable() {
-        symbolTable.printTable();
+        symbolTable.printFunctionTable();
     }
 
-/* "ToY.java":1276  */
+/* "ToY.java":1289  */
 
 }
-/* "ToY.y":182  */
+/* "ToY.y":185  */
 
 
 class ToYLexer implements ToY.Lexer {
