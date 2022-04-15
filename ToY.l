@@ -69,46 +69,46 @@ LineTerminator = \r|\n|\r\n
 
 /* reserved words */
 "bool"                         { return new Yytoken(ToYLexer.BOOL, "BOOL"); }
-"int"                          { return new Yytoken(ToYLexer.INT); }
-"true"                         { return new Yytoken(ToYLexer.TRUE); }
-"false"                        { return new Yytoken(ToYLexer.FALSE); }
-"void"                         { return new Yytoken(ToYLexer.VOID); }
-"printf"                       { return new Yytoken(ToYLexer.PRINTF); }
+"int"                          { return new Yytoken(ToYLexer.INT, "INT"); }
+"true"                         { return new Yytoken(ToYLexer.TRUE, "TRUE"); }
+"false"                        { return new Yytoken(ToYLexer.FALSE,"FALSE"); }
+"void"                         { return new Yytoken(ToYLexer.VOID, "VOID"); }
+"printf"                       { return new Yytoken(ToYLexer.PRINTF, "PRINTF"); }
 "string"                       { return new Yytoken(ToYLexer.STRING, "STRING"); }
 "struct"                       { return new Yytoken(ToYLexer.STRUCT, "STRUCT"); }
-"if"                           { return new Yytoken(ToYLexer.IF); }
-"then"                         { return new Yytoken(ToYLexer.THEN); }
-"else"                         { return new Yytoken(ToYLexer.ELSE); }
-"for"                          { return new Yytoken(ToYLexer.FOR); }
-"return"                       { return new Yytoken(ToYLexer.RETURN); }
+"if"                           { return new Yytoken(ToYLexer.IF, "IF"); }
+"then"                         { return new Yytoken(ToYLexer.THEN, "THEN"); }
+"else"                         { return new Yytoken(ToYLexer.ELSE, "ELSE"); }
+"for"                          { return new Yytoken(ToYLexer.FOR, "FOR"); }
+"return"                       { return new Yytoken(ToYLexer.RETURN, "RETURN"); }
 
 /* operators */
-"+"                            { return new Yytoken(ToYLexer.PLUS); }
-"-"                            { return new Yytoken(ToYLexer.MINUS); }
-"*"                            { return new Yytoken(ToYLexer.TIMES); }
-"/"                            { return new Yytoken(ToYLexer.DIVIDE); }
-"mod"                          { return new Yytoken(ToYLexer.MOD); }
-"and"                          { return new Yytoken(ToYLexer.AND); }
-"or"                           { return new Yytoken(ToYLexer.OR); }
+"+"                            { return new Yytoken(ToYLexer.PLUS, "PLUS"); }
+"-"                            { return new Yytoken(ToYLexer.MINUS, "MINUS"); }
+"*"                            { return new Yytoken(ToYLexer.TIMES, "TIMES"); }
+"/"                            { return new Yytoken(ToYLexer.DIVIDE, "DIVIDE"); }
+"mod"                          { return new Yytoken(ToYLexer.MOD, "MOD"); }
+"and"                          { return new Yytoken(ToYLexer.AND, "AND"); }
+"or"                           { return new Yytoken(ToYLexer.OR, "OR"); }
 /* ! at top of projetc spec but 'not' later */
-"!"                            { return new Yytoken(ToYLexer.NOT); }
-"=="                           { return new Yytoken(ToYLexer.EQ); }
-"<"                            { return new Yytoken(ToYLexer.LT); }
-">"                            { return new Yytoken(ToYLexer.GT); }
-"<="                           { return new Yytoken(ToYLexer.LE); }
-">="                           { return new Yytoken(ToYLexer.GE); }
-"!="                           { return new Yytoken(ToYLexer.NE); }
-"="                            { return new Yytoken(ToYLexer.ASSIGN); }
+"!"                            { return new Yytoken(ToYLexer.NOT, "NOT"); }
+"=="                           { return new Yytoken(ToYLexer.EQ, "EQ"); }
+"<"                            { return new Yytoken(ToYLexer.LT, "LT"); }
+">"                            { return new Yytoken(ToYLexer.GT, "GT"); }
+"<="                           { return new Yytoken(ToYLexer.LE, "LE"); }
+">="                           { return new Yytoken(ToYLexer.GE, "GE"); }
+"!="                           { return new Yytoken(ToYLexer.NE, "NE"); }
+"="                            { return new Yytoken(ToYLexer.ASSIGN, "ASSIGN"); }
 
 /* symbols */
-"{"                            { return new Yytoken(ToYLexer.LEFTCURLY); }
-"}"                            { return new Yytoken(ToYLexer.RIGHTCURLY); }
-";"                            { return new Yytoken(ToYLexer.SEMICOLON); }
-"("                            { return new Yytoken(ToYLexer.LEFT); }
-")"                            { return new Yytoken(ToYLexer.RIGHT); }
-"."                            { return new Yytoken(ToYLexer.PERIOD); }
-","                            { return new Yytoken(ToYLexer.COMMA); }
-"\""                           { return new Yytoken(ToYLexer.QUOTE); }
+"{"                            { return new Yytoken(ToYLexer.LEFTCURLY, "LEFTCURLY"); }
+"}"                            { return new Yytoken(ToYLexer.RIGHTCURLY, "RIGHTCURLY"); }
+";"                            { return new Yytoken(ToYLexer.SEMICOLON, "SEMICOLON"); }
+"("                            { return new Yytoken(ToYLexer.LEFT, "LEFT"); }
+")"                            { return new Yytoken(ToYLexer.RIGHT, "RIGHT"); }
+"."                            { return new Yytoken(ToYLexer.PERIOD, "PERIOD"); }
+","                            { return new Yytoken(ToYLexer.COMMA, "COMMA"); }
+"\""                           { return new Yytoken(ToYLexer.QUOTE, "QUOTE"); }
 
 /* comments */
 "//".*                        { }
