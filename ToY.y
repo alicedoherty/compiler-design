@@ -19,6 +19,7 @@
 %code {
     public static SymbolTable symbolTable;
     public static SymbolTable.Variable var;
+    public String returnType;
 
     public SymbolTable.Function func;
     public SymbolTable.Struct struct;
@@ -102,11 +103,9 @@ type
 structName
     : IDENTIFIER    { if(!symbolTable.isStructDeclared($1.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
 
-/* STRUCT is keyword for defining a struct */
-/* STRUCT cannot be used as a return type - rather value of struct, e.g Car is the return type*/
 returnType
-    : type          
-    | VOID            
+    : type     { returnType = $1.value; }     
+    | VOID     { returnType = $1.value; }  
 ;
 
 /* Struct has at least one declaration */
@@ -178,11 +177,34 @@ proc
 /* Variables declared inside compound/for/if statement cannot be used outside of it */
 
 statement
-    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement { if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }}
-    | IF LEFT exp RIGHT THEN statement
-    | IF LEFT exp RIGHT THEN statement ELSE statement
+    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement { 
+                                                                                            if(!$7.value.equals("BOOL")) {
+                                                                                                throw new Error("Second component in for loop is boolean expression");
+                                                                                            }
+                                                                                            if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
+                                                                                        }
+    | IF LEFT exp RIGHT THEN statement      {
+                                                if(!$3.value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
+                                                /* Add check for */
+                                                /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                            }
+    | IF LEFT exp RIGHT THEN statement ELSE statement   {
+                                                            if(!$3.value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
+                                                            /* Add check for */
+                                                            /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                                        }
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
-    | RETURN exp SEMICOLON
+    | RETURN exp SEMICOLON   { 
+                                String varType;
+                                if($2.type == 278) {
+                                    varType = symbolTable.getVariableType($2.value, localVariableList);                                    
+                                } else {
+                                    varType = $2.value;
+                                }
+                                if(!returnType.equals(varType)) {
+                                    throw new Error("Return type does not match function defintion");
+                                }
+                             }
     | LEFTCURLY statementSeq RIGHTCURLY
     | type IDENTIFIER SEMICOLON             {
                                                 if(symbolTable.isVariableDeclared($2.value, localVariableList)) { throw new Error("Variable " + $2.value + " is already declared"); }
@@ -196,16 +218,13 @@ statement
                                             }
     /* Update below - to work with lExp */ 
     | IDENTIFIER PERIOD IDENTIFIER ASSIGN exp SEMICOLON     {
-                                                                System.out.println("test");
                                                                 /* Check if there is variable called IDENTIFIER in the function */
                                                                 if (symbolTable.isVariableDeclared($1.value, localVariableList)) {
                                                                     
                                                                     /* Get type of the variable */
                                                                     String varType = symbolTable.getVariableType($1.value, localVariableList);
-                                                                    System.out.println("test2");
                                                                     /* Look for struct of that type and if it exists, check it has field lExp */
                                                                     if (symbolTable.isStructDeclared(varType)) {
-                                                                        System.out.println("test3");
                                                                         if (!symbolTable.isStructField(varType, $3.value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + $3.value);
                                                                         }
@@ -215,7 +234,21 @@ statement
                                                                 }
                                                            }
     /*| lExp ASSIGN exp SEMICOLON*/
-    | IDENTIFIER ASSIGN exp SEMICOLON       { if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }}
+    | IDENTIFIER ASSIGN exp SEMICOLON       { 
+                                                if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
+                                                
+                                                String varType = symbolTable.getVariableType($1.value, localVariableList);                                    
+                                                
+                                                String exprType;
+                                                if($3.type == 278) {
+                                                    exprType = symbolTable.getVariableType($2.value, localVariableList);                                    
+                                                } else { 
+                                                    exprType = $3.value;
+                                                }
+                                                if(!exprType.equals(varType)) {
+                                                    throw new Error("Assignment is not well-typed");
+                                                }    
+                                            }
     /* Add check to see if variable has been declared */
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
@@ -230,37 +263,120 @@ statementSeq
 /* Define different expressions for type checking or delegate to type checker */
 /* See if different rules are needed for calculation, logical, comparison expressions */
 exp
-    : INTEGER_LITERAL
-    | STRING_LITERAL
-    | TRUE
-    | FALSE
-    | MINUS exp %prec UMINUS 
-    | NOT exp
-    | lExp
-    | LEFT exp RIGHT
-    | exp PLUS exp          
-    | exp MINUS exp
-    | exp TIMES exp 
-    | exp DIVIDE exp
-    | exp MOD exp 
-    | exp AND exp 
-    | exp OR exp
-    | exp EQ exp 
-    | exp GT exp
-    | exp LT exp
-    | exp GE exp
-    | exp LE exp
-    | exp NE exp
+    : INTEGER_LITERAL   /*{ $$.value = "INT"; }*/
+    | STRING_LITERAL    { }
+    | TRUE              { $$.value = "BOOL"; }
+    | FALSE             { $$.value = "BOOL"; }
+    | MINUS exp %prec UMINUS    { $$.value = "INT"; }
+    | NOT exp                   { $$.value = "BOOL"; }
+    /*| lExp */
+    | IDENTIFIER                        { 
+                                            System.out.println($1.value);
+                                            if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
+                                            $$.value = symbolTable.getVariableType($1.value, localVariableList); 
+                                        }
+    | IDENTIFIER PERIOD IDENTIFIER
+    | LEFT exp RIGHT    { $$.value = $2.value; }
+    | exp PLUS exp      { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("Addition can only be done on INTs");
+                            }
+                        }          
+    | exp MINUS exp     { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("Subtraction can only be done on INTs");
+                            }
+                        } 
+    | exp TIMES exp     { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("Multiplication can only be done on INTs");
+                            }
+                        } 
+    | exp DIVIDE exp    { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("Division can only be done on INTs");
+                            }
+                        }
+    | exp MOD exp       { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("Mod can only be done on INTs");
+                            }
+                        }
+    | exp AND exp       { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
+                                throw new Error("And can only be done on BOOLs");
+                            }
+                            $$.value = "BOOL";
+                            /*
+                            $$.value = "BOOL";
+
+                            String exprOneType = $1.value;
+                            String exprTwoType = $3.value;
+                            
+                            if($1.type == 278) {
+                                
+                                exprOneType = symbolTable.getVariableType($1.value, func.localVariables);  
+                            }
+
+                            if($3.type == 278) {
+                                exprTwoType = symbolTable.getVariableType($3.value, func.localVariables);  
+                            }*/
+
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
+                                throw new Error("And can only be done on BOOLs");
+                            }
+                        }    
+    | exp OR exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
+                                throw new Error("Or can only be done on BOOLs");
+                            }
+                            $$.value = "BOOL";
+                        } 
+    | exp EQ exp        { 
+                            $$.value = "BOOL";
+                            /*if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
+                                throw new Error("Equals can only be done on BOOLs");
+                            }*/
+                        } 
+    | exp GT exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("> can only be done on INTs");
+                            }
+                            $$.value = "BOOL";
+                        } 
+    | exp LT exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("< can only be done on INTs");
+                            }
+                            $$.value = "BOOL";
+                            
+                        } 
+    | exp GE exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error(">= can only be done on INTs");
+                            }
+                            $$.value = "BOOL";
+                        } 
+    | exp LE exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("<= can only be done on INTs");
+                            }
+                            $$.value = "BOOL";
+                        } 
+    | exp NE exp        { 
+                            if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
+                                throw new Error("!= can only be done on INTs");
+                            }
+                            $$.value = "BOOL";
+                        } 
 ;
 
 /* lExp below never matches */
 lExp
     : IDENTIFIER                { 
-                                    $$ = $1;
                                     if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
                                 }                   
     | IDENTIFIER PERIOD lExp    { 
-                                    System.out.println("test");
                                     /* Check if there is variable called IDENTIFIER in the function */
                                     if (symbolTable.isVariableDeclared($1.value, localVariableList)) {
                                         

@@ -82,6 +82,17 @@ public class SymbolTable {
         return false;
     }
 
+    // public boolean isReturnType(String returnType, String returnType) {
+    //     return func.returnType.equals(returnType);
+    // }
+
+    public boolean isCorrectType(String typeOne, String typeTwo, String expectedType) {
+        if((!typeOne.equals(expectedType)) | (!typeTwo.equals(expectedType))) {
+            return false;
+        }
+        return true;
+    }
+
     // Is the variable of the given name of a passed in type?
     // public boolean isType(String name, int type) {
     //     if (variableSymbolTable.containsKey(name)) {

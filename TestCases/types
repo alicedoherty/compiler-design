@@ -1,0 +1,6 @@
+int myFunction() {
+    {
+        int x;
+        if (x < 2) then printf("test"); else printf("test2");
+    }
+}

@@ -719,52 +719,52 @@ public class Yylex {
             // fall through
           case 43: break;
           case 3:
-            { return new Yytoken(ToYLexer.NOT);
+            { return new Yytoken(ToYLexer.NOT, "NOT");
             }
             // fall through
           case 44: break;
           case 4:
-            { return new Yytoken(ToYLexer.QUOTE);
+            { return new Yytoken(ToYLexer.QUOTE, "QUOTE");
             }
             // fall through
           case 45: break;
           case 5:
-            { return new Yytoken(ToYLexer.LEFT);
+            { return new Yytoken(ToYLexer.LEFT, "LEFT");
             }
             // fall through
           case 46: break;
           case 6:
-            { return new Yytoken(ToYLexer.RIGHT);
+            { return new Yytoken(ToYLexer.RIGHT, "RIGHT");
             }
             // fall through
           case 47: break;
           case 7:
-            { return new Yytoken(ToYLexer.TIMES);
+            { return new Yytoken(ToYLexer.TIMES, "TIMES");
             }
             // fall through
           case 48: break;
           case 8:
-            { return new Yytoken(ToYLexer.PLUS);
+            { return new Yytoken(ToYLexer.PLUS, "PLUS");
             }
             // fall through
           case 49: break;
           case 9:
-            { return new Yytoken(ToYLexer.COMMA);
+            { return new Yytoken(ToYLexer.COMMA, "COMMA");
             }
             // fall through
           case 50: break;
           case 10:
-            { return new Yytoken(ToYLexer.MINUS);
+            { return new Yytoken(ToYLexer.MINUS, "MINUS");
             }
             // fall through
           case 51: break;
           case 11:
-            { return new Yytoken(ToYLexer.PERIOD);
+            { return new Yytoken(ToYLexer.PERIOD, "PERIOD");
             }
             // fall through
           case 52: break;
           case 12:
-            { return new Yytoken(ToYLexer.DIVIDE);
+            { return new Yytoken(ToYLexer.DIVIDE, "DIVIDE");
             }
             // fall through
           case 53: break;
@@ -774,28 +774,28 @@ public class Yylex {
                                  if (inputInt < -32768 || inputInt > 32767) {
                                    throw new Error("Integer <"+yytext()+"> out of bounds");         
                                  } else {
-                                   return new Yytoken(ToYLexer.INTEGER_LITERAL);
+                                   return new Yytoken(ToYLexer.INTEGER_LITERAL, "INT");
                                  }
             }
             // fall through
           case 54: break;
           case 14:
-            { return new Yytoken(ToYLexer.SEMICOLON);
+            { return new Yytoken(ToYLexer.SEMICOLON, "SEMICOLON");
             }
             // fall through
           case 55: break;
           case 15:
-            { return new Yytoken(ToYLexer.LT);
+            { return new Yytoken(ToYLexer.LT, "LT");
             }
             // fall through
           case 56: break;
           case 16:
-            { return new Yytoken(ToYLexer.ASSIGN);
+            { return new Yytoken(ToYLexer.ASSIGN, "ASSIGN");
             }
             // fall through
           case 57: break;
           case 17:
-            { return new Yytoken(ToYLexer.GT);
+            { return new Yytoken(ToYLexer.GT, "GT");
             }
             // fall through
           case 58: break;
@@ -805,42 +805,42 @@ public class Yylex {
             // fall through
           case 59: break;
           case 19:
-            { return new Yytoken(ToYLexer.LEFTCURLY);
+            { return new Yytoken(ToYLexer.LEFTCURLY, "LEFTCURLY");
             }
             // fall through
           case 60: break;
           case 20:
-            { return new Yytoken(ToYLexer.RIGHTCURLY);
+            { return new Yytoken(ToYLexer.RIGHTCURLY, "RIGHTCURLY");
             }
             // fall through
           case 61: break;
           case 21:
-            { return new Yytoken(ToYLexer.NE);
+            { return new Yytoken(ToYLexer.NE, "NE");
             }
             // fall through
           case 62: break;
           case 22:
-            { return new Yytoken(ToYLexer.LE);
+            { return new Yytoken(ToYLexer.LE, "LE");
             }
             // fall through
           case 63: break;
           case 23:
-            { return new Yytoken(ToYLexer.EQ);
+            { return new Yytoken(ToYLexer.EQ, "EQ");
             }
             // fall through
           case 64: break;
           case 24:
-            { return new Yytoken(ToYLexer.GE);
+            { return new Yytoken(ToYLexer.GE, "GE");
             }
             // fall through
           case 65: break;
           case 25:
-            { return new Yytoken(ToYLexer.IF);
+            { return new Yytoken(ToYLexer.IF, "IF");
             }
             // fall through
           case 66: break;
           case 26:
-            { return new Yytoken(ToYLexer.OR);
+            { return new Yytoken(ToYLexer.OR, "OR");
             }
             // fall through
           case 67: break;
@@ -850,22 +850,22 @@ public class Yylex {
             // fall through
           case 68: break;
           case 28:
-            { return new Yytoken(ToYLexer.AND);
+            { return new Yytoken(ToYLexer.AND, "AND");
             }
             // fall through
           case 69: break;
           case 29:
-            { return new Yytoken(ToYLexer.FOR);
+            { return new Yytoken(ToYLexer.FOR, "FOR");
             }
             // fall through
           case 70: break;
           case 30:
-            { return new Yytoken(ToYLexer.INT);
+            { return new Yytoken(ToYLexer.INT, "INT");
             }
             // fall through
           case 71: break;
           case 31:
-            { return new Yytoken(ToYLexer.MOD);
+            { return new Yytoken(ToYLexer.MOD, "MOD");
             }
             // fall through
           case 72: break;
@@ -875,37 +875,37 @@ public class Yylex {
             // fall through
           case 73: break;
           case 33:
-            { return new Yytoken(ToYLexer.ELSE);
+            { return new Yytoken(ToYLexer.ELSE, "ELSE");
             }
             // fall through
           case 74: break;
           case 34:
-            { return new Yytoken(ToYLexer.THEN);
+            { return new Yytoken(ToYLexer.THEN, "THEN");
             }
             // fall through
           case 75: break;
           case 35:
-            { return new Yytoken(ToYLexer.TRUE);
+            { return new Yytoken(ToYLexer.TRUE, "TRUE");
             }
             // fall through
           case 76: break;
           case 36:
-            { return new Yytoken(ToYLexer.VOID);
+            { return new Yytoken(ToYLexer.VOID, "VOID");
             }
             // fall through
           case 77: break;
           case 37:
-            { return new Yytoken(ToYLexer.FALSE);
+            { return new Yytoken(ToYLexer.FALSE,"FALSE");
             }
             // fall through
           case 78: break;
           case 38:
-            { return new Yytoken(ToYLexer.PRINTF);
+            { return new Yytoken(ToYLexer.PRINTF, "PRINTF");
             }
             // fall through
           case 79: break;
           case 39:
-            { return new Yytoken(ToYLexer.RETURN);
+            { return new Yytoken(ToYLexer.RETURN, "RETURN");
             }
             // fall through
           case 80: break;

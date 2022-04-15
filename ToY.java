@@ -147,8 +147,7 @@ public class ToY
     S_proc(55),                    /* proc  */
     S_statement(56),               /* statement  */
     S_statementSeq(57),            /* statementSeq  */
-    S_exp(58),                     /* exp  */
-    S_lExp(59);                    /* lExp  */
+    S_exp(58);                     /* exp  */
 
 
     private final int yycode_;
@@ -216,8 +215,7 @@ public class ToY
       SymbolKind.S_proc,
       SymbolKind.S_statement,
       SymbolKind.S_statementSeq,
-      SymbolKind.S_exp,
-      SymbolKind.S_lExp
+      SymbolKind.S_exp
     };
 
     static final SymbolKind get(int code) {
@@ -276,7 +274,7 @@ public class ToY
   "pgm", "pgm1", "type", "structName", "returnType", "struct",
   "declaration", "declarationZeroPlus", "declarationOnePlus",
   "structDeclaration", "structDeclarationOnePlus", "proc", "statement",
-  "statementSeq", "exp", "lExp", null
+  "statementSeq", "exp", null
     };
   }
 
@@ -579,42 +577,56 @@ public class ToY
       {
           case 7: /* type: INT  */
   if (yyn == 7)
-    /* "ToY.y":96  */
+    /* "ToY.y":97  */
                     { yyval = yystack.valueAt (0); };
   break;
 
 
   case 8: /* type: BOOL  */
   if (yyn == 8)
-    /* "ToY.y":97  */
+    /* "ToY.y":98  */
                     { yyval = yystack.valueAt (0); };
   break;
 
 
   case 9: /* type: STRING  */
   if (yyn == 9)
-    /* "ToY.y":98  */
+    /* "ToY.y":99  */
                     { yyval = yystack.valueAt (0); };
   break;
 
 
   case 10: /* type: structName  */
   if (yyn == 10)
-    /* "ToY.y":99  */
+    /* "ToY.y":100  */
                     { yyval = yystack.valueAt (0); };
   break;
 
 
   case 11: /* structName: IDENTIFIER  */
   if (yyn == 11)
-    /* "ToY.y":103  */
+    /* "ToY.y":104  */
                     { if(!symbolTable.isStructDeclared(yystack.valueAt (0).value)) { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }};
+  break;
+
+
+  case 12: /* returnType: type  */
+  if (yyn == 12)
+    /* "ToY.y":107  */
+               { returnType = yystack.valueAt (0).value; };
+  break;
+
+
+  case 13: /* returnType: VOID  */
+  if (yyn == 13)
+    /* "ToY.y":108  */
+               { returnType = yystack.valueAt (0).value; };
   break;
 
 
   case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY structDeclarationOnePlus RIGHTCURLY  */
   if (yyn == 14)
-    /* "ToY.y":114  */
+    /* "ToY.y":113  */
                                                                         {
                                                                             struct = symbolTable.new Struct();
                                                                             struct.name = yystack.valueAt (3).value; struct.fields = (ArrayList)fieldList.clone();
@@ -626,7 +638,7 @@ public class ToY
 
   case 15: /* declaration: type IDENTIFIER  */
   if (yyn == 15)
-    /* "ToY.y":123  */
+    /* "ToY.y":122  */
                         {   
                             if(symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
                             else { 
@@ -642,7 +654,7 @@ public class ToY
 
   case 21: /* structDeclaration: type IDENTIFIER  */
   if (yyn == 21)
-    /* "ToY.y":148  */
+    /* "ToY.y":147  */
                         {   
                             if(symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
                             else { 
@@ -658,7 +670,7 @@ public class ToY
 
   case 24: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
   if (yyn == 24)
-    /* "ToY.y":167  */
+    /* "ToY.y":166  */
                                                                                            { 
                                                                                                 func = symbolTable.new Function();
                                                                                                 func.name = yystack.valueAt (6).value; func.returnType = yystack.valueAt (7).value; 
@@ -672,14 +684,58 @@ public class ToY
 
   case 25: /* statement: FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement  */
   if (yyn == 25)
-    /* "ToY.y":181  */
-                                                                                       { if(!symbolTable.isVariableDeclared(yystack.valueAt (8).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (10).value + " is not declared"); }};
+    /* "ToY.y":180  */
+                                                                                       { 
+                                                                                            if(!yystack.valueAt (4).value.equals("BOOL")) {
+                                                                                                throw new Error("Second component in for loop is boolean expression");
+                                                                                            }
+                                                                                            if(!symbolTable.isVariableDeclared(yystack.valueAt (8).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (10).value + " is not declared"); }
+                                                                                        };
+  break;
+
+
+  case 26: /* statement: IF LEFT exp RIGHT THEN statement  */
+  if (yyn == 26)
+    /* "ToY.y":186  */
+                                            {
+                                                if(!yystack.valueAt (3).value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
+                                                /* Add check for */
+                                                /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                            };
+  break;
+
+
+  case 27: /* statement: IF LEFT exp RIGHT THEN statement ELSE statement  */
+  if (yyn == 27)
+    /* "ToY.y":191  */
+                                                        {
+                                                            if(!yystack.valueAt (5).value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
+                                                            /* Add check for */
+                                                            /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                                        };
+  break;
+
+
+  case 29: /* statement: RETURN exp SEMICOLON  */
+  if (yyn == 29)
+    /* "ToY.y":197  */
+                             { 
+                                String varType;
+                                if(yystack.valueAt (1).type == 278) {
+                                    varType = symbolTable.getVariableType(yystack.valueAt (1).value, localVariableList);                                    
+                                } else {
+                                    varType = yystack.valueAt (1).value;
+                                }
+                                if(!returnType.equals(varType)) {
+                                    throw new Error("Return type does not match function defintion");
+                                }
+                             };
   break;
 
 
   case 31: /* statement: type IDENTIFIER SEMICOLON  */
   if (yyn == 31)
-    /* "ToY.y":187  */
+    /* "ToY.y":209  */
                                             {
                                                 if(symbolTable.isVariableDeclared(yystack.valueAt (1).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (1).value + " is already declared"); }
                                                     else { 
@@ -695,18 +751,15 @@ public class ToY
 
   case 32: /* statement: IDENTIFIER PERIOD IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 32)
-    /* "ToY.y":198  */
+    /* "ToY.y":220  */
                                                             {
-                                                                System.out.println("test");
                                                                 /* Check if there is variable called IDENTIFIER in the function */
                                                                 if (symbolTable.isVariableDeclared(yystack.valueAt (5).value, localVariableList)) {
                                                                     
                                                                     /* Get type of the variable */
                                                                     String varType = symbolTable.getVariableType(yystack.valueAt (5).value, localVariableList);
-                                                                    System.out.println("test2");
                                                                     /* Look for struct of that type and if it exists, check it has field lExp */
                                                                     if (symbolTable.isStructDeclared(varType)) {
-                                                                        System.out.println("test3");
                                                                         if (!symbolTable.isStructField(varType, yystack.valueAt (3).value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + yystack.valueAt (3).value);
                                                                         }
@@ -720,52 +773,257 @@ public class ToY
 
   case 33: /* statement: IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 33)
-    /* "ToY.y":218  */
-                                            { if(!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); }};
+    /* "ToY.y":237  */
+                                            { 
+                                                if(!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); }
+                                                
+                                                String varType = symbolTable.getVariableType(yystack.valueAt (3).value, localVariableList);                                    
+                                                
+                                                String exprType;
+                                                if(yystack.valueAt (1).type == 278) {
+                                                    exprType = symbolTable.getVariableType(yystack.valueAt (2).value, localVariableList);                                    
+                                                } else { 
+                                                    exprType = yystack.valueAt (1).value;
+                                                }
+                                                if(!exprType.equals(varType)) {
+                                                    throw new Error("Assignment is not well-typed");
+                                                }    
+                                            };
   break;
 
 
   case 35: /* statement: IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON  */
   if (yyn == 35)
-    /* "ToY.y":222  */
+    /* "ToY.y":255  */
                                                             { if(!symbolTable.isVariableDeclared(yystack.valueAt (6).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); }};
   break;
 
 
-  case 59: /* lExp: IDENTIFIER  */
+  case 39: /* exp: STRING_LITERAL  */
+  if (yyn == 39)
+    /* "ToY.y":267  */
+                        { };
+  break;
+
+
+  case 40: /* exp: TRUE  */
+  if (yyn == 40)
+    /* "ToY.y":268  */
+                        { yyval.value = "BOOL"; };
+  break;
+
+
+  case 41: /* exp: FALSE  */
+  if (yyn == 41)
+    /* "ToY.y":269  */
+                        { yyval.value = "BOOL"; };
+  break;
+
+
+  case 42: /* exp: MINUS exp  */
+  if (yyn == 42)
+    /* "ToY.y":270  */
+                                { yyval.value = "INT"; };
+  break;
+
+
+  case 43: /* exp: NOT exp  */
+  if (yyn == 43)
+    /* "ToY.y":271  */
+                                { yyval.value = "BOOL"; };
+  break;
+
+
+  case 44: /* exp: IDENTIFIER  */
+  if (yyn == 44)
+    /* "ToY.y":273  */
+                                        { 
+                                            System.out.println(yystack.valueAt (0).value);
+                                            if(!symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }
+                                            yyval.value = symbolTable.getVariableType(yystack.valueAt (0).value, localVariableList); 
+                                        };
+  break;
+
+
+  case 46: /* exp: LEFT exp RIGHT  */
+  if (yyn == 46)
+    /* "ToY.y":279  */
+                        { yyval.value = yystack.valueAt (1).value; };
+  break;
+
+
+  case 47: /* exp: exp PLUS exp  */
+  if (yyn == 47)
+    /* "ToY.y":280  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("Addition can only be done on INTs");
+                            }
+                        };
+  break;
+
+
+  case 48: /* exp: exp MINUS exp  */
+  if (yyn == 48)
+    /* "ToY.y":285  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("Subtraction can only be done on INTs");
+                            }
+                        };
+  break;
+
+
+  case 49: /* exp: exp TIMES exp  */
+  if (yyn == 49)
+    /* "ToY.y":290  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("Multiplication can only be done on INTs");
+                            }
+                        };
+  break;
+
+
+  case 50: /* exp: exp DIVIDE exp  */
+  if (yyn == 50)
+    /* "ToY.y":295  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("Division can only be done on INTs");
+                            }
+                        };
+  break;
+
+
+  case 51: /* exp: exp MOD exp  */
+  if (yyn == 51)
+    /* "ToY.y":300  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("Mod can only be done on INTs");
+                            }
+                        };
+  break;
+
+
+  case 52: /* exp: exp AND exp  */
+  if (yyn == 52)
+    /* "ToY.y":305  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "BOOL")) {
+                                throw new Error("And can only be done on BOOLs");
+                            }
+                            yyval.value = "BOOL";
+                            /*
+                            $$.value = "BOOL";
+
+                            String exprOneType = $1.value;
+                            String exprTwoType = $3.value;
+                            
+                            if($1.type == 278) {
+                                
+                                exprOneType = symbolTable.getVariableType($1.value, func.localVariables);  
+                            }
+
+                            if($3.type == 278) {
+                                exprTwoType = symbolTable.getVariableType($3.value, func.localVariables);  
+                            }*/
+
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "BOOL")) {
+                                throw new Error("And can only be done on BOOLs");
+                            }
+                        };
+  break;
+
+
+  case 53: /* exp: exp OR exp  */
+  if (yyn == 53)
+    /* "ToY.y":329  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "BOOL")) {
+                                throw new Error("Or can only be done on BOOLs");
+                            }
+                            yyval.value = "BOOL";
+                        };
+  break;
+
+
+  case 54: /* exp: exp EQ exp  */
+  if (yyn == 54)
+    /* "ToY.y":335  */
+                        { 
+                            yyval.value = "BOOL";
+                            /*if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
+                                throw new Error("Equals can only be done on BOOLs");
+                            }*/
+                        };
+  break;
+
+
+  case 55: /* exp: exp GT exp  */
+  if (yyn == 55)
+    /* "ToY.y":341  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("> can only be done on INTs");
+                            }
+                            yyval.value = "BOOL";
+                        };
+  break;
+
+
+  case 56: /* exp: exp LT exp  */
+  if (yyn == 56)
+    /* "ToY.y":347  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("< can only be done on INTs");
+                            }
+                            yyval.value = "BOOL";
+                            
+                        };
+  break;
+
+
+  case 57: /* exp: exp GE exp  */
+  if (yyn == 57)
+    /* "ToY.y":354  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error(">= can only be done on INTs");
+                            }
+                            yyval.value = "BOOL";
+                        };
+  break;
+
+
+  case 58: /* exp: exp LE exp  */
+  if (yyn == 58)
+    /* "ToY.y":360  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("<= can only be done on INTs");
+                            }
+                            yyval.value = "BOOL";
+                        };
+  break;
+
+
+  case 59: /* exp: exp NE exp  */
   if (yyn == 59)
-    /* "ToY.y":258  */
-                                { 
-                                    yyval = yystack.valueAt (0);
-                                    if(!symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }
-                                };
-  break;
-
-
-  case 60: /* lExp: IDENTIFIER PERIOD lExp  */
-  if (yyn == 60)
-    /* "ToY.y":262  */
-                                { 
-                                    System.out.println("test");
-                                    /* Check if there is variable called IDENTIFIER in the function */
-                                    if (symbolTable.isVariableDeclared(yystack.valueAt (2).value, localVariableList)) {
-                                        
-                                        /* Get type of the variable */
-                                        String varType = symbolTable.getVariableType(yystack.valueAt (2).value, localVariableList);
-
-                                        /* Look for struct of that type and if it exists, check it has field lExp */
-                                        if (!symbolTable.isStructDeclared(varType)) {
-                                            if (!symbolTable.isStructField(varType, yystack.valueAt (0).value)) {
-                                                throw new Error("Struct " + varType + " does not have field " + yystack.valueAt (0).value);
-                                            }
-                                        }
-                                    }
-                                };
+    /* "ToY.y":366  */
+                        { 
+                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                                throw new Error("!= can only be done on INTs");
+                            }
+                            yyval.value = "BOOL";
+                        };
   break;
 
 
 
-/* "ToY.java":769  */
+/* "ToY.java":1027  */
 
         default: break;
       }
@@ -1187,20 +1445,20 @@ public class ToY
   {
     return new short[]
     {
-     257,   -51,   -51,   -51,   -51,   -19,   -51,    12,   -51,   -51,
-      -7,   257,   257,   -14,   -51,     1,   -51,   -51,   257,   257,
-      42,    42,   -51,   -51,    21,    24,    32,    33,    31,    37,
-     -51,    42,   -51,   -51,    42,    47,   -51,    34,   -51,   254,
-      42,    52,    54,    55,     2,   254,    28,    43,    59,   -51,
-      56,     2,    57,   -51,   -51,     2,   -51,   -51,    53,     2,
-       2,    80,   -51,   254,    67,     2,    65,    64,    71,   -51,
-      70,   168,    58,   184,    69,   -51,   -51,   -51,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,   -51,   -51,   200,    60,   -13,    98,   -51,    75,    87,
-       2,   -51,   -51,   251,   251,   251,   262,   262,   262,   262,
-     262,   262,   -21,   -21,   -51,   -51,    82,     2,     2,   -51,
-     -51,   254,   116,   -51,   134,   216,    88,     2,   -51,    84,
-     254,   152,   -51,   -51,   254,    83,   254,   -51
+     256,   -51,   -51,   -51,   -51,   -20,   -51,    12,   -51,   -51,
+      -8,   256,   256,    10,   -51,    -2,   -51,   -51,   256,   256,
+      41,    41,   -51,   -51,    20,    24,    38,    33,    39,    37,
+     -51,    41,   -51,   -51,    41,    46,   -51,    48,   -51,   253,
+      41,    51,    54,    56,     1,   253,   -15,    42,    60,   -51,
+      57,     1,    55,   -51,   -51,     1,   -51,   -51,    61,     1,
+       1,    79,   253,    66,     1,    65,    63,    71,   -51,    72,
+     167,    59,   183,    68,   -51,   -51,   -51,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+     -51,   -51,   199,    62,    -1,    97,   -51,    75,    87,     1,
+     -51,   -51,   250,   250,   250,   261,   261,   261,   261,   261,
+     261,     7,     7,   -51,   -51,    82,     1,     1,   -51,   -51,
+     253,   115,   -51,   133,   215,    88,     1,   -51,    84,   253,
+     151,   -51,   -51,   253,    85,   253,   -51
     };
   }
 
@@ -1217,15 +1475,15 @@ public class ToY
        0,    16,     6,     5,     0,    22,     0,     0,    17,     0,
       21,     0,    14,    15,     0,     0,    23,    19,    18,     0,
        0,     0,     0,     0,     0,    36,    11,     0,     0,    20,
-       0,     0,     0,    40,    41,     0,    38,    39,    59,     0,
-       0,     0,    44,    36,     0,     0,     0,     0,     0,    24,
-       0,     0,     0,     0,     0,    42,    43,    29,     0,     0,
+       0,     0,     0,    40,    41,     0,    38,    39,    44,     0,
+       0,     0,    36,     0,     0,     0,     0,     0,    24,     0,
+       0,     0,     0,     0,    42,    43,    29,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    37,    30,     0,     0,    59,     0,    31,     0,     0,
-       0,    45,    60,    50,    51,    52,    53,    55,    54,    57,
-      56,    58,    48,    49,    46,    47,     0,     0,     0,    33,
-      28,     0,     0,    34,     0,     0,    26,     0,    32,     0,
-       0,     0,    35,    27,     0,     0,     0,    25
+      37,    30,     0,     0,    44,     0,    31,     0,     0,     0,
+      46,    45,    51,    52,    53,    54,    56,    55,    58,    57,
+      59,    49,    50,    47,    48,     0,     0,     0,    33,    28,
+       0,     0,    34,     0,     0,    26,     0,    32,     0,     0,
+       0,    35,    27,     0,     0,     0,    25
     };
   }
 
@@ -1235,8 +1493,8 @@ public class ToY
   {
     return new byte[]
     {
-     -51,    95,     8,    41,   -51,   -51,     3,   100,   -51,    99,
-     -51,    91,    11,   -39,    61,   -50,    49
+     -51,   109,    35,    40,   -51,   -51,     2,   100,   -51,    83,
+     -51,    91,     8,   -39,    76,   -50
     };
   }
 
@@ -1247,7 +1505,7 @@ public class ToY
     return new byte[]
     {
        0,     7,    17,    47,     9,    10,    18,    37,    29,    38,
-      25,    26,    19,    63,    64,    61,    62
+      25,    26,    19,    62,    63,    61
     };
   }
 
@@ -1259,37 +1517,37 @@ public class ToY
   {
     return new short[]
     {
-      48,    71,    20,    11,    13,    73,   118,    53,    54,    75,
-      76,    12,    14,    74,    11,    93,    15,    96,    89,    90,
-      21,    55,    12,    56,    57,    58,    22,    23,   103,   104,
+      48,    70,    11,    13,    64,    72,    53,    54,    12,    74,
+      75,    65,    14,    11,    92,    15,    95,    21,   117,    12,
+      55,    66,    56,    57,    58,    73,    20,   102,   103,   104,
      105,   106,   107,   108,   109,   110,   111,   112,   113,   114,
-     115,     8,    59,    60,    30,     1,     2,    65,    31,    32,
-     122,     4,     8,     8,    66,    34,    33,    35,    40,     8,
-       8,    24,    27,    39,    67,     6,    68,   124,   125,    53,
-      54,    50,    24,    51,    52,    27,    69,   131,    70,    74,
-      72,    27,   126,    55,    92,    56,    57,    95,    94,    97,
-      98,   133,    58,   120,   100,   135,   117,   137,    77,   121,
-     123,   130,   132,   136,    59,    60,    16,    78,    79,    80,
-      81,    82,    83,    84,    85,    86,   119,    87,    88,    89,
-      90,    28,    36,   102,    91,    78,    79,    80,    81,    82,
-      83,    84,    85,    86,   127,    87,    88,    89,    90,    49,
-       0,     0,     0,    78,    79,    80,    81,    82,    83,    84,
-      85,    86,   128,    87,    88,    89,    90,     0,     0,     0,
-       0,    78,    79,    80,    81,    82,    83,    84,    85,    86,
-     134,    87,    88,    89,    90,     0,     0,     0,     0,    78,
-      79,    80,    81,    82,    83,    84,    85,    86,    99,    87,
-      88,    89,    90,     0,     0,    78,    79,    80,    81,    82,
-      83,    84,    85,    86,   101,    87,    88,    89,    90,     0,
-       0,    78,    79,    80,    81,    82,    83,    84,    85,    86,
-     116,    87,    88,    89,    90,     0,     0,    78,    79,    80,
-      81,    82,    83,    84,    85,    86,   129,    87,    88,    89,
-      90,     0,     0,    78,    79,    80,    81,    82,    83,    84,
-      85,    86,     0,    87,    88,    89,    90,     1,     2,     0,
-       1,     2,    41,     4,     3,    42,     4,     5,    43,    44,
-      45,     0,     0,     0,     0,     0,     0,    46,     0,     0,
-       6,    81,    82,    83,    84,    85,    86,     0,    87,    88,
-      89,    90,    -1,    -1,    -1,    -1,    -1,    -1,     0,    87,
-      88,    89,    90
+       8,    59,    60,    30,     1,     2,    88,    89,    31,   121,
+       4,     8,     8,    22,    23,    32,    33,    35,     8,     8,
+      24,    27,    39,    34,     6,    67,   123,   124,    53,    54,
+      50,    24,    40,    51,    27,    52,   130,    68,    71,    69,
+      27,   125,    55,    91,    56,    57,    94,    73,    93,    96,
+     132,   101,    97,   119,   134,    99,   136,    76,   116,   120,
+     122,   129,   131,    59,    60,   135,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,   118,    86,    87,    88,    89,
+      16,    28,    36,    49,    77,    78,    79,    80,    81,    82,
+      83,    84,    85,   126,    86,    87,    88,    89,    90,     0,
+       0,     0,    77,    78,    79,    80,    81,    82,    83,    84,
+      85,   127,    86,    87,    88,    89,     0,     0,     0,     0,
+      77,    78,    79,    80,    81,    82,    83,    84,    85,   133,
+      86,    87,    88,    89,     0,     0,     0,     0,    77,    78,
+      79,    80,    81,    82,    83,    84,    85,    98,    86,    87,
+      88,    89,     0,     0,    77,    78,    79,    80,    81,    82,
+      83,    84,    85,   100,    86,    87,    88,    89,     0,     0,
+      77,    78,    79,    80,    81,    82,    83,    84,    85,   115,
+      86,    87,    88,    89,     0,     0,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,   128,    86,    87,    88,    89,
+       0,     0,    77,    78,    79,    80,    81,    82,    83,    84,
+      85,     0,    86,    87,    88,    89,     1,     2,     0,     1,
+       2,    41,     4,     3,    42,     4,     5,    43,    44,    45,
+       0,     0,     0,     0,     0,     0,    46,     0,     0,     6,
+      80,    81,    82,    83,    84,    85,     0,    86,    87,    88,
+      89,    -1,    -1,    -1,    -1,    -1,    -1,     0,    86,    87,
+      88,    89
     };
   }
 
@@ -1298,37 +1556,37 @@ private static final short[] yycheck_ = yycheck_init();
   {
     return new short[]
     {
-      39,    51,    16,     0,    23,    55,    19,     5,     6,    59,
-      60,     0,     0,    26,    11,    65,    23,    67,    39,    40,
-      19,    19,    11,    21,    22,    23,    18,    19,    78,    79,
+      39,    51,     0,    23,    19,    55,     5,     6,     0,    59,
+      60,    26,     0,    11,    64,    23,    66,    19,    19,    11,
+      19,    36,    21,    22,    23,    26,    16,    77,    78,    79,
       80,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,     0,    40,    41,    23,     3,     4,    19,    24,    17,
-     100,     9,    11,    12,    26,    24,    23,    20,    24,    18,
-      19,    20,    21,    16,    36,    23,    23,   117,   118,     5,
-       6,    19,    31,    19,    19,    34,    17,   127,    22,    26,
-      23,    40,   121,    19,    17,    21,    22,    23,    23,    18,
-      20,   130,    23,    18,    36,   134,    36,   136,    18,    12,
-      18,    13,    18,    20,    40,    41,    11,    27,    28,    29,
-      30,    31,    32,    33,    34,    35,    18,    37,    38,    39,
-      40,    21,    31,    74,    63,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    18,    37,    38,    39,    40,    40,
-      -1,    -1,    -1,    27,    28,    29,    30,    31,    32,    33,
-      34,    35,    18,    37,    38,    39,    40,    -1,    -1,    -1,
-      -1,    27,    28,    29,    30,    31,    32,    33,    34,    35,
-      18,    37,    38,    39,    40,    -1,    -1,    -1,    -1,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    20,    37,
-      38,    39,    40,    -1,    -1,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    20,    37,    38,    39,    40,    -1,
-      -1,    27,    28,    29,    30,    31,    32,    33,    34,    35,
-      20,    37,    38,    39,    40,    -1,    -1,    27,    28,    29,
-      30,    31,    32,    33,    34,    35,    20,    37,    38,    39,
-      40,    -1,    -1,    27,    28,    29,    30,    31,    32,    33,
-      34,    35,    -1,    37,    38,    39,    40,     3,     4,    -1,
-       3,     4,     8,     9,     7,    11,     9,    10,    14,    15,
-      16,    -1,    -1,    -1,    -1,    -1,    -1,    23,    -1,    -1,
-      23,    30,    31,    32,    33,    34,    35,    -1,    37,    38,
-      39,    40,    30,    31,    32,    33,    34,    35,    -1,    37,
-      38,    39,    40
+       0,    40,    41,    23,     3,     4,    39,    40,    24,    99,
+       9,    11,    12,    18,    19,    17,    23,    20,    18,    19,
+      20,    21,    16,    24,    23,    23,   116,   117,     5,     6,
+      19,    31,    24,    19,    34,    19,   126,    17,    23,    22,
+      40,   120,    19,    17,    21,    22,    23,    26,    23,    18,
+     129,    23,    20,    18,   133,    36,   135,    18,    36,    12,
+      18,    13,    18,    40,    41,    20,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    18,    37,    38,    39,    40,
+      11,    21,    31,    40,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    18,    37,    38,    39,    40,    62,    -1,
+      -1,    -1,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    18,    37,    38,    39,    40,    -1,    -1,    -1,    -1,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    18,
+      37,    38,    39,    40,    -1,    -1,    -1,    -1,    27,    28,
+      29,    30,    31,    32,    33,    34,    35,    20,    37,    38,
+      39,    40,    -1,    -1,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    20,    37,    38,    39,    40,    -1,    -1,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    20,
+      37,    38,    39,    40,    -1,    -1,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    20,    37,    38,    39,    40,
+      -1,    -1,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    -1,    37,    38,    39,    40,     3,     4,    -1,     3,
+       4,     8,     9,     7,    11,     9,    10,    14,    15,    16,
+      -1,    -1,    -1,    -1,    -1,    -1,    23,    -1,    -1,    23,
+      30,    31,    32,    33,    34,    35,    -1,    37,    38,    39,
+      40,    30,    31,    32,    33,    34,    35,    -1,    37,    38,
+      39,    40
     };
   }
 
@@ -1345,14 +1603,14 @@ private static final short[] yycheck_ = yycheck_init();
       23,    24,    17,    23,    24,    20,    54,    50,    52,    16,
       24,     8,    11,    14,    15,    16,    23,    46,    56,    52,
       19,    19,    19,     5,     6,    19,    21,    22,    23,    40,
-      41,    58,    59,    56,    57,    19,    26,    36,    23,    17,
-      22,    58,    23,    58,    26,    58,    58,    18,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    37,    38,    39,
-      40,    57,    17,    58,    23,    23,    58,    18,    20,    20,
-      36,    20,    59,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    20,    36,    19,    18,
-      18,    12,    58,    18,    58,    58,    56,    18,    18,    20,
-      13,    58,    18,    56,    18,    56,    20,    56
+      41,    58,    56,    57,    19,    26,    36,    23,    17,    22,
+      58,    23,    58,    26,    58,    58,    18,    27,    28,    29,
+      30,    31,    32,    33,    34,    35,    37,    38,    39,    40,
+      57,    17,    58,    23,    23,    58,    18,    20,    20,    36,
+      20,    23,    58,    58,    58,    58,    58,    58,    58,    58,
+      58,    58,    58,    58,    58,    20,    36,    19,    18,    18,
+      12,    58,    18,    58,    58,    56,    18,    18,    20,    13,
+      58,    18,    56,    18,    56,    20,    56
     };
   }
 
@@ -1367,8 +1625,7 @@ private static final short[] yycheck_ = yycheck_init();
       52,    53,    54,    54,    55,    56,    56,    56,    56,    56,
       56,    56,    56,    56,    56,    56,    57,    57,    58,    58,
       58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    58,    59,
-      59
+      58,    58,    58,    58,    58,    58,    58,    58,    58,    58
     };
   }
 
@@ -1383,8 +1640,7 @@ private static final short[] yycheck_ = yycheck_init();
        3,     2,     1,     3,     8,    11,     6,     8,     5,     3,
        3,     3,     6,     4,     5,     7,     0,     2,     1,     1,
        1,     1,     2,     2,     1,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     3,     3,     3,     1,
-       3
+       3,     3,     3,     3,     3,     3,     3,     3,     3,     3
     };
   }
 
@@ -1443,7 +1699,7 @@ private static final short[] yycheck_ = yycheck_init();
   }
 
 
-  private static final int YYLAST_ = 302;
+  private static final int YYLAST_ = 301;
   private static final int YYEMPTY_ = -2;
   private static final int YYFINAL_ = 14;
   private static final int YYNTOKENS_ = 43;
@@ -1453,6 +1709,7 @@ private static final short[] yycheck_ = yycheck_init();
 
     public static SymbolTable symbolTable;
     public static SymbolTable.Variable var;
+    public String returnType;
 
     public SymbolTable.Function func;
     public SymbolTable.Struct struct;
@@ -1489,10 +1746,10 @@ private static final short[] yycheck_ = yycheck_init();
         //symbolTable.printVariableTable();
     }
 
-/* "ToY.java":1493  */
+/* "ToY.java":1750  */
 
 }
-/* "ToY.y":280  */
+/* "ToY.y":396  */
 
 
 class ToYLexer implements ToY.Lexer {

@@ -126,7 +126,7 @@ LineTerminator = \r|\n|\r\n
                                  if (inputInt < -32768 || inputInt > 32767) {
                                    throw new Error("Integer <"+yytext()+"> out of bounds");         
                                  } else {
-                                   return new Yytoken(ToYLexer.INTEGER_LITERAL);
+                                   return new Yytoken(ToYLexer.INTEGER_LITERAL, "INT");
                                  }
                                }
 
