@@ -1,6 +1,7 @@
 //Bad struct usage: RHS is not a field in that struct.
 struct MyStruct {
-    string a
+    string a,
+    string b
 }
 
 void main() {

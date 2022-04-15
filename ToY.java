@@ -705,11 +705,13 @@ public class ToY
                                                                     String varType = symbolTable.getVariableType(yystack.valueAt (5).value, localVariableList);
                                                                     System.out.println("test2");
                                                                     /* Look for struct of that type and if it exists, check it has field lExp */
-                                                                    if (!symbolTable.isStructDeclared(varType)) {
+                                                                    if (symbolTable.isStructDeclared(varType)) {
                                                                         System.out.println("test3");
                                                                         if (!symbolTable.isStructField(varType, yystack.valueAt (3).value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + yystack.valueAt (3).value);
                                                                         }
+                                                                    } else {
+                                                                        throw new Error("Struct " + varType + " does not have field " + yystack.valueAt (3).value);
                                                                     }
                                                                 }
                                                            };
@@ -718,21 +720,21 @@ public class ToY
 
   case 33: /* statement: IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 33)
-    /* "ToY.y":216  */
+    /* "ToY.y":218  */
                                             { if(!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); }};
   break;
 
 
   case 35: /* statement: IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON  */
   if (yyn == 35)
-    /* "ToY.y":220  */
+    /* "ToY.y":222  */
                                                             { if(!symbolTable.isVariableDeclared(yystack.valueAt (6).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); }};
   break;
 
 
   case 59: /* lExp: IDENTIFIER  */
   if (yyn == 59)
-    /* "ToY.y":256  */
+    /* "ToY.y":258  */
                                 { 
                                     yyval = yystack.valueAt (0);
                                     if(!symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }
@@ -742,7 +744,7 @@ public class ToY
 
   case 60: /* lExp: IDENTIFIER PERIOD lExp  */
   if (yyn == 60)
-    /* "ToY.y":260  */
+    /* "ToY.y":262  */
                                 { 
                                     System.out.println("test");
                                     /* Check if there is variable called IDENTIFIER in the function */
@@ -763,7 +765,7 @@ public class ToY
 
 
 
-/* "ToY.java":767  */
+/* "ToY.java":769  */
 
         default: break;
       }
@@ -1487,10 +1489,10 @@ private static final short[] yycheck_ = yycheck_init();
         //symbolTable.printVariableTable();
     }
 
-/* "ToY.java":1491  */
+/* "ToY.java":1493  */
 
 }
-/* "ToY.y":278  */
+/* "ToY.y":280  */
 
 
 class ToYLexer implements ToY.Lexer {
