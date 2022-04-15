@@ -5,8 +5,15 @@ void main(int pls, string hi) {
     }
 }
 
-int func(bool myBool) {
-    {
-        string hello;
-    }
+int myFunc(int sad) {
+    string myString;
+}
+
+struct myStruct1 {
+    string name,
+    string surname
+}
+
+struct myStruct2 {
+    int myInt
 }

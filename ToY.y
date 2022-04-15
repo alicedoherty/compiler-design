@@ -18,9 +18,12 @@
 
 %code {
     public static SymbolTable symbolTable;
-    public static SymbolTable.Function func;
+    public SymbolTable.Function func;
+    public SymbolTable.Struct struct;
     public SymbolTable.Variable var;
-    public ArrayList<SymbolTable.Variable> varList = new ArrayList<SymbolTable.Variable>();
+
+    public ArrayList<SymbolTable.Variable> paramList = new ArrayList<SymbolTable.Variable>();
+    public ArrayList<SymbolTable.Variable> fieldList = new ArrayList<SymbolTable.Variable>();
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -41,12 +44,11 @@
     
     public static void initialise() {
         symbolTable = new SymbolTable();
-        //func = symbolTable.new Function();
-        //varList = new ArrayList<SymbolTable.Variable>();
     }
 
     public static void printSymbolTables() {
         symbolTable.printFunctionTable();
+        symbolTable.printStructTable();
         symbolTable.printVariableTable();
     }
 }
@@ -88,7 +90,7 @@ pgm1
 
 /* Only struct identifiers count as a type - not all IDENTIFIERs */
 type
-    : INT                    {System.out.println("INT");}
+    : INT                    
     | BOOL
     | STRING
     | structName
@@ -106,7 +108,12 @@ returnType
 
 /* Struct has at least one declaration */
 struct
-    : STRUCT IDENTIFIER LEFTCURLY declarationOnePlus RIGHTCURLY        
+    : STRUCT IDENTIFIER LEFTCURLY structDeclarationOnePlus RIGHTCURLY   {
+                                                                            struct = symbolTable.new Struct();
+                                                                            struct.name = $2.value; struct.fields = (ArrayList)fieldList.clone();
+                                                                            symbolTable.structSymbolTable.put(struct.name, struct);
+                                                                            fieldList.clear();
+                                                                        }  
 ;
 
 declaration
@@ -114,7 +121,7 @@ declaration
                             if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
                             else { 
                                 var = symbolTable.addVariable($2.value, $1.type); 
-                                varList.add(var);                            
+                                paramList.add(var);                            
                             }
                         }
 ;
@@ -129,13 +136,30 @@ declarationZeroPlus
 declarationOnePlus
     : declaration                                                                                                      
     | declaration COMMA declarationOnePlus    
-;                          
+;
+
+structDeclaration
+    : type IDENTIFIER   {   
+                            if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                            else { 
+                                var = symbolTable.addVariable($2.value, $1.type); 
+                                fieldList.add(var);                            
+                            }
+                        }
+;
+
+/* Structs need to have at least one declaration */
+structDeclarationOnePlus
+    : structDeclaration                                                                                                      
+    | structDeclaration COMMA structDeclarationOnePlus    
+;
 
 proc
     : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  { 
                                                                                                 func = symbolTable.new Function();
-                                                                                                func.name = $2.value; func.returnType = $1.type; func.parameters = varList;
+                                                                                                func.name = $2.value; func.returnType = $1.type; func.parameters = (ArrayList)paramList.clone();
                                                                                                 symbolTable.functionSymbolTable.put(func.name, func);
+                                                                                                paramList.clear();
                                                                                            }                                                                                          
 
 /* First statement inside for-construct is optional */
@@ -175,7 +199,7 @@ exp
     | NOT exp
     | lExp
     | LEFT exp RIGHT
-    | exp PLUS exp    
+    | exp PLUS exp          
     | exp MINUS exp
     | exp TIMES exp 
     | exp DIVIDE exp
@@ -191,8 +215,8 @@ exp
 ;
 
 lExp
-    : IDENTIFIER                    {System.out.println("lExp");}
-    | IDENTIFIER PERIOD lExp        {System.out.println("lExp");}
+    : IDENTIFIER                    
+    | IDENTIFIER PERIOD lExp       
 ;
 
 %%
