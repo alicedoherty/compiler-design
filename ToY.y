@@ -18,12 +18,14 @@
 
 %code {
     public static SymbolTable symbolTable;
+    public static SymbolTable.Variable var;
+
     public SymbolTable.Function func;
     public SymbolTable.Struct struct;
-    public SymbolTable.Variable var;
 
     public ArrayList<SymbolTable.Variable> paramList = new ArrayList<SymbolTable.Variable>();
     public ArrayList<SymbolTable.Variable> fieldList = new ArrayList<SymbolTable.Variable>();
+    public ArrayList<SymbolTable.Variable> localVariableList = new ArrayList<SymbolTable.Variable>();
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -44,12 +46,13 @@
     
     public static void initialise() {
         symbolTable = new SymbolTable();
+        var = symbolTable.new Variable();
     }
 
     public static void printSymbolTables() {
         symbolTable.printFunctionTable();
         symbolTable.printStructTable();
-        symbolTable.printVariableTable();
+        //symbolTable.printVariableTable();
     }
 }
 
@@ -118,9 +121,12 @@ struct
 
 declaration
     : type IDENTIFIER   {   
-                            if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                            if(symbolTable.isVariableDeclared($2.value, localVariableList)) { throw new Error("Variable " + $2.value + " is already declared"); }
                             else { 
-                                var = symbolTable.addVariable($2.value, $1.type); 
+                                //var = symbolTable.createVariable($2.value, $1.type); 
+                                //var.name = $2.value; var.type = $1.type;
+                                var = symbolTable.new Variable($2.value, $1.type); 
+                                //System.out.println(var);
                                 paramList.add(var);                            
                             }
                         }
@@ -140,9 +146,12 @@ declarationOnePlus
 
 structDeclaration
     : type IDENTIFIER   {   
-                            if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                            if(symbolTable.isVariableDeclared($2.value, localVariableList)) { throw new Error("Variable " + $2.value + " is already declared"); }
                             else { 
-                                var = symbolTable.addVariable($2.value, $1.type); 
+                                //var = symbolTable.createVariable($2.value, $1.type); 
+                                var = symbolTable.new Variable($2.value, $1.type); 
+                                //var.name = $2.value; var.type = $1.type;
+                                //System.out.println(var);
                                 fieldList.add(var);                            
                             }
                         }
@@ -157,9 +166,11 @@ structDeclarationOnePlus
 proc
     : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  { 
                                                                                                 func = symbolTable.new Function();
-                                                                                                func.name = $2.value; func.returnType = $1.type; func.parameters = (ArrayList)paramList.clone();
+                                                                                                func.name = $2.value; func.returnType = $1.type; 
+                                                                                                func.parameters = (ArrayList)paramList.clone(); func.localVariables = (ArrayList)localVariableList.clone();
                                                                                                 symbolTable.functionSymbolTable.put(func.name, func);
                                                                                                 paramList.clear();
+                                                                                                localVariableList.clear();
                                                                                            }                                                                                          
 
 /* First statement inside for-construct is optional */
@@ -167,20 +178,28 @@ proc
 /* Variables declared inside compound/for/if statement cannot be used outside of it */
 
 statement
-    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement { if(!symbolTable.isVariableDeclared($3.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
+    : FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement { if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }}
     | IF LEFT exp RIGHT THEN statement
     | IF LEFT exp RIGHT THEN statement ELSE statement
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON
     | LEFTCURLY statementSeq RIGHTCURLY
-    | type IDENTIFIER SEMICOLON     { if(symbolTable.isVariableDeclared($2.value)) { throw new Error("Variable " + $2.value + " is already declared"); }
-                                        else { symbolTable.addVariable($2.value, $1.type); }}
-    | IDENTIFIER ASSIGN exp SEMICOLON   { if(!symbolTable.isVariableDeclared($1.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
+    | type IDENTIFIER SEMICOLON             {
+                                                if(symbolTable.isVariableDeclared($2.value, localVariableList)) { throw new Error("Variable " + $2.value + " is already declared"); }
+                                                    else { 
+                                                        //var.name = $2.value; var.type = $1.type;
+                                                        //var = symbolTable.createVariable($2.value, $1.type); 
+                                                        var = symbolTable.new Variable($2.value, $1.type); 
+                                                        localVariableList.add(var);
+                                                        //System.out.println(var);
+                                                    }
+                                            }
+    | IDENTIFIER ASSIGN exp SEMICOLON       { if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }}
     /* Add check to see if variable has been declared */
     | lExp ASSIGN exp SEMICOLON     
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
-    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { if(!symbolTable.isVariableDeclared($1.value)) { throw new Error("Variable " + $1.value + " is not declared"); }}
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }}
 ;
 
 statementSeq

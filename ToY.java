@@ -579,7 +579,7 @@ public class ToY
       {
           case 14: /* struct: STRUCT IDENTIFIER LEFTCURLY structDeclarationOnePlus RIGHTCURLY  */
   if (yyn == 14)
-    /* "ToY.y":111  */
+    /* "ToY.y":114  */
                                                                         {
                                                                             struct = symbolTable.new Struct();
                                                                             struct.name = yystack.valueAt (3).value; struct.fields = (ArrayList)fieldList.clone();
@@ -591,11 +591,14 @@ public class ToY
 
   case 15: /* declaration: type IDENTIFIER  */
   if (yyn == 15)
-    /* "ToY.y":120  */
+    /* "ToY.y":123  */
                         {   
-                            if(symbolTable.isVariableDeclared(yystack.valueAt (0).value)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
+                            if(symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
                             else { 
-                                var = symbolTable.addVariable(yystack.valueAt (0).value, yystack.valueAt (1).type); 
+                                //var = symbolTable.createVariable($2.value, $1.type); 
+                                //var.name = $2.value; var.type = $1.type;
+                                var = symbolTable.new Variable(yystack.valueAt (0).value, yystack.valueAt (1).type); 
+                                //System.out.println(var);
                                 paramList.add(var);                            
                             }
                         };
@@ -604,11 +607,14 @@ public class ToY
 
   case 21: /* structDeclaration: type IDENTIFIER  */
   if (yyn == 21)
-    /* "ToY.y":142  */
+    /* "ToY.y":148  */
                         {   
-                            if(symbolTable.isVariableDeclared(yystack.valueAt (0).value)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
+                            if(symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
                             else { 
-                                var = symbolTable.addVariable(yystack.valueAt (0).value, yystack.valueAt (1).type); 
+                                //var = symbolTable.createVariable($2.value, $1.type); 
+                                var = symbolTable.new Variable(yystack.valueAt (0).value, yystack.valueAt (1).type); 
+                                //var.name = $2.value; var.type = $1.type;
+                                //System.out.println(var);
                                 fieldList.add(var);                            
                             }
                         };
@@ -617,47 +623,57 @@ public class ToY
 
   case 24: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
   if (yyn == 24)
-    /* "ToY.y":158  */
+    /* "ToY.y":167  */
                                                                                            { 
                                                                                                 func = symbolTable.new Function();
-                                                                                                func.name = yystack.valueAt (6).value; func.returnType = yystack.valueAt (7).type; func.parameters = (ArrayList)paramList.clone();
+                                                                                                func.name = yystack.valueAt (6).value; func.returnType = yystack.valueAt (7).type; 
+                                                                                                func.parameters = (ArrayList)paramList.clone(); func.localVariables = (ArrayList)localVariableList.clone();
                                                                                                 symbolTable.functionSymbolTable.put(func.name, func);
                                                                                                 paramList.clear();
+                                                                                                localVariableList.clear();
                                                                                            };
   break;
 
 
   case 25: /* statement: FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement  */
   if (yyn == 25)
-    /* "ToY.y":170  */
-                                                                                       { if(!symbolTable.isVariableDeclared(yystack.valueAt (8).value)) { throw new Error("Variable " + yystack.valueAt (10).value + " is not declared"); }};
+    /* "ToY.y":181  */
+                                                                                       { if(!symbolTable.isVariableDeclared(yystack.valueAt (8).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (10).value + " is not declared"); }};
   break;
 
 
   case 31: /* statement: type IDENTIFIER SEMICOLON  */
   if (yyn == 31)
-    /* "ToY.y":176  */
-                                    { if(symbolTable.isVariableDeclared(yystack.valueAt (1).value)) { throw new Error("Variable " + yystack.valueAt (1).value + " is already declared"); }
-                                        else { symbolTable.addVariable(yystack.valueAt (1).value, yystack.valueAt (2).type); }};
+    /* "ToY.y":187  */
+                                            {
+                                                if(symbolTable.isVariableDeclared(yystack.valueAt (1).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (1).value + " is already declared"); }
+                                                    else { 
+                                                        //var.name = $2.value; var.type = $1.type;
+                                                        //var = symbolTable.createVariable($2.value, $1.type); 
+                                                        var = symbolTable.new Variable(yystack.valueAt (1).value, yystack.valueAt (2).type); 
+                                                        localVariableList.add(var);
+                                                        //System.out.println(var);
+                                                    }
+                                            };
   break;
 
 
   case 32: /* statement: IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 32)
-    /* "ToY.y":178  */
-                                        { if(!symbolTable.isVariableDeclared(yystack.valueAt (3).value)) { throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); }};
+    /* "ToY.y":197  */
+                                            { if(!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); }};
   break;
 
 
   case 35: /* statement: IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON  */
   if (yyn == 35)
-    /* "ToY.y":183  */
-                                                            { if(!symbolTable.isVariableDeclared(yystack.valueAt (6).value)) { throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); }};
+    /* "ToY.y":202  */
+                                                            { if(!symbolTable.isVariableDeclared(yystack.valueAt (6).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); }};
   break;
 
 
 
-/* "ToY.java":661  */
+/* "ToY.java":677  */
 
         default: break;
       }
@@ -1346,12 +1362,14 @@ private static final short[] yycheck_ = yycheck_init();
 /* "ToY.y":19  */
 
     public static SymbolTable symbolTable;
+    public static SymbolTable.Variable var;
+
     public SymbolTable.Function func;
     public SymbolTable.Struct struct;
-    public SymbolTable.Variable var;
 
     public ArrayList<SymbolTable.Variable> paramList = new ArrayList<SymbolTable.Variable>();
     public ArrayList<SymbolTable.Variable> fieldList = new ArrayList<SymbolTable.Variable>();
+    public ArrayList<SymbolTable.Variable> localVariableList = new ArrayList<SymbolTable.Variable>();
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -1372,18 +1390,19 @@ private static final short[] yycheck_ = yycheck_init();
     
     public static void initialise() {
         symbolTable = new SymbolTable();
+        var = symbolTable.new Variable();
     }
 
     public static void printSymbolTables() {
         symbolTable.printFunctionTable();
         symbolTable.printStructTable();
-        symbolTable.printVariableTable();
+        //symbolTable.printVariableTable();
     }
 
-/* "ToY.java":1384  */
+/* "ToY.java":1403  */
 
 }
-/* "ToY.y":222  */
+/* "ToY.y":241  */
 
 
 class ToYLexer implements ToY.Lexer {
