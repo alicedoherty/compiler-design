@@ -1,7 +1,0 @@
-void main() {
-    {
-        int int1;
-        int int2;
-        string myString;
-    }
-}

@@ -653,9 +653,10 @@ public class ToY
   if (yyn == 18)
     /* "ToY.y":135  */
                         {   
-                            if(symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
+                            if((symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) || (symbolTable.isVariableDeclared(yystack.valueAt (0).value, paramList))) { throw new Error("Variable " + yystack.valueAt (0).value + " is already declared"); }
                             else { 
                                 var = symbolTable.new Variable(yystack.valueAt (0).value, yystack.valueAt (1).value); 
+                                //localVariableList.add(var);
                                 paramList.add(var);                            
                             }
                         };
@@ -664,10 +665,11 @@ public class ToY
 
   case 24: /* proc: returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  */
   if (yyn == 24)
-    /* "ToY.y":156  */
+    /* "ToY.y":157  */
                                                                                            { 
                                                                                                 func = symbolTable.new Function();
                                                                                                 func.name = yystack.valueAt (6).value; func.returnType = yystack.valueAt (7).value; 
+                                                                                                //func.localVariables = (ArrayList)localVariableList.clone();
                                                                                                 func.parameters = (ArrayList)paramList.clone(); func.localVariables = (ArrayList)localVariableList.clone();
                                                                                                 symbolTable.functionSymbolTable.put(func.name, func);
                                                                                                 paramList.clear();
@@ -678,7 +680,7 @@ public class ToY
 
   case 25: /* statement: FOR LEFT IDENTIFIER ASSIGN exp SEMICOLON exp SEMICOLON statement RIGHT statement  */
   if (yyn == 25)
-    /* "ToY.y":167  */
+    /* "ToY.y":169  */
                                                                                        { 
                                                                                             if(!yystack.valueAt (4).value.equals("BOOL")) { throw new Error("Second component in for loop is boolean expression"); }
                                                                                             if(!symbolTable.isVariableDeclared(yystack.valueAt (8).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (10).value + " is not declared"); }
@@ -688,7 +690,7 @@ public class ToY
 
   case 26: /* statement: IF LEFT exp RIGHT THEN statement  */
   if (yyn == 26)
-    /* "ToY.y":171  */
+    /* "ToY.y":173  */
                                             {
                                                 if(!yystack.valueAt (3).value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
                                                 /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
@@ -698,7 +700,7 @@ public class ToY
 
   case 27: /* statement: IF LEFT exp RIGHT THEN statement ELSE statement  */
   if (yyn == 27)
-    /* "ToY.y":175  */
+    /* "ToY.y":177  */
                                                         {
                                                             if(!yystack.valueAt (5).value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
                                                             /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
@@ -708,14 +710,18 @@ public class ToY
 
   case 29: /* statement: RETURN exp SEMICOLON  */
   if (yyn == 29)
-    /* "ToY.y":180  */
+    /* "ToY.y":182  */
                              { 
                                 String varType;
-                                if(yystack.valueAt (1).type == 278) {
-                                    varType = symbolTable.getVariableType(yystack.valueAt (1).value, localVariableList);                                    
+                                /*
+                                if($2.type == 278) {
+                                    System.out.println($2.value);
+                                    varType = symbolTable.getVariableType($2.value, localVariableList);   
+                                     System.out.println(varType);                                 
                                 } else {
-                                    varType = yystack.valueAt (1).value;
-                                }
+                                    varType = $2.value;
+                                }*/
+                                varType = yystack.valueAt (1).value;
                                 if(!returnType.equals(varType)) {
                                     throw new Error("Return type does not match function defintion");
                                 }
@@ -725,7 +731,7 @@ public class ToY
 
   case 31: /* statement: type IDENTIFIER SEMICOLON  */
   if (yyn == 31)
-    /* "ToY.y":192  */
+    /* "ToY.y":198  */
                                             {
                                                 if(symbolTable.isVariableDeclared(yystack.valueAt (1).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (1).value + " is already declared"); }
                                                 else { 
@@ -738,31 +744,33 @@ public class ToY
 
   case 32: /* statement: IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 32)
-    /* "ToY.y":200  */
+    /* "ToY.y":206  */
                                             { 
-                                                if((!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) && (!symbolTable.isVariableDeclared(yystack.valueAt (3).value, paramList))) { 
+                                                if((!symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) && (!symbolTable.isVariableDeclared(yystack.valueAt (3).value, paramList))) {
                                                     throw new Error("Variable " + yystack.valueAt (3).value + " is not declared"); 
                                                 }
-                                                System.out.println(paramList.get(0));
                                                 String varType;
                                                 String exprType;
                                                 if(symbolTable.isVariableDeclared(yystack.valueAt (3).value, localVariableList)) {
                                                     varType = symbolTable.getVariableType(yystack.valueAt (3).value, localVariableList);                                    
-                                                    if(yystack.valueAt (1).type == 278) {
-                                                        exprType = symbolTable.getVariableType(yystack.valueAt (1).value, localVariableList);                                    
+                                                    /*if($3.type == 278) {
+                                                        System.out.println($3.value);
+                                                        exprType = symbolTable.getVariableType($3.value, localVariableList);                                    
                                                     } else { 
-                                                        exprType = yystack.valueAt (1).value;
-                                                    }
+                                                        exprType = $3.value;
+                                                    }*/
+                                                    exprType = yystack.valueAt (1).value;
                                                     if(!exprType.equals(varType)) {
                                                         throw new Error("Assignment is not well-typed");
                                                     }  
                                                 } else if (symbolTable.isVariableDeclared(yystack.valueAt (3).value, paramList)) {
                                                     varType = symbolTable.getVariableType(yystack.valueAt (3).value, paramList);                                    
-                                                    if(yystack.valueAt (1).type == 278) {
-                                                        exprType = symbolTable.getVariableType(yystack.valueAt (1).value, paramList);                                    
+                                                    /*if($3.type == 278) {
+                                                        exprType = symbolTable.getVariableType($3.value, paramList);                                    
                                                     } else { 
-                                                        exprType = yystack.valueAt (1).value;
-                                                    }
+                                                        exprType = $3.value;
+                                                    }*/
+                                                    exprType = yystack.valueAt (1).value;
                                                     if(!exprType.equals(varType)) {
                                                         throw new Error("Assignment is not well-typed");
                                                     }  
@@ -773,7 +781,7 @@ public class ToY
 
   case 33: /* statement: IDENTIFIER PERIOD IDENTIFIER ASSIGN exp SEMICOLON  */
   if (yyn == 33)
-    /* "ToY.y":229  */
+    /* "ToY.y":237  */
                                                             {
                                                                 String varType;
                                                                 /* Check if there is variable called IDENTIFIER in the function */
@@ -791,7 +799,7 @@ public class ToY
                                                                 /* Check if there is variable called IDENTIFIER passed in as a parameter */
                                                                 } else if (symbolTable.isVariableDeclared(yystack.valueAt (5).value, paramList)) {
                                                                     varType = symbolTable.getVariableType(yystack.valueAt (5).value, paramList);
-                                                                    /* Look for struct of that type and if it exists, check it has field lExp */
+                                                                    //Look for struct of that type and if it exists, check it has field lExp
                                                                     if (symbolTable.isStructDeclared(varType)) {
                                                                         if (!symbolTable.isStructField(varType, yystack.valueAt (3).value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + yystack.valueAt (3).value);
@@ -806,45 +814,63 @@ public class ToY
 
   case 35: /* statement: IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON  */
   if (yyn == 35)
-    /* "ToY.y":258  */
-                                                            { if(!symbolTable.isVariableDeclared(yystack.valueAt (6).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); }};
+    /* "ToY.y":266  */
+                                                            { if((!symbolTable.isVariableDeclared(yystack.valueAt (6).value, localVariableList)) && (!symbolTable.isVariableDeclared(yystack.valueAt (6).value, paramList))) 
+                                                                { 
+                                                                    throw new Error("Variable " + yystack.valueAt (6).value + " is not declared"); 
+                                                                }
+                                                            };
+  break;
+
+
+  case 38: /* exp: INTEGER_LITERAL  */
+  if (yyn == 38)
+    /* "ToY.y":279  */
+                                { yyval.value = "INT"; };
+  break;
+
+
+  case 39: /* exp: STRING_LITERAL  */
+  if (yyn == 39)
+    /* "ToY.y":280  */
+                                { yyval.value = "STRING"; };
   break;
 
 
   case 40: /* exp: TRUE  */
   if (yyn == 40)
-    /* "ToY.y":269  */
+    /* "ToY.y":281  */
                                 { yyval.value = "BOOL"; };
   break;
 
 
   case 41: /* exp: FALSE  */
   if (yyn == 41)
-    /* "ToY.y":270  */
+    /* "ToY.y":282  */
                                 { yyval.value = "BOOL"; };
   break;
 
 
   case 42: /* exp: MINUS exp  */
   if (yyn == 42)
-    /* "ToY.y":271  */
+    /* "ToY.y":283  */
                                 { yyval.value = "INT"; };
   break;
 
 
   case 43: /* exp: NOT exp  */
   if (yyn == 43)
-    /* "ToY.y":272  */
+    /* "ToY.y":284  */
                                 { yyval.value = "BOOL"; };
   break;
 
 
   case 44: /* exp: IDENTIFIER  */
   if (yyn == 44)
-    /* "ToY.y":274  */
+    /* "ToY.y":286  */
                                 { 
-                                    System.out.println(yystack.valueAt (0).value);
-                                    if(!symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }
+                                    if((!symbolTable.isVariableDeclared(yystack.valueAt (0).value, localVariableList)) && (!symbolTable.isVariableDeclared(yystack.valueAt (0).value, paramList))) 
+                                        { throw new Error("Variable " + yystack.valueAt (0).value + " is not declared"); }
                                     yyval.value = symbolTable.getVariableType(yystack.valueAt (0).value, localVariableList); 
                                 };
   break;
@@ -852,14 +878,14 @@ public class ToY
 
   case 46: /* exp: LEFT exp RIGHT  */
   if (yyn == 46)
-    /* "ToY.y":280  */
+    /* "ToY.y":292  */
                                 { yyval.value = yystack.valueAt (1).value; };
   break;
 
 
   case 47: /* exp: exp PLUS exp  */
   if (yyn == 47)
-    /* "ToY.y":281  */
+    /* "ToY.y":293  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("Addition can only be done on INTs");
@@ -870,7 +896,7 @@ public class ToY
 
   case 48: /* exp: exp MINUS exp  */
   if (yyn == 48)
-    /* "ToY.y":286  */
+    /* "ToY.y":298  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("Subtraction can only be done on INTs");
@@ -881,7 +907,7 @@ public class ToY
 
   case 49: /* exp: exp TIMES exp  */
   if (yyn == 49)
-    /* "ToY.y":291  */
+    /* "ToY.y":303  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("Multiplication can only be done on INTs");
@@ -892,7 +918,7 @@ public class ToY
 
   case 50: /* exp: exp DIVIDE exp  */
   if (yyn == 50)
-    /* "ToY.y":296  */
+    /* "ToY.y":308  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("Division can only be done on INTs");
@@ -903,7 +929,7 @@ public class ToY
 
   case 51: /* exp: exp MOD exp  */
   if (yyn == 51)
-    /* "ToY.y":301  */
+    /* "ToY.y":313  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("Mod can only be done on INTs");
@@ -914,7 +940,7 @@ public class ToY
 
   case 52: /* exp: exp AND exp  */
   if (yyn == 52)
-    /* "ToY.y":306  */
+    /* "ToY.y":318  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "BOOL")) {
                                 throw new Error("And can only be done on BOOLs");
@@ -926,7 +952,7 @@ public class ToY
 
   case 53: /* exp: exp OR exp  */
   if (yyn == 53)
-    /* "ToY.y":312  */
+    /* "ToY.y":324  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "BOOL")) {
                                 throw new Error("Or can only be done on BOOLs");
@@ -938,7 +964,7 @@ public class ToY
 
   case 54: /* exp: exp EQ exp  */
   if (yyn == 54)
-    /* "ToY.y":318  */
+    /* "ToY.y":330  */
                         { 
                             /*if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
                                 throw new Error("Equals can only be done on BOOLs");
@@ -950,7 +976,7 @@ public class ToY
 
   case 55: /* exp: exp GT exp  */
   if (yyn == 55)
-    /* "ToY.y":324  */
+    /* "ToY.y":336  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("> can only be done on INTs");
@@ -962,7 +988,7 @@ public class ToY
 
   case 56: /* exp: exp LT exp  */
   if (yyn == 56)
-    /* "ToY.y":330  */
+    /* "ToY.y":342  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("< can only be done on INTs");
@@ -975,7 +1001,7 @@ public class ToY
 
   case 57: /* exp: exp GE exp  */
   if (yyn == 57)
-    /* "ToY.y":337  */
+    /* "ToY.y":349  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error(">= can only be done on INTs");
@@ -987,7 +1013,7 @@ public class ToY
 
   case 58: /* exp: exp LE exp  */
   if (yyn == 58)
-    /* "ToY.y":343  */
+    /* "ToY.y":355  */
                         { 
                             if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
                                 throw new Error("<= can only be done on INTs");
@@ -999,18 +1025,18 @@ public class ToY
 
   case 59: /* exp: exp NE exp  */
   if (yyn == 59)
-    /* "ToY.y":349  */
+    /* "ToY.y":361  */
                         { 
-                            if(!symbolTable.isCorrectType(yystack.valueAt (2).value, yystack.valueAt (0).value, "INT")) {
+                            /*if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
                                 throw new Error("!= can only be done on INTs");
-                            }
+                            }*/
                             yyval.value = "BOOL";
                         };
   break;
 
 
 
-/* "ToY.java":1014  */
+/* "ToY.java":1040  */
 
         default: break;
       }
@@ -1734,10 +1760,10 @@ private static final short[] yycheck_ = yycheck_init();
         symbolTable.printStructTable();
     }
 
-/* "ToY.java":1738  */
+/* "ToY.java":1764  */
 
 }
-/* "ToY.y":379  */
+/* "ToY.y":393  */
 
 
 class ToYLexer implements ToY.Lexer {

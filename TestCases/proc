@@ -1,7 +1,0 @@
-int myFunction() {
-    int myInt;
-}
-
-string myFunction2() {
-    string myString;
-}

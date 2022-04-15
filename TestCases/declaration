@@ -1,7 +1,0 @@
-struct MyStruct {
-    int myInt, int secondInt, string mystring
-}
-
-void main() {
-    int myInt;
-}

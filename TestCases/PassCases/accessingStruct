@@ -1,0 +1,24 @@
+void main() {
+    {
+        int i;
+        int j;
+    }
+}
+
+struct myStruct {
+    string name,
+    string surname
+}
+
+## Can have type myStruct.name but myStruct2.name will fail
+int myFunc() {
+    {
+        myStruct test;
+        string myString;
+
+        test.name = myString;
+        test.surname = "name";
+
+        return 0;
+    }
+}

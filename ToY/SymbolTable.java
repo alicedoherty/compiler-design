@@ -112,14 +112,14 @@ public class SymbolTable {
         public String name;
         public String returnType;
         public ArrayList<Variable> parameters = new ArrayList<Variable>();
-        //public ArrayList<Variable> localVariables = new ArrayList<Variable>();
+        public ArrayList<Variable> localVariables = new ArrayList<Variable>();
         
         public Function() {
             this.name = "";
             this.returnType = "";
         }
 
-        public Function(String name, String returnType, ArrayList<Variable> parameters) {
+        public Function(String name, String returnType, ArrayList<Variable> parameters, ArrayList<Variable> localVariables) {
             this.name = name;
             this.returnType = returnType;
             this.parameters = parameters;
