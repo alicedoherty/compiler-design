@@ -1,0 +1,8 @@
+void main() {
+    {
+        int i;
+        bool b;
+        for (i = 0; b == false; i = i + 1;)
+            b = false;
+    }
+}
