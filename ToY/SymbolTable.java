@@ -50,9 +50,9 @@ public class SymbolTable {
 
     }
 
-    public boolean isVariableDeclared(String name, ArrayList<Variable> localVariables) {
-        for(int i = 0; i < localVariables.size(); i++) {
-            if(localVariables.get(i).name.equals(name)) {
+    public boolean isVariableDeclared(String name, ArrayList<Variable> variableList) {
+        for(int i = 0; i < variableList.size(); i++) {
+            if(variableList.get(i).name.equals(name)) {
                 return true;
             }
         }
@@ -112,7 +112,7 @@ public class SymbolTable {
         public String name;
         public String returnType;
         public ArrayList<Variable> parameters = new ArrayList<Variable>();
-        public ArrayList<Variable> localVariables = new ArrayList<Variable>();
+        //public ArrayList<Variable> localVariables = new ArrayList<Variable>();
         
         public Function() {
             this.name = "";

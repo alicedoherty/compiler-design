@@ -1,3 +1,10 @@
-void main() {
-    test.test = "test";
+struct myStruct {
+    int i
+}
+
+void main(int test) {
+    {
+        int test;
+        test = 1;
+    }
 }

@@ -20,7 +20,6 @@ class Yytoken {
 
 %unicode
 %public
-/*%standalone*/
 
 /*
 %{
@@ -45,16 +44,11 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 
 Letter = [A-Za-z]
 Digit = [0-9]
-/* "." can't be in identifier name - i.e can't have variable test.myVariable 
-* because can be mistaken for struct variable
-*/
 Identifier = ({Letter}|_)[{Letter}{Digit}_]*
 
 Zero = 0
 DecInt = [1-9][0-9]*
 
-/* TODO removing/keeping whitespace at end {WhiteSpace}
-  Will recognise 0123 as valid - two separate Integers */
 Integer = [\-]?({Zero}|{DecInt})
 
 Escape = \\[ntbrf\\\'\"]
