@@ -204,11 +204,13 @@ statement
                                                                     String varType = symbolTable.getVariableType($1.value, localVariableList);
                                                                     System.out.println("test2");
                                                                     /* Look for struct of that type and if it exists, check it has field lExp */
-                                                                    if (!symbolTable.isStructDeclared(varType)) {
+                                                                    if (symbolTable.isStructDeclared(varType)) {
                                                                         System.out.println("test3");
                                                                         if (!symbolTable.isStructField(varType, $3.value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + $3.value);
                                                                         }
+                                                                    } else {
+                                                                        throw new Error("Struct " + varType + " does not have field " + $3.value);
                                                                     }
                                                                 }
                                                            }
