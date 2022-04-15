@@ -1,0 +1,12 @@
+//Bad struct usage: RHS is not a field in that struct.
+struct MyStruct {
+    string a
+}
+
+void main() {
+    {
+        MyStruct s;
+        s.b = "hello";
+
+    }
+}

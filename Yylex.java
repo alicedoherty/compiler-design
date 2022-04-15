@@ -870,7 +870,7 @@ public class Yylex {
             // fall through
           case 72: break;
           case 32:
-            { return new Yytoken(ToYLexer.BOOL);
+            { return new Yytoken(ToYLexer.BOOL, "BOOL");
             }
             // fall through
           case 73: break;
@@ -910,12 +910,12 @@ public class Yylex {
             // fall through
           case 80: break;
           case 40:
-            { return new Yytoken(ToYLexer.STRING);
+            { return new Yytoken(ToYLexer.STRING, "STRING");
             }
             // fall through
           case 81: break;
           case 41:
-            { return new Yytoken(ToYLexer.STRUCT);
+            { return new Yytoken(ToYLexer.STRUCT, "STRUCT");
             }
             // fall through
           case 82: break;

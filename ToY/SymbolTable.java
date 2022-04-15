@@ -18,7 +18,7 @@ public class SymbolTable {
         System.out.println("Function Symbol Table:");
         for (String key : functionSymbolTable.keySet()) {
             Function function = functionSymbolTable.get(key);
-            System.out.print("Function Name: " + function.name + " | " + "Return Type: " + function.returnType + " | ");
+            System.out.print("Function Name: " + key + " | " + "Return Type: " + function.returnType + " | ");
             
             System.out.print("Parameters: ");
             for (int i = 0; i < function.parameters.size(); i++) {
@@ -39,7 +39,7 @@ public class SymbolTable {
         System.out.println("Struct Symbol Table:");
         for (String key : structSymbolTable.keySet()) {
             Struct struct = structSymbolTable.get(key);
-            System.out.print("Struct Name: " + struct.name + " | ");
+            System.out.print("Struct Name: " + key + " | ");
             System.out.print("Fields: ");
             for (int i = 0; i < struct.fields.size(); i++) {
                 System.out.print(struct.fields.get(i).name + ":" + struct.fields.get(i).type + ", ");
@@ -50,23 +50,35 @@ public class SymbolTable {
 
     }
 
-    // public void printVariableTable() {
-    //     System.out.println("Variable Symbol Table: ");
-    //     for (String key: variableSymbolTable.keySet()) {
-    //         Variable variable = variableSymbolTable.get(key);
-    //         System.out.print(variable.name + " : " + variable.type + ", ");
-    //     }
-    // }
-
     public boolean isVariableDeclared(String name, ArrayList<Variable> localVariables) {
         for(int i = 0; i < localVariables.size(); i++) {
             if(localVariables.get(i).name.equals(name)) {
                 return true;
             }
         }
-        // if (variableSymbolTable.containsKey(name)) {
-        //     return true;
-        // }
+        return false;
+    }
+
+    public String getVariableType(String name, ArrayList<Variable> localVariables) {
+        for(int i = 0; i < localVariables.size(); i++) {
+            if(localVariables.get(i).name.equals(name)) {
+                return localVariables.get(i).type;
+            }
+        }
+        return "";
+    }
+
+    public boolean isStructDeclared(String name) {
+        return structSymbolTable.containsKey(name);
+    }
+
+    public boolean isStructField(String structName, String varName) {
+        Struct struct = structSymbolTable.get(structName);
+        for (int i = 0; i < struct.fields.size(); i++) {
+            if(struct.fields.get(i).name.equals(varName)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -81,49 +93,27 @@ public class SymbolTable {
     //     return false;
     // }
 
-    public boolean returnTypeMatches() {
-        return true;
-    }
-
-    // public Function addFunction(String name, int type, ArrayList<Variable> parameters) {
-    //     Function function = new Function(name, type, parameters);
-    //     functionSymbolTable.put(name, function);
-    //     return function;
-    // }
-
-    // public void addStruct(String name) {
-    //     Struct struct = new Struct(name);
-    //     structSymbolTable.put(name, struct);
-    //     System.out.println("Struct Added: " + name);
-    // }
-
-    // public Variable createVariable(String name, int type) {
-    //     Variable variable = new Variable(name, type);
-    //     //variableSymbolTable.put(name, variable);
-    //     return variable;
+    // public boolean returnTypeMatches() {
+    //     return true;
     // }
 
     public class Function {
         public String name;
-        public int returnType;
+        public String returnType;
         public ArrayList<Variable> parameters = new ArrayList<Variable>();
         public ArrayList<Variable> localVariables = new ArrayList<Variable>();
         
         public Function() {
             this.name = "";
-            this.returnType = -1;
+            this.returnType = "";
         }
 
-        public Function(String name, int returnType, ArrayList<Variable> parameters) {
+        public Function(String name, String returnType, ArrayList<Variable> parameters) {
             this.name = name;
             this.returnType = returnType;
             this.parameters = parameters;
             this.localVariables = localVariables;
         }
-
-        // public void addParameter(Variable variable) {
-        //     this.parameters.add(variable);
-        // }
     }
 
     public class Struct {
@@ -137,22 +127,18 @@ public class SymbolTable {
         public Struct(String name) {
            this.name = name;
         }
-
-        // public void addField(Variable variable) {
-        //     this.fields.add(variable);
-        // }
     }
 
     public class Variable {
         public String name;
-        public int type;
+        public String type;
 
         public Variable() {
             this.name = "";
-            this.type = -1;
+            this.type = "";
         }
 
-        public Variable(String name, int type) {
+        public Variable(String name, String type) {
             this.name = name;
             this.type = type;
         }

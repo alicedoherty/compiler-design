@@ -1,6 +1,6 @@
 //Bad struct usage: LHS of dot in variable reference is not a known struct 
 struct MyStruct {
-         string a
+    string a
 }
 
 void main() {

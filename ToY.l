@@ -45,6 +45,9 @@ public static void main(String[] args) throws FileNotFoundException, IOException
 
 Letter = [A-Za-z]
 Digit = [0-9]
+/* "." can't be in identifier name - i.e can't have variable test.myVariable 
+* because can be mistaken for struct variable
+*/
 Identifier = ({Letter}|_)[{Letter}{Digit}_]*
 
 Zero = 0
@@ -65,14 +68,14 @@ LineTerminator = \r|\n|\r\n
 <YYINITIAL> {
 
 /* reserved words */
-"bool"                         { return new Yytoken(ToYLexer.BOOL); }
+"bool"                         { return new Yytoken(ToYLexer.BOOL, "BOOL"); }
 "int"                          { return new Yytoken(ToYLexer.INT); }
 "true"                         { return new Yytoken(ToYLexer.TRUE); }
 "false"                        { return new Yytoken(ToYLexer.FALSE); }
 "void"                         { return new Yytoken(ToYLexer.VOID); }
 "printf"                       { return new Yytoken(ToYLexer.PRINTF); }
-"string"                       { return new Yytoken(ToYLexer.STRING); }
-"struct"                       { return new Yytoken(ToYLexer.STRUCT); }
+"string"                       { return new Yytoken(ToYLexer.STRING, "STRING"); }
+"struct"                       { return new Yytoken(ToYLexer.STRUCT, "STRUCT"); }
 "if"                           { return new Yytoken(ToYLexer.IF); }
 "then"                         { return new Yytoken(ToYLexer.THEN); }
 "else"                         { return new Yytoken(ToYLexer.ELSE); }

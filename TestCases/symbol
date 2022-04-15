@@ -5,15 +5,21 @@ void main(int pls, string hi) {
     }
 }
 
-int myFunc(int sad) {
-    string myString;
+struct myStruct2 {
+    int myInt
 }
 
 struct myStruct1 {
     string name,
-    string surname
+    string surname,
+    myStruct2 hello
 }
 
-struct myStruct2 {
-    int myInt
+## Can have type myStruct1 but myStruct3, etc. will fail
+int myFunc(int sad) {
+    {
+        string myString;
+        myStruct1 test;
+        int i;
+    }
 }
