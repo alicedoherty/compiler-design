@@ -1,0 +1,7 @@
+void main() {
+    {
+        bool i;
+        i = true;
+        if (i == true) then printf ("true"); else printf ("false");
+    }
+}

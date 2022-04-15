@@ -1,0 +1,14 @@
+int myFunction(){
+    {
+        int a;
+        a = 12;
+        return a;
+    }
+}
+
+void main(){
+    {
+        string b;
+        b = myFunction();
+    }
+}
