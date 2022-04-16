@@ -1,0 +1,6 @@
+// ToY doesn't support declaration and assignment on same line
+void main() {
+    {
+        int i = 0;
+    }
+}

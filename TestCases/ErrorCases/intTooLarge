@@ -1,5 +1,5 @@
- //Integers larger than Integer.MAX VALUE
- void main(){
+ // Integers larger than Integer.MAX VALUE
+ void main() {
      {
             int i;
             i = 2147483647;

@@ -1,4 +1,4 @@
-int myFunction (){
+int myFunction () {
     {
         int a;
         a = 12;

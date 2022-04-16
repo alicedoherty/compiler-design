@@ -1,0 +1,10 @@
+void main() { 
+    {
+        ## This will parse
+        int myInt;
+
+        ## This won't
+        int 1myInt;
+
+    }
+}

@@ -1,0 +1,7 @@
+void main() {
+    {
+        int i;
+        i = 5;
+        if (true) then if (i < 5) then printf ("hello"); else printf("world");
+    }
+}

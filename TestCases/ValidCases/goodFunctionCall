@@ -9,6 +9,7 @@ int myFunction(){
 void main(){
     {
         int b;
+        myFunction();
         b = myFunction();
     }
 }

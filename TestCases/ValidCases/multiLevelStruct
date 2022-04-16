@@ -1,0 +1,16 @@
+struct Name {
+    string firstName,
+    string lastName
+}
+
+struct Employee {
+    Name name
+}
+
+struct Dept {
+    Employee emp
+}
+
+void main() {
+    printf("hello world");
+}

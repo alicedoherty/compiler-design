@@ -1,14 +1,13 @@
-int myFunction(){
+void myFunction(){
     {
         int a;
         a = 12;
-        return a;
     }
 }
 
 void main(){
     {
         int b;
-        b = myFunction();
+        myFunction();
     }
 }

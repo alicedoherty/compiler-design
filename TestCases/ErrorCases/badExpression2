@@ -1,7 +1,5 @@
 void main(){
     {
-        int i;
-        i = 5;
-        if (i !4 ) then printf (":)"); else printf (":(");
+        if(!4) then printf("error");
     }
 }

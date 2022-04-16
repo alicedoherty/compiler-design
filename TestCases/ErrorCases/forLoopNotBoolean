@@ -1,0 +1,10 @@
+void main() {
+    {
+        int i;
+        bool b;
+
+        ## Second expression in for loop must be boolean expr
+        for (i = 0; i = 2; i = i + 1;)
+            b = false;
+    }
+}

@@ -136,7 +136,6 @@ declaration
                             if((symbolTable.isVariableDeclared($2.value, localVariableList)) || (symbolTable.isVariableDeclared($2.value, paramList))) { throw new Error("Variable " + $2.value + " is already declared"); }
                             else { 
                                 var = symbolTable.new Variable($2.value, $1.value); 
-                                //localVariableList.add(var);
                                 paramList.add(var);                            
                             }
                         }
@@ -261,7 +260,8 @@ statement
                                                            }
     /* TODO Below exp - they should allow for 0 exp */
     | IDENTIFIER LEFT exp RIGHT SEMICOLON 
-    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) 
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON // Needs to be changed for function instead
+                                                            { if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) 
                                                                 { 
                                                                     throw new Error("Variable " + $1.value + " is not declared"); 
                                                                 }
@@ -279,7 +279,12 @@ exp
     | TRUE                      { $$.value = "BOOL"; }
     | FALSE                     { $$.value = "BOOL"; }
     | MINUS exp %prec UMINUS    { $$.value = "INT"; }
-    | NOT exp                   { $$.value = "BOOL"; }
+    | NOT exp                   { 
+                                    if(!symbolTable.isCorrectType($2.value, "BOOL", "BOOL")) {
+                                        throw new Error("Negation can only be done on BOOLs");
+                                    }
+                                    $$.value = "BOOL"; 
+                                }
     /*| lExp */
     | IDENTIFIER                { 
                                     if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) 

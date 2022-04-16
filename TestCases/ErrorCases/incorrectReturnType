@@ -1,0 +1,7 @@
+int myFunction () {
+    {
+        string a;
+        a = "test";
+        return a;
+    }
+}
