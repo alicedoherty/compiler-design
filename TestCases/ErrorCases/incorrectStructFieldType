@@ -1,0 +1,24 @@
+void main() {
+    int i;
+}
+
+struct myStruct {
+    int age,
+    string surname
+}
+
+## Can have type myStruct.name but myStruct2.name will fail
+int myFunc() {
+    {
+        myStruct test;
+
+        string myString;
+        myString = "myAge";
+
+        // MyStruct.age is of type int, and myString is of type string
+        test.age = myString;
+        test.surname = "name";
+
+        return 0;
+    }
+}

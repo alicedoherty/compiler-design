@@ -1,3 +1,7 @@
-bool main() {
+void main() {
+   printf("hello world");
+}
+
+bool myFunction() {
    return 1 < 2;
 }

@@ -25,9 +25,12 @@
     public SymbolTable.Function func;
     public SymbolTable.Struct struct;
 
-    public ArrayList<SymbolTable.Variable> paramList = new ArrayList<SymbolTable.Variable>();
+    /* Keeps tracks of current struct's fields */
     public ArrayList<SymbolTable.Variable> fieldList = new ArrayList<SymbolTable.Variable>();
+
+    /* Keeps track of current function's parameters and local variables */
     public ArrayList<SymbolTable.Variable> localVariableList = new ArrayList<SymbolTable.Variable>();
+
 
 	public static void main (String args[]) throws IOException {
         ToYLexer lexer = new ToYLexer(System.in);
@@ -44,7 +47,7 @@
             System.out.println("ERROR");
         }
 
-        // printSymbolTables();
+        //printSymbolTables();
 	} 
     
     public static void initialise() {
@@ -52,6 +55,7 @@
         var = symbolTable.new Variable();
     }
 
+    // Print function for debugging
     public static void printSymbolTables() {
         symbolTable.printFunctionTable();
         symbolTable.printStructTable();
@@ -133,10 +137,12 @@ structDeclaration
 
 declaration
     : type IDENTIFIER   {   
-                            if((symbolTable.isVariableDeclared($2.value, localVariableList)) || (symbolTable.isVariableDeclared($2.value, paramList))) { throw new Error("Variable " + $2.value + " is already declared"); }
+                            if(symbolTable.isVariableDeclared($2.value, localVariableList)) {
+                                throw new Error("Variable " + $2.value + " is already declared");
+                            } 
                             else { 
-                                var = symbolTable.new Variable($2.value, $1.value); 
-                                paramList.add(var);                            
+                                var = symbolTable.new Variable($2.value, $1.value);
+                                localVariableList.add(var);                          
                             }
                         }
 ;
@@ -157,10 +163,8 @@ proc
                                                                                                 if(symbolTable.isFunctionDeclared($2.value)) { throw new Error("Cannot redeclare function with same name"); }
                                                                                                 func = symbolTable.new Function();
                                                                                                 func.name = $2.value; func.returnType = $1.value; 
-                                                                                                //func.localVariables = (ArrayList)localVariableList.clone();
-                                                                                                func.parameters = (ArrayList)paramList.clone(); func.localVariables = (ArrayList)localVariableList.clone();
+                                                                                                func.localVariables = (ArrayList)localVariableList.clone();
                                                                                                 symbolTable.functionSymbolTable.put(func.name, func);
-                                                                                                paramList.clear();
                                                                                                 localVariableList.clear();
                                                                                            }  
 ;
@@ -171,22 +175,18 @@ statement
                                                                                             if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
                                                                                         }
     | IF LEFT exp RIGHT THEN statement      {
-                                                if(!$3.value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
-                                                /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                                if(!$3.value.equals("BOOL")) {
+                                                    throw new Error("Second component in for loop must be boolean expression");
+                                                }
                                             }
     | IF LEFT exp RIGHT THEN statement ELSE statement   {
-                                                            if(!$3.value.equals("BOOL")) {throw new Error("Second component in for loop is boolean expression");}
-                                                            /*if(!symbolTable.isVariableDeclared($3.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }*/
+                                                            if(!$3.value.equals("BOOL")) {
+                                                                throw new Error("Second component in for loop is boolean expression");
+                                                            }
                                                         }
     | PRINTF LEFT STRING_LITERAL RIGHT SEMICOLON
     | RETURN exp SEMICOLON   { 
                                 String varType;
-                                /*
-                                if($2.type == 278) {
-                                    varType = symbolTable.getVariableType($2.value, localVariableList);   
-                                } else {
-                                    varType = $2.value;
-                                }*/
                                 varType = $2.value;
                                 if(!returnType.equals(varType)) {
                                     throw new Error("Return type does not match function defintion");
@@ -202,9 +202,10 @@ statement
                                             }
     /*| lExp ASSIGN exp SEMICOLON*/
     | IDENTIFIER ASSIGN exp SEMICOLON       { 
-                                                if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) {
+                                                if(!symbolTable.isVariableDeclared($1.value, localVariableList)) {
                                                     throw new Error("Variable " + $1.value + " is not declared"); 
                                                 }
+                                                    
                                                 String varType;
                                                 String exprType;
                                                 if(symbolTable.isVariableDeclared($1.value, localVariableList)) {
@@ -213,48 +214,35 @@ statement
                                                     if(!exprType.equals(varType)) {
                                                         throw new Error("Assignment is not well-typed");
                                                     }  
-                                                } else if (symbolTable.isVariableDeclared($1.value, paramList)) {
-                                                    varType = symbolTable.getVariableType($1.value, paramList);                                    
-                                                    exprType = $3.value;
-                                                    if(!exprType.equals(varType)) {
-                                                        throw new Error("Assignment is not well-typed");
-                                                    }  
                                                 }
                                             }
     | IDENTIFIER PERIOD IDENTIFIER ASSIGN exp SEMICOLON     {
                                                                 String varType;
-                                                                /* Check if there is variable called IDENTIFIER in the function */
+                                                                /* Check if there is variable called IDENTIFIER in the function's scope */
                                                                 if (symbolTable.isVariableDeclared($1.value, localVariableList)) {
                                                                     /* Get type of the variable */
                                                                     varType = symbolTable.getVariableType($1.value, localVariableList);
-                                                                    /* Look for struct of that type and if it exists, check it has field lExp */
+                                                                    /* Look for struct of that type and if it exists, check it has that field */
                                                                     if (symbolTable.isStructDeclared(varType)) {
                                                                         if (!symbolTable.isStructField(varType, $3.value)) {
                                                                             throw new Error("Struct " + varType + " does not have field " + $3.value);
                                                                         }
-                                                                    } else {
-                                                                        throw new Error("Struct " + varType + " does not have field " + $3.value);
-                                                                    }
-                                                                /* Check if there is variable called IDENTIFIER passed in as a parameter */
-                                                                } else if (symbolTable.isVariableDeclared($1.value, paramList)) {
-                                                                    varType = symbolTable.getVariableType($1.value, paramList);
-                                                                    //Look for struct of that type and if it exists, check it has field lExp
-                                                                    if (symbolTable.isStructDeclared(varType)) {
-                                                                        if (!symbolTable.isStructField(varType, $3.value)) {
-                                                                            throw new Error("Struct " + varType + " does not have field " + $3.value);
+
+                                                                        String structFieldType = symbolTable.getStructFieldType(varType, $3.value);
+
+                                                                        if (!structFieldType.equals($5.value)) { 
+                                                                            throw new Error ("Struct field type does not match assignment"); 
                                                                         }
                                                                     } else {
                                                                         throw new Error("Struct " + varType + " does not have field " + $3.value);
                                                                     }
                                                                 }
                                                            }
-    | IDENTIFIER LEFT exp RIGHT SEMICOLON       { if(!symbolTable.isFunctionDeclared($1.value) ) 
-                                                    { 
+    | IDENTIFIER LEFT exp RIGHT SEMICOLON       { if(!symbolTable.isFunctionDeclared($1.value)) { 
                                                         throw new Error("Function is not declared"); 
                                                     }
                                                 }
-    | IDENTIFIER LEFT RIGHT SEMICOLON           { if(!symbolTable.isFunctionDeclared($1.value) ) 
-                                                    { 
+    | IDENTIFIER LEFT RIGHT SEMICOLON           { if(!symbolTable.isFunctionDeclared($1.value)) { 
                                                         throw new Error("Function is not declared"); 
                                                     }
                                                 }
@@ -269,8 +257,7 @@ statement
                                                             }
                                                         }
     | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { 
-                                                                if(!symbolTable.isFunctionDeclared($3.value) ) 
-                                                                    { 
+                                                                if(!symbolTable.isFunctionDeclared($3.value)) { 
                                                                         throw new Error("Function is not declared"); 
                                                                     }
                                                                 String funcReturnType = symbolTable.getFunctionReturnType($3.value);
@@ -300,11 +287,12 @@ exp
                                 }
     /*| lExp */
     | IDENTIFIER                { 
-                                    if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) 
-                                        { throw new Error("Variable " + $1.value + " is not declared"); }
+                                    if(!symbolTable.isVariableDeclared($1.value, localVariableList)) {
+                                        throw new Error("Variable " + $1.value + " is not declared");
+                                    }
                                     $$.value = symbolTable.getVariableType($1.value, localVariableList); 
                                 }
-    | IDENTIFIER PERIOD IDENTIFIER
+    | IDENTIFIER PERIOD IDENTIFIER 
     | LEFT exp RIGHT            { $$.value = $2.value; }
     | exp PLUS exp      { 
                             if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
@@ -344,10 +332,7 @@ exp
                             $$.value = "BOOL";
                         } 
     | exp EQ exp        { 
-                            /*if(!symbolTable.isCorrectType($1.value, $3.value, "BOOL")) {
-                                throw new Error("Equals can only be done on BOOLs");
-                            }*/
-                            /* != can be used on any type */
+                            /* == can be used on any type but it evaluates to a BOOL expression */
                             $$.value = "BOOL";
                         } 
     | exp GT exp        { 
@@ -376,37 +361,10 @@ exp
                             $$.value = "BOOL";
                         } 
     | exp NE exp        { 
-                            /*if(!symbolTable.isCorrectType($1.value, $3.value, "INT")) {
-                                throw new Error("!= can only be done on INTs");
-                            }*/
-                            /* != can be used on any type */
+                            /* != can be used on any type but it evaluates to a BOOL expression */
                             $$.value = "BOOL";
                         } 
 ;
-
-/* lExp below never matches */
-/*
-lExp
-    : IDENTIFIER                { 
-                                    if(!symbolTable.isVariableDeclared($1.value, localVariableList)) { throw new Error("Variable " + $1.value + " is not declared"); }
-                                }                   
-    | IDENTIFIER PERIOD lExp    { 
-                                    // Check if there is variable called IDENTIFIER in the function
-                                    if (symbolTable.isVariableDeclared($1.value, localVariableList)) {
-                                        
-                                        // Get type of the variable
-                                        String varType = symbolTable.getVariableType($1.value, localVariableList);
-
-                                        // Look for struct of that type and if it exists, check it has field lExp
-                                        if (!symbolTable.isStructDeclared(varType)) {
-                                            if (!symbolTable.isStructField(varType, $3.value)) {
-                                                throw new Error("Struct " + varType + " does not have field " + $3.value);
-                                            }
-                                        }
-                                    }
-                                }
-;
-*/
 
 %%
 

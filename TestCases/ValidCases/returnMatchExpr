@@ -1,4 +1,8 @@
-int main() {
+void main() {
+    printf("hello world");
+}
+
+int myFunc() {
     {
         return 2+3;
     }

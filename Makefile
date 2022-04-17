@@ -1,6 +1,6 @@
 # To compile and run code:
-# make test=testFileName
-# e.g make test=TestCases/PassCases/accessingStruct
+# `make test=testFileName`
+# e.g `make test=TestCases/PassCases/accessingStruct`
 
 default:
 	clear
