@@ -1,3 +1,4 @@
+// NOT can only be done on BOOL type
 void main(){
     {
         if(!4) then printf("error");

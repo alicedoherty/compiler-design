@@ -1,3 +1,4 @@
+// Cannot add a BOOL and INT
 void main(){
     {
         int a;

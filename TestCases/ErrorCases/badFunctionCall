@@ -8,7 +8,8 @@ int myFunction(){
 
 void main(){
     {
-        int b;
+        string b;
+        // b is of type STRING, but myFunction() returns INT
         b = myFunction();
     }
 }

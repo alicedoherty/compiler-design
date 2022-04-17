@@ -1,0 +1,8 @@
+// Cannot assign STRING value to INT
+void main() {
+    {
+        int a;
+        string b;
+        a = b;
+    }
+}

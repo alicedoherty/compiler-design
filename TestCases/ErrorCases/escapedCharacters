@@ -1,4 +1,4 @@
-//String containing escaped characters e.g., "Hello \”world\”!"
+// String containing escaped characters aren't supported
 void main(){
     {
         string s;

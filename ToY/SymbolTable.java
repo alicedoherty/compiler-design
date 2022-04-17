@@ -6,24 +6,17 @@ import java.util.ArrayList;
 public class SymbolTable {
     public HashMap<String, Function> functionSymbolTable;
     public HashMap<String, Struct> structSymbolTable;
-    //public HashMap<String, Variable> variableSymbolTable;
     
     public SymbolTable() {
         functionSymbolTable = new HashMap<String, Function>();
         structSymbolTable = new HashMap<String, Struct>();
-        //variableSymbolTable = new HashMap<String, Variable>();
     }
 
     public void printFunctionTable() {
         System.out.println("Function Symbol Table:");
         for (String key : functionSymbolTable.keySet()) {
             Function function = functionSymbolTable.get(key);
-            System.out.print("Function Name: " + key + " | " + "Return Type: " + function.returnType + " | ");
-            
-            System.out.print("Parameters: ");
-            for (int i = 0; i < function.parameters.size(); i++) {
-                System.out.print(function.parameters.get(i).name + ":" + function.parameters.get(i).type + ", ");
-            }
+            System.out.print("Function Name: " + key + " | " + "Return Type: " + function.returnType);
 
             System.out.print("| Local Variables: ");
             for(int i = 0; i < function.localVariables.size(); i++) {
@@ -82,9 +75,24 @@ public class SymbolTable {
         return false;
     }
 
-    // public boolean isReturnType(String returnType, String returnType) {
-    //     return func.returnType.equals(returnType);
-    // }
+    public String getStructFieldType(String structName, String varName) {
+        Struct struct = structSymbolTable.get(structName);
+        for (int i = 0; i < struct.fields.size(); i++) {
+            if(struct.fields.get(i).name.equals(varName)) {
+                return struct.fields.get(i).type;
+            }
+        }
+        return "";
+    }
+
+    public boolean isFunctionDeclared(String name) {
+        return functionSymbolTable.containsKey(name);
+    }
+
+    public String getFunctionReturnType(String functionName) {
+        Function function = functionSymbolTable.get(functionName);
+        return function.returnType;
+    }
 
     public boolean isCorrectType(String typeOne, String typeTwo, String expectedType) {
         if((!typeOne.equals(expectedType)) | (!typeTwo.equals(expectedType))) {
@@ -93,25 +101,22 @@ public class SymbolTable {
         return true;
     }
 
-    // Is the variable of the given name of a passed in type?
-    // public boolean isType(String name, int type) {
-    //     if (variableSymbolTable.containsKey(name)) {
-    //         Variable variable = variableSymbolTable.get(name);
-    //         if (variable.type == type) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // public boolean returnTypeMatches() {
-    //     return true;
-    // }
+    public boolean checkForMain() {
+        for (String key : functionSymbolTable.keySet()) {
+            if(key.equals("main")) {
+                Function function = functionSymbolTable.get(key);
+                if(function.returnType.equals("VOID"))
+                    return true;
+            }
+        }
+        return false;
+    }
 
     public class Function {
         public String name;
         public String returnType;
-        public ArrayList<Variable> parameters = new ArrayList<Variable>();
+
+        // localVariables includes variables passed in as parameters AND variables declared within the function
         public ArrayList<Variable> localVariables = new ArrayList<Variable>();
         
         public Function() {
@@ -119,10 +124,9 @@ public class SymbolTable {
             this.returnType = "";
         }
 
-        public Function(String name, String returnType, ArrayList<Variable> parameters, ArrayList<Variable> localVariables) {
+        public Function(String name, String returnType, ArrayList<Variable> localVariables) {
             this.name = name;
             this.returnType = returnType;
-            this.parameters = parameters;
             this.localVariables = localVariables;
         }
     }

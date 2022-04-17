@@ -1,0 +1,14 @@
+void myFunction(){
+    {
+        int a;
+        a = 12;
+    }
+}
+
+void main(){
+    {
+        int b;
+        ## myFunc() is not defined
+        myFunc();
+    }
+}

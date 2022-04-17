@@ -1,8 +1,9 @@
+// First part of if statement needs to be a boolean expression
 void main() {
     {
         int i;
 
-        ## if (i == 0) would work
+        // if (i == 0) would work
         if (i = 3) then printf ("hello"); else printf ("world");
     }
 }

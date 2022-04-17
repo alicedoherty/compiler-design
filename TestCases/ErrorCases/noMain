@@ -1,0 +1,7 @@
+// Program must one procedure with the signature "void main() {...}"
+int myFunction() {
+    {
+        int i;
+        int j;
+    }
+}

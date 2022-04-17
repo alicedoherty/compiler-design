@@ -81,8 +81,8 @@
 %%  
 
 pgm
-    : proc pgm1                           
-    | struct pgm 
+    : proc pgm1     { if(!symbolTable.checkForMain()) { throw new Error("Program must have at least one procedure with the signature \"void main {...}\""); } }                      
+    | struct pgm    { if(!symbolTable.checkForMain()) { throw new Error("Program must have at least one procedure with the signature \"void main {...}\""); } }                       
 ;
 
 pgm1
@@ -154,6 +154,7 @@ declarationOnePlus
 
 proc
     : returnType IDENTIFIER LEFT declarationZeroPlus RIGHT LEFTCURLY statement RIGHTCURLY  { 
+                                                                                                if(symbolTable.isFunctionDeclared($2.value)) { throw new Error("Cannot redeclare function with same name"); }
                                                                                                 func = symbolTable.new Function();
                                                                                                 func.name = $2.value; func.returnType = $1.value; 
                                                                                                 //func.localVariables = (ArrayList)localVariableList.clone();
@@ -208,23 +209,12 @@ statement
                                                 String exprType;
                                                 if(symbolTable.isVariableDeclared($1.value, localVariableList)) {
                                                     varType = symbolTable.getVariableType($1.value, localVariableList);                                    
-                                                    /*if($3.type == 278) {
-                                                        System.out.println($3.value);
-                                                        exprType = symbolTable.getVariableType($3.value, localVariableList);                                    
-                                                    } else { 
-                                                        exprType = $3.value;
-                                                    }*/
                                                     exprType = $3.value;
                                                     if(!exprType.equals(varType)) {
                                                         throw new Error("Assignment is not well-typed");
                                                     }  
                                                 } else if (symbolTable.isVariableDeclared($1.value, paramList)) {
                                                     varType = symbolTable.getVariableType($1.value, paramList);                                    
-                                                    /*if($3.type == 278) {
-                                                        exprType = symbolTable.getVariableType($3.value, paramList);                                    
-                                                    } else { 
-                                                        exprType = $3.value;
-                                                    }*/
                                                     exprType = $3.value;
                                                     if(!exprType.equals(varType)) {
                                                         throw new Error("Assignment is not well-typed");
@@ -258,12 +248,35 @@ statement
                                                                     }
                                                                 }
                                                            }
-    /* TODO Below exp - they should allow for 0 exp */
-    | IDENTIFIER LEFT exp RIGHT SEMICOLON 
-    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON // Needs to be changed for function instead
-                                                            { if((!symbolTable.isVariableDeclared($1.value, localVariableList)) && (!symbolTable.isVariableDeclared($1.value, paramList))) 
-                                                                { 
-                                                                    throw new Error("Variable " + $1.value + " is not declared"); 
+    | IDENTIFIER LEFT exp RIGHT SEMICOLON       { if(!symbolTable.isFunctionDeclared($1.value) ) 
+                                                    { 
+                                                        throw new Error("Function is not declared"); 
+                                                    }
+                                                }
+    | IDENTIFIER LEFT RIGHT SEMICOLON           { if(!symbolTable.isFunctionDeclared($1.value) ) 
+                                                    { 
+                                                        throw new Error("Function is not declared"); 
+                                                    }
+                                                }
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT RIGHT SEMICOLON { 
+                                                            if(!symbolTable.isFunctionDeclared($3.value) ) { 
+                                                                throw new Error("Function is not declared"); 
+                                                            }
+                                                            String funcReturnType = symbolTable.getFunctionReturnType($3.value);
+                                                            String variableType = symbolTable.getVariableType($1.value, localVariableList);
+                                                            if(!funcReturnType.equals(variableType)) {
+                                                                throw new Error("Function return type does not match variable type"); 
+                                                            }
+                                                        }
+    | IDENTIFIER ASSIGN IDENTIFIER LEFT exp RIGHT SEMICOLON { 
+                                                                if(!symbolTable.isFunctionDeclared($3.value) ) 
+                                                                    { 
+                                                                        throw new Error("Function is not declared"); 
+                                                                    }
+                                                                String funcReturnType = symbolTable.getFunctionReturnType($3.value);
+                                                                String variableType = symbolTable.getVariableType($1.value, localVariableList);
+                                                                if(!funcReturnType.equals(variableType)) {
+                                                                    throw new Error("Function return type does not match variable type"); 
                                                                 }
                                                             }
 ;

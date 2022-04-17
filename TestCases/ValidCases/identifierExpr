@@ -1,5 +1,3 @@
-## This should be ignored
-
 void main() {
     {
         int myInt;
@@ -8,5 +6,3 @@ void main() {
         myInt = a + b;
     }
 }
-
-// So should this

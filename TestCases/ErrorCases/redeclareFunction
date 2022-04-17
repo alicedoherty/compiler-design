@@ -1,0 +1,17 @@
+void main() {
+    int i;
+}
+
+int myFunction() {
+    {
+        printf("hello");
+        string myString;
+    }
+}
+
+string myFunction() {
+    {
+        int x;
+        int y;
+    }
+}
